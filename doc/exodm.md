@@ -13,6 +13,8 @@
 
 RPC to create a device group
 
+
+
 **descriptions**
 <dl><dt>name</dt>
 <dd>Group name (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -51,6 +53,8 @@ RPC to create a device group
 
 RPC to create a device group
 
+
+
 **descriptions**
 <dl><dt>gid</dt>
 <dd>Group ID (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
@@ -84,6 +88,8 @@ RPC to create a device group
 ```
 
 List provisioned devices, N entries at a time
+
+
 
 **descriptions**
 <dl><dt>n</dt>
@@ -150,6 +156,8 @@ List provisioned devices, N entries at a time
 
 List config sets, N entries at a time
 
+
+
 **descriptions**
 <dl><dt>n</dt>
 <dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
@@ -195,6 +203,8 @@ List config sets, N entries at a time
 
 List members of a config set, N entries at a time
 
+
+
 **descriptions**
 <dl><dt>n</dt>
 <dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
@@ -232,6 +242,8 @@ List members of a config set, N entries at a time
 ```
 
 List device groups, N entries at a time
+
+
 
 **descriptions**
 <dl><dt>n</dt>
@@ -277,6 +289,8 @@ List device groups, N entries at a time
 
 Link devices to device groups
 
+
+
 **descriptions**
 <dl><dt>dev-id</dt>
 <dd>List of Device ID(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -312,6 +326,8 @@ Link devices to device groups
 ```
 
 RPC to change the notification URL of an existing group
+
+
 
 **descriptions**
 <dl><dt>gid</dt>
@@ -349,6 +365,8 @@ RPC to change the notification URL of an existing group
 ```
 
 RPC to store a YANG module either in user or system space
+
+
 
 **descriptions**
 <dl><dt>name</dt>
@@ -389,6 +407,8 @@ RPC to store a YANG module either in user or system space
 
 RPC to list existing yang modules.
 
+
+
 **descriptions**
 <dl><dt>n</dt>
 <dd>Number of entries to fetch. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
@@ -428,6 +448,8 @@ RPC to list existing yang modules.
 ```
 
 RPC to create device config data set
+
+
 
 **descriptions**
 <dl><dt>name</dt>
@@ -470,6 +492,8 @@ RPC to create device config data set
 
 RPC to update existing config data set
 
+
+
 **descriptions**
 <dl><dt>name</dt>
 <dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -506,6 +530,8 @@ RPC to update existing config data set
 ```
 
 RPC to delete a config data set. Any member devices must first be removed.
+
+
 
 **descriptions**
 <dl><dt>name</dt>
@@ -548,6 +574,8 @@ RPC to delete a config data set. Any member devices must first be removed.
 ```
 
 Create a new device. augment this call if you want to add device-data
+
+
 
 **descriptions**
 <dl><dt>description</dt>
@@ -609,6 +637,8 @@ Create a new device. augment this call if you want to add device-data
 
 RPC to update an existing device object.
 
+
+
 **descriptions**
 <dl><dt>description</dt>
 <dd>User-provided description of device (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -659,6 +689,8 @@ RPC to update an existing device object.
 ```
 
 RPC to read a single device object.Returns a list of zero or one device object.
+
+
 
 **descriptions**
 <dl><dt>dev-id</dt>
@@ -722,6 +754,8 @@ RPC to read a single device object.Returns a list of zero or one device object.
 
 RPC to deprovision an existing device.
 
+
+
 **descriptions**
 <dl><dt>dev-id</dt>
 <dd>Account-wide unique device-id (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -755,6 +789,8 @@ RPC to deprovision an existing device.
 ```
 
 Create a new device. augment this call if you want to add device-data
+
+
 
 **descriptions**
 <dl><dt>dev-id</dt>
@@ -791,6 +827,12 @@ Create a new device. augment this call if you want to add device-data
 
 Push the given configuration data to all member devices
 
+**extensions**
+<dl>
+<dt>exosense:matching-notification</dt><dd>push-config-set-callback</dd>
+</dl>
+
+
 **descriptions**
 <dl><dt>name</dt>
 <dd>Name of configuration data set to push. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -823,6 +865,191 @@ Push the given configuration data to all member devices
 ```
 
 Elements included in all callback notifications sent from Exosense to the backend server.
+
+
+
+**descriptions**
+<dl><dt>final</dt>
+<dd>This is the final callback for the given operation (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dt>rpc-status</dt>
+<dd>Status of operation in progress. (<b>type:</b> "0" (accepted) | "0" (accepted) | "1" (complete) | "2" (time-out) | "3" (device-connected) | "4" (device-unknown) | "5" (device-error) | "6" (format-error) | "7" (value-error); [<em>mandatory: false</em>])</dd>
+<dt>rpc-status-string</dt>
+<dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>transaction-id</dt>
+<dd>The transaction that this callback is made in response to. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:create-package
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:create-package",
+ "id": "",
+ "params": {"package-name": "",
+            "depndencies": [{"package-name": ""}],
+            "image": ""}}
+```
+
+Create a package in the database to be forwarded to devices.
+
+
+
+**descriptions**
+<dl><dt>depndencies</dt>
+<dd> (<b>type:</b> array)</dd>
+<dt>image</dt>
+<dd>The package image itself. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Notification: exodm:create-package-notification
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:create-package-notification",
+ "params": {"transaction-id": "",
+            "rpc-status": "",
+            "rpc-status-string": "",
+            "final": ""}}
+```
+
+Elements included in all callback notifications sent from Exosense to the backend server.
+
+
+
+**descriptions**
+<dl><dt>final</dt>
+<dd>This is the final callback for the given operation (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dt>rpc-status</dt>
+<dd>Status of operation in progress. (<b>type:</b> "0" (accepted) | "0" (accepted) | "1" (complete) | "2" (time-out) | "3" (device-connected) | "4" (device-unknown) | "5" (device-error) | "6" (format-error) | "7" (value-error); [<em>mandatory: false</em>])</dd>
+<dt>rpc-status-string</dt>
+<dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>transaction-id</dt>
+<dd>The transaction that this callback is made in response to. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:add-package-members
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:add-package-members",
+ "id": "",
+ "params": {"package-name": ["package-name": ""],
+            "dev-id": ["dev-id": ""]}}
+```
+
+Add members to the list of devices to receive the package.
+
+
+
+**descriptions**
+<dl><dt>dev-id</dt>
+<dd>Devices to push the given config data instances to (s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>Configuration data instances to associate with the given device(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:push-package
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:push-package",
+ "id": "",
+ "params": {"package-name": "",
+            "operation": "",
+            "timeout": "",
+            "auto-push-dependencies": "",
+            "remove-after-operation": "",
+            "replace-queue": ""}}
+```
+
+Pushes the given package to all member devices. Notifications will be sent back. If the package is already pushed to a device, it will not be transmitted again. Instead the specified operation will be executed for the package on the given device.
+
+
+
+**descriptions**
+<dl><dt>auto-push-dependencies</dt>
+<dd>Specifies if any unresolved dependencies should automatically be pushed to the target as well. If set to false, each device with an unresolved dependency will generate an error push-package-notification (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dt>operation</dt>
+<dd>The operation to be carried out on the package once it has been received on a device. (<b>type:</b> "0" (transmit) | "0" (transmit) | "1" (install) | "2" (upgrade) | "3" (uninstall) | "4" (remove) | "5" (remove-recursively); [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>remove-after-operation</dt>
+<dd>Specifies if the package should be removed from device-local storage once the operation (such as install) has been carried out on the device. If the auto-push-dependencies flag is set, any packages automatically transmitted to resolve dependencies will be removed as well. (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dt>replace-queue</dt>
+<dd>If set to true, any earlier operations for this package queued to the given device will be removed and replaced by the operation specified by this command. If set to false, this command will be queued to be executed after any other pending commands for this package to the given device. (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dt>timeout</dt>
+<dd>Timeout specification for this operation to be carried out to a device. If a timeout occur, an error is sent back for the timed out device using push-package-notification. Please note that some devices may time out while other succeed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Notification: exodm:push-package-notification
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:push-package-notification",
+ "params": {"transaction-id": "",
+            "rpc-status": "",
+            "rpc-status-string": "",
+            "final": ""}}
+```
+
+Elements included in all callback notifications sent from Exosense to the backend server.
+
+
 
 **descriptions**
 <dl><dt>final</dt>
