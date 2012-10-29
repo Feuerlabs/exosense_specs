@@ -1,0 +1,166 @@
+module exosense {
+
+    prefix exosense;
+
+    namespace "http://feuerlabs.com/exosense";
+
+    description "Exosense standard RPC structures.";
+
+    typedef timer {
+      description "Kvdb_cron-type timer specification";
+      type string {
+	length "1..256";
+      }
+    }
+
+    // Transaction id.
+    typedef transaction-id {
+	type uint32;
+	description
+	  "A transaction ID associated with an operation. " +
+	  "Assigned by caller";
+    }
+
+    extension matching-notification {
+      description "Used to pair RPC calls with following notifications.";
+      argument "method";
+    }
+
+    //
+    // Status codes used by the system
+    //
+    typedef status-code {
+
+        type enumeration {
+	    enum accepted {
+		description "Operation has been accepted and is in progress.";
+		value 0;
+	    }
+
+	    enum complete {
+		description "The operation has completed successfully.";
+		value 1;
+	    }
+
+	    enum time-out {
+		description "Operation has timed out.";
+		value 2;
+	    }
+
+	    enum device-connected {
+		description
+		  "A connection has been established with " +
+		  "the device addressed by the operation.";
+		value 3;
+	    }
+
+	    enum device-unknown {
+		description
+		  "The device-id provided with the operation is unknown.";
+		value 4;
+	    }
+
+
+	    enum device-error {
+		description
+		  "The device encountered an error when carrying out " +
+		  "the operation. See device-status.";
+		value 5;
+	    }
+
+	    enum format-error {
+		description "The RPC had an incorrect element structure.";
+		value 6;
+	    }
+
+	    enum value-error {
+		description
+		  "The RPC had illegal values in one or more of its elements.";
+		value 7;
+	    }
+	}
+        description
+	  "Define status codes used throughout the JSON RPC interface.";
+    }
+
+    //
+    // Leafs included in all rpc requests
+    //
+    grouping std-request {
+        description "Elements included in all RPC requests sent"
+	  + " from the backend server to Exosense.";
+
+	leaf timeout {
+	    type timer;
+	    description "UTC time when this operation times out.";
+	}
+
+	leaf notification-url {
+	    type string {
+		length "1..256";
+	    }
+	    description "URL to send operation notifications on.";
+	}
+
+	leaf device-id {
+	    type string {
+		length "1..32";
+	    }
+	    description "Target device. Can also be a group,";
+	}
+
+	leaf transaction-id {
+	    type transaction-id;
+	    description "Transaction ID assigned by the caller.";
+	}
+    }
+
+
+    //
+    // Standard callback elements
+    //
+    grouping std-callback {
+        description "Elements included in all callback notifications"
+	  + " sent from Exosense to the backend server.";
+
+	leaf transaction-id {
+	    type transaction-id;
+	    description "The transaction that this callback is made"
+	      + " in response to.";
+	}
+
+	leaf rpc-status {
+	    type status-code;
+	    description "Status of operation in progress.";
+	}
+
+	leaf rpc-status-string {
+	    type string;
+	    description "Additional status information, "
+	      + "in human readable format,";
+	}
+
+	leaf final {
+	    type boolean;
+	    description "This is the final callback for the given operation";
+	}
+    }
+
+    //
+    // Configuration entry
+    //
+    grouping configuration-entry {
+      description
+	"A configuration entry used (in a list) by " +
+	"set-config-entry and set config-set.";
+
+        leaf name {
+            description "Specifies the configuration entry to set";
+            type string;
+        }
+
+        anyxml val {
+            description "Value of the given configuration data.";
+        }
+    }
+}
