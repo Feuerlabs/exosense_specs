@@ -686,6 +686,9 @@ module exodm {
 	}
       }
       output {
+	leaf result {
+	  type result-code;
+	}
 	list devices {
 	  uses device-obj;
 	}
