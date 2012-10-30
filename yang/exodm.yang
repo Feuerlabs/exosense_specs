@@ -444,6 +444,30 @@ module exodm {
         }
     }
 
+    rpc remove-device-group-members {
+      description "Unlink devices from device groups";
+      input {
+	leaf-list device-groups {
+	  description
+	    "Device groups to unlink the given device(s) from";
+	  type uint32;
+	}
+	leaf-list dev-id {
+	  description "List of device ID(s)";
+	  type string {
+	    type string {
+	      length "1..64";
+	    }
+	  }
+	}
+      }
+      output {
+	leaf result {
+	  type result-code;
+	}
+      }
+    }
+
 
     rpc update-device-group {
         description "RPC to change the notification URL of an existing group";
