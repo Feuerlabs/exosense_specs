@@ -7,8 +7,8 @@
 %%% @author Ulf Wiger <ulf@feuerlabs.com>
 {application, exosense_specs,
  [
-  {description, ""},
-  {vsn, "1"},
+  {description, "Exosense Yang specs"},
+  {vsn, git},
   {registered, []},
   {applications, [
                   kernel,
