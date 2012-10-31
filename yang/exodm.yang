@@ -391,6 +391,35 @@ module exodm {
 	}
     }
 
+    rpc list-device-groups {
+      description "List device groups, N entries at a time";
+
+      input {
+	leaf n {
+	  description "Number of entries to fetch";
+	  type uint32;
+	}
+	leaf previous {
+	  description
+	    "Previous device group id (GID); \"\" if from beginning";
+	  type uint32;
+	}
+      }
+      output {
+	list device-groups {
+	  leaf gid {
+	    type uint32;
+	  }
+	  leaf name {
+	    type string;
+	  }
+	  leaf notification-url {
+	    type inet:uri;
+	  }
+	}
+      }
+    }
+
 
     rpc list-device-group-members {
         description "List devices attached to a device group, " +

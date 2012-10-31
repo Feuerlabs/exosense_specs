@@ -36,7 +36,7 @@ RPC to create a device group
 <dl><dt>gid</dt>
 <dd>Group identifier. 0 (zero) if operation failed. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -71,7 +71,7 @@ RPC to create a device group
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -276,6 +276,47 @@ List device groups, N entries at a time
 
 
 
+### RPC: exodm:list-device-group-members
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:list-device-group-members",
+ "id": "",
+ "params": {"gid": "",
+            "n": "",
+            "previous": ""}}
+```
+
+List devices attached to a device group, N entries at a time
+
+
+
+**descriptions**
+<dl><dt>gid</dt>
+<dd>ID of the device group (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>n</dt>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>previous</dt>
+<dd>Previous device; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"device-group-members": ["device-group-members": ""]}}
+```
+
+**descriptions**
+<dl><dt>device-group-members</dt>
+<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
 ### RPC: exodm:add-device-group-members
 
 #### Request
@@ -309,7 +350,45 @@ Link devices to device groups
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:remove-device-group-members
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:remove-device-group-members",
+ "id": "",
+ "params": {"device-groups": ["device-groups": ""],
+            "dev-id": ["dev-id": ""]}}
+```
+
+Unlink devices from device groups
+
+
+
+**descriptions**
+<dl><dt>dev-id</dt>
+<dd>List of device ID(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-groups</dt>
+<dd>Device groups to unlink the given device(s) from (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -347,7 +426,7 @@ RPC to change the notification URL of an existing group
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -388,7 +467,7 @@ RPC to store a YANG module either in user or system space
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -473,7 +552,7 @@ RPC to create device config data set
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -514,7 +593,7 @@ RPC to update existing config data set
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -549,7 +628,7 @@ RPC to delete a config data set. Any member devices must first be removed.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -611,7 +690,7 @@ Create a new device. augment this call if you want to add device-data
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -673,7 +752,7 @@ RPC to update an existing device object.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -703,7 +782,8 @@ RPC to read a single device object.Returns a list of zero or one device object.
 ```json
 {"jsonrpc": "2.0",
  "id": "",
- "result": {"devices": [{"dev-id": "",
+ "result": {"result": "",
+            "devices": [{"dev-id": "",
                          "protocol": "",
                          "description": "",
                          "server-key": "",
@@ -736,6 +816,8 @@ RPC to read a single device object.Returns a list of zero or one device object.
 <dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>result</dt>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 <dt>server-key</dt>
 <dd>Server key (<b>type:</b> uint64; [<em>mandatory: false</em>])</dd>
 </dl>
@@ -772,7 +854,7 @@ RPC to deprovision an existing device.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -810,7 +892,7 @@ Create a new device. augment this call if you want to add device-data
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -849,7 +931,7 @@ Push the given configuration data to all member devices
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -870,9 +952,9 @@ Elements included in all callback notifications sent from Exosense to the backen
 
 **descriptions**
 <dl><dt>final</dt>
-<dd>This is the final callback for the given operation (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> "0" (accepted) | "0" (accepted) | "1" (complete) | "2" (time-out) | "3" (device-connected) | "4" (device-unknown) | "5" (device-error) | "6" (format-error) | "7" (value-error); [<em>mandatory: false</em>])</dd>
+<dd>Status of operation in progress. (<b>type:</b> 0 (accepted) | 1 (complete) | 2 (time-out) | 3 (device-connected) | 4 (device-unknown) | 5 (device-error) | 6 (format-error) | 7 (value-error); [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
 <dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>transaction-id</dt>
@@ -917,7 +999,7 @@ Create a package in the database to be forwarded to devices.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -938,9 +1020,9 @@ Elements included in all callback notifications sent from Exosense to the backen
 
 **descriptions**
 <dl><dt>final</dt>
-<dd>This is the final callback for the given operation (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> "0" (accepted) | "0" (accepted) | "1" (complete) | "2" (time-out) | "3" (device-connected) | "4" (device-unknown) | "5" (device-error) | "6" (format-error) | "7" (value-error); [<em>mandatory: false</em>])</dd>
+<dd>Status of operation in progress. (<b>type:</b> 0 (accepted) | 1 (complete) | 2 (time-out) | 3 (device-connected) | 4 (device-unknown) | 5 (device-error) | 6 (format-error) | 7 (value-error); [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
 <dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>transaction-id</dt>
@@ -982,7 +1064,7 @@ Add members to the list of devices to receive the package.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1008,15 +1090,15 @@ Pushes the given package to all member devices. Notifications will be sent back.
 
 **descriptions**
 <dl><dt>auto-push-dependencies</dt>
-<dd>Specifies if any unresolved dependencies should automatically be pushed to the target as well. If set to false, each device with an unresolved dependency will generate an error push-package-notification (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dd>Specifies if any unresolved dependencies should automatically be pushed to the target as well. If set to false, each device with an unresolved dependency will generate an error push-package-notification (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>operation</dt>
-<dd>The operation to be carried out on the package once it has been received on a device. (<b>type:</b> "0" (transmit) | "0" (transmit) | "1" (install) | "2" (upgrade) | "3" (uninstall) | "4" (remove) | "5" (remove-recursively); [<em>mandatory: false</em>])</dd>
+<dd>The operation to be carried out on the package once it has been received on a device. (<b>type:</b> 0 (transmit) | 1 (install) | 2 (upgrade) | 3 (uninstall) | 4 (remove) | 5 (remove-recursively); [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
 <dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>remove-after-operation</dt>
-<dd>Specifies if the package should be removed from device-local storage once the operation (such as install) has been carried out on the device. If the auto-push-dependencies flag is set, any packages automatically transmitted to resolve dependencies will be removed as well. (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dd>Specifies if the package should be removed from device-local storage once the operation (such as install) has been carried out on the device. If the auto-push-dependencies flag is set, any packages automatically transmitted to resolve dependencies will be removed as well. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>replace-queue</dt>
-<dd>If set to true, any earlier operations for this package queued to the given device will be removed and replaced by the operation specified by this command. If set to false, this command will be queued to be executed after any other pending commands for this package to the given device. (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dd>If set to true, any earlier operations for this package queued to the given device will be removed and replaced by the operation specified by this command. If set to false, this command will be queued to be executed after any other pending commands for this package to the given device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>timeout</dt>
 <dd>Timeout specification for this operation to be carried out to a device. If a timeout occur, an error is sent back for the timed out device using push-package-notification. Please note that some devices may time out while other succeed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
@@ -1032,7 +1114,7 @@ Pushes the given package to all member devices. Notifications will be sent back.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> "0" (ok) | "0" (ok) | "1" (permission-denied) | "2" (validation-failed) | "3" (object-exists) | "4" (object-not-found) | "5" (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1053,9 +1135,9 @@ Elements included in all callback notifications sent from Exosense to the backen
 
 **descriptions**
 <dl><dt>final</dt>
-<dd>This is the final callback for the given operation (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> "0" (accepted) | "0" (accepted) | "1" (complete) | "2" (time-out) | "3" (device-connected) | "4" (device-unknown) | "5" (device-error) | "6" (format-error) | "7" (value-error); [<em>mandatory: false</em>])</dd>
+<dd>Status of operation in progress. (<b>type:</b> 0 (accepted) | 1 (complete) | 2 (time-out) | 3 (device-connected) | 4 (device-unknown) | 5 (device-error) | 6 (format-error) | 7 (value-error); [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
 <dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>transaction-id</dt>
