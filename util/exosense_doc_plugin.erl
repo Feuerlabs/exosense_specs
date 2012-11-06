@@ -11,11 +11,11 @@
 %% Rebar plugin for generating Markdown docs from yang files
 -module(exosense_doc_plugin).
 
--export([post_compile/2,
+-export([doc/2,
 	 clean/2]).
 
--spec post_compile(rebar_config:config(), _AppFile::file:filename()) -> 'ok'.
-post_compile(Config, _AppFile) ->
+-spec doc(rebar_config:config(), _AppFile::file:filename()) -> 'ok'.
+doc(Config, _AppFile) ->
     rebar_base_compiler:run(Config, [], "yang", ".yang", "doc", ".md",
 			    fun mk_markdown/3, []).
 

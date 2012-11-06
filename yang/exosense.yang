@@ -1,6 +1,6 @@
 module exosense {
 
-    prefix exosense;
+    prefix exo;
 
     namespace "http://feuerlabs.com/exosense";
 
@@ -24,6 +24,12 @@ module exosense {
     extension matching-notification {
       description "Used to pair RPC calls with following notifications.";
       argument "method";
+    }
+
+    extension semantics {
+      description "Element expects special treatment in Exosense:\n" +
+	"Arg: timeout | schedule";
+      argument class;
     }
 
     //
@@ -91,8 +97,9 @@ module exosense {
 	  + " from the backend server to Exosense.";
 
 	leaf timeout {
-	    type timer;
-	    description "UTC time when this operation times out.";
+	  type timer;
+	  exo:semantics "timeout";
+	  description "UTC time when this operation times out.";
 	}
 
 	leaf notification-url {

@@ -36,7 +36,7 @@ RPC to create a device group
 <dl><dt>gid</dt>
 <dd>Group identifier. 0 (zero) if operation failed. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -71,7 +71,7 @@ RPC to create a device group
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -350,7 +350,7 @@ Link devices to device groups
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -388,7 +388,7 @@ Unlink devices from device groups
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -426,7 +426,7 @@ RPC to change the notification URL of an existing group
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -467,7 +467,7 @@ RPC to store a YANG module either in user or system space
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -552,7 +552,7 @@ RPC to create device config data set
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -593,7 +593,7 @@ RPC to update existing config data set
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -628,7 +628,7 @@ RPC to delete a config data set. Any member devices must first be removed.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -690,7 +690,7 @@ Create a new device. augment this call if you want to add device-data
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -752,7 +752,7 @@ RPC to update an existing device object.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -817,7 +817,7 @@ RPC to read a single device object.Returns a list of zero or one device object.
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 <dt>server-key</dt>
 <dd>Server key (<b>type:</b> uint64; [<em>mandatory: false</em>])</dd>
 </dl>
@@ -854,7 +854,7 @@ RPC to deprovision an existing device.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -892,7 +892,7 @@ Create a new device. augment this call if you want to add device-data
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -931,7 +931,7 @@ Push the given configuration data to all member devices
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -954,7 +954,7 @@ Elements included in all callback notifications sent from Exosense to the backen
 <dl><dt>final</dt>
 <dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> 0 (accepted) | 1 (complete) | 2 (time-out) | 3 (device-connected) | 4 (device-unknown) | 5 (device-error) | 6 (format-error) | 7 (value-error); [<em>mandatory: false</em>])</dd>
+<dd>Status of operation in progress. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
 <dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>transaction-id</dt>
@@ -999,7 +999,7 @@ Create a package in the database to be forwarded to devices.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1022,7 +1022,7 @@ Elements included in all callback notifications sent from Exosense to the backen
 <dl><dt>final</dt>
 <dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> 0 (accepted) | 1 (complete) | 2 (time-out) | 3 (device-connected) | 4 (device-unknown) | 5 (device-error) | 6 (format-error) | 7 (value-error); [<em>mandatory: false</em>])</dd>
+<dd>Status of operation in progress. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
 <dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>transaction-id</dt>
@@ -1064,7 +1064,7 @@ Add members to the list of devices to receive the package.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1114,7 +1114,7 @@ Pushes the given package to all member devices. Notifications will be sent back.
 
 **descriptions**
 <dl><dt>result</dt>
-<dd> (<b>type:</b> 0 (ok) | 1 (permission-denied) | 2 (validation-failed) | 3 (object-exists) | 4 (object-not-found) | 5 (device-not-found); [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1137,7 +1137,7 @@ Elements included in all callback notifications sent from Exosense to the backen
 <dl><dt>final</dt>
 <dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> 0 (accepted) | 1 (complete) | 2 (time-out) | 3 (device-connected) | 4 (device-unknown) | 5 (device-error) | 6 (format-error) | 7 (value-error); [<em>mandatory: false</em>])</dd>
+<dd>Status of operation in progress. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
 <dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>transaction-id</dt>
