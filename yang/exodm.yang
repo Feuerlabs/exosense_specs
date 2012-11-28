@@ -98,6 +98,11 @@ module exodm {
 	}
 	mandatory true;
       }
+      leaf device-type {
+	description "Type of device";
+	type string;
+	mandatory true;
+      }
       leaf protocol {
 	description "Protocol between device and Exosense server";
 	type string;
@@ -305,6 +310,54 @@ module exodm {
             leaf gid {
                 description "Group ID";
                 type uint32;
+            }
+        }
+
+        output {
+            leaf result {
+                type result-code;
+            }
+        }
+    }
+
+    rpc create-device-type {
+        description "RPC to create a device type";
+
+        input {
+            leaf name {
+                description "Device type name";
+		mandatory true;
+                type string {
+                    length "1..32";
+                }
+            }
+            leaf notification-url {
+                description "RPC callback notification URL";
+
+                type inet:uri;
+            }
+        }
+
+        output {
+            leaf result {
+                type result-code;
+            }
+            leaf gid {
+                description "Group identifier. 0 (zero) if operation failed.";
+                type uint32;
+            }
+        }
+    }
+
+    rpc delete-device-type {
+        description "RPC to create a device type";
+
+        input {
+            leaf name {
+                description "Device type name";
+                type string {
+                    length "1..32";
+                }
             }
         }
 
@@ -748,8 +801,8 @@ module exodm {
       }
     }
 
-    rpc deprovision-device {
-      description "RPC to deprovision an existing device.";
+    rpc deprovision-devices {
+      description "RPC to deprovision a set of existing devices.";
 
       input {
 	leaf-list dev-id {
