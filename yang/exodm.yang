@@ -18,11 +18,16 @@ module exodm {
       prefix exo;
     }
 
-    description "Data model for DM server";
+    description "Data model for Exosense Device Management Server";
 
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";
 
+    revision 2012-11-30 {
+      description
+	"Added device-type definitions; harmonized ID string lengths, " +
+	"some cleanups to stay within 80 char line lengths.";
+    }
     revision 2012-10-26 {
       description "Validation and cleanup";
     }
@@ -33,35 +38,41 @@ module exodm {
     typedef result-code {
         type enumeration {
             enum ok {
-                description "Operation has completed successfully.";
-                value 0;
+	      description "Operation has completed successfully.";
+	      value 0;
             }
-
             enum permission-denied {
-                description "Insufficient privileges to perform operation.";
-                value 1;
+	      description "Insufficient privileges to perform operation.";
+	      value 1;
             }
-
             enum validation-failed {
-                description "An error occurred validating the YANG module.";
-                value 2;
+	      description "An error occurred validating the YANG module.";
+	      value 2;
             }
-
             enum object-exists {
-                description "An object with the same identifier already exists.";
-                value 3;
+	      description "An object with the same identifier already exists.";
+	      value 3;
             }
-
             enum object-not-found {
-                description "No object with the given identifier has been found.";
-                value 4;
+	      description "No object with the given identifier has been found.";
+	      value 4;
             }
-
             enum device-not-found {
-                description "No device with the given identifier has been found.";
-                value 5;
+	      description "No device with the given identifier has been found.";
+	      value 5;
             }
+	    enum object-not-empty {
+	      description "Members must be removed before deleting.";
+	      value 6;
+	    }
         }
+    }
+
+    typedef id-string {
+      description "Common type for string identifiers in exodm";
+      type string {
+	length "1..64";
+      }
     }
 
     // INTERNAL INFO!
@@ -88,24 +99,35 @@ module exodm {
 	}
     }
 
+    grouping device-type-obj {
+      description "Device type object leafs";
+      leaf name {
+	description "Account-wide unique device type name";
+	mandatory true;
+	type id-string;
+      }
+      leaf protocol {
+	description "Protocol between device and Exosense server";
+	mandatory true;
+	type id-string;
+      }
+      leaf notification-url {
+	description "RPC callback notification URL";
+	type inet:uri;
+      }
+    }
+
     grouping device-obj {
       description "Device object leafs";
 
       leaf dev-id {
 	description "Account-wide unique device-id";
-	type string {
-	  length "1..64";
-	}
+	type id-string;
 	mandatory true;
       }
       leaf device-type {
 	description "Type of device";
-	type string;
-	mandatory true;
-      }
-      leaf protocol {
-	description "Protocol between device and Exosense server";
-	type string;
+	type id-string;
 	mandatory true;
       }
       leaf description {
@@ -159,7 +181,7 @@ module exodm {
 	leaf did {
 	    description "Device identifer";
 	    // internally it must be escaped!
-	    type string;
+	    type id-string;
 	}
 
 	leaf name {
@@ -225,7 +247,7 @@ module exodm {
 
 	leaf name {
 	    description "Login name of user, unique";
-	    type string;
+	    type id-string;
 	}
 
 	leaf fullname {
@@ -280,14 +302,10 @@ module exodm {
         input {
             leaf name {
                 description "Group name";
-
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
             leaf notification-url {
                 description "RPC callback notification URL";
-
                 type inet:uri;
             }
         }
@@ -324,29 +342,30 @@ module exodm {
         description "RPC to create a device type";
 
         input {
-            leaf name {
-                description "Device type name";
-		mandatory true;
-                type string {
-                    length "1..32";
-                }
-            }
-            leaf notification-url {
-                description "RPC callback notification URL";
-
-                type inet:uri;
-            }
-        }
+	  uses device-type-obj;
+	}
 
         output {
             leaf result {
                 type result-code;
             }
-            leaf gid {
-                description "Group identifier. 0 (zero) if operation failed.";
-                type uint32;
-            }
         }
+    }
+
+    rpc update-device-type {
+      description "RPC to modify an existing device type.";
+      input {
+	uses device-type-obj {
+	  refine protocol {
+	    mandatory false;
+	  }
+	}
+      }
+      output {
+	leaf result {
+	  type result-code;
+	}
+      }
     }
 
     rpc delete-device-type {
@@ -355,9 +374,7 @@ module exodm {
         input {
             leaf name {
                 description "Device type name";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
         }
 
@@ -366,6 +383,49 @@ module exodm {
                 type result-code;
             }
         }
+    }
+
+    rpc list-device-types {
+      description "RPC to list device types.";
+      input {
+	leaf n {
+	  description "Number of entries to fetch";
+	  type uint32;
+	}
+	leaf previous {
+	  description 'Previous device type; "" if from beginning';
+	  type id-string;
+	}
+      }
+      output {
+	list device-types {
+	  uses device-type-obj;
+	}
+      }
+    }
+
+    rpc list-device-type-members {
+      description "List device IDs associated with a device type";
+      input {
+	leaf name {
+	  description "Name of device type";
+	  type id-string;
+	}
+	leaf n {
+	  description "Number of entries to fetch";
+	  type uint32;
+	}
+	leaf previous {
+	  description 'Previous device ID; "" if from beginning';
+	  type id-string;
+	}
+      }
+      output {
+	leaf-list device-type-members {
+	  description "Device ID";
+	  type id-string;
+	}
+      }
     }
 
     rpc list-devices {
@@ -378,7 +438,7 @@ module exodm {
             }
             leaf previous {
 	      description "Previous device ID; \"\" if from beginning";
-                type string;
+                type id-string;
             }
         }
         output {
@@ -399,13 +459,13 @@ module exodm {
             }
             leaf previous {
 	      description "Previous config set; \"\" if from beginning";
-                type string;
+                type id-string;
             }
         }
         output {
             list config-sets {
                 leaf name {
-		  type string;
+		  type id-string;
                 }
                 leaf yang {
                     type string;
@@ -423,7 +483,7 @@ module exodm {
         input {
 	  leaf name {
 	    description "Name of the config set";
-	    type string;
+	    type id-string;
 	  }
 	  leaf n {
 	    description "Number of entries to fetch";
@@ -431,15 +491,13 @@ module exodm {
 	  }
 	  leaf previous {
 	    description "Previous member; \"\" if from beginning";
-	    type string;
+	    type id-string;
 	  }
         }
         output {
 	  leaf-list config-set-members {
 	    description "";
-	    type string {
-	      length "1..64";
-            }
+	    type id-string;
 	  }
 	}
     }
@@ -464,7 +522,7 @@ module exodm {
 	    type uint32;
 	  }
 	  leaf name {
-	    type string;
+	    type id-string;
 	  }
 	  leaf notification-url {
 	    type inet:uri;
@@ -489,17 +547,13 @@ module exodm {
 	  }
 	  leaf previous {
 	    description "Previous device; \"\" if from beginning";
-	    type string {
-	      length "1..64";
-	    }
+	    type id-string;
 	  }
         }
         output {
 	  leaf-list device-group-members {
 	    description "";
-	    type string {
-	      length "1..64";
-            }
+	    type id-string;
 	  }
 	}
     }
@@ -515,9 +569,7 @@ module exodm {
             }
             leaf-list dev-id {
                 description "List of Device ID(s)";
-                type string {
-                    length "1..64";
-                }
+                type id-string;
             }
         }
 
@@ -538,9 +590,7 @@ module exodm {
 	}
 	leaf-list dev-id {
 	  description "List of device ID(s)";
-	  type string {
-	      length "1..64";
-	    }
+	  type id-string;
 	  }
 	}
       output {
@@ -578,19 +628,15 @@ module exodm {
             leaf repository {
                 description
 		  "Where to store the module: Currently \"system\" or \"user\"";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
             leaf name {
                 description "Name, including extension, e.g. 'rfzone.yang'";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
             leaf yang-module {
                 description "The actual source of the YANG module specification";
-                type string;
+                type id-string;
             }
         }
         output {
@@ -605,9 +651,7 @@ module exodm {
       input {
 	leaf repository {
 	  description "\"system\" or \"user\"; default: \"user\"";
-	  type string {
-	    length "1..32";
-	  }
+	  type id-string;
 	  default "user";
 	}
 	leaf n {
@@ -616,9 +660,7 @@ module exodm {
 	}
 	leaf previous {
 	  description "Previous yang filename.";
-	  type string {
-	    length "1..32";
-	  }
+	  type id-string;
 	}
       }
       output {
@@ -633,15 +675,11 @@ module exodm {
         input {
             leaf name {
                 description "Name of the config data set";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
             leaf yang {
                 description "Name of the corresponding yang file - must exist.";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
 	    leaf notification-url {
 	         description "Notification URL";
@@ -664,16 +702,15 @@ module exodm {
         input {
             leaf name {
                 description "Name of the config data set";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
 	    leaf notification-url {
 	        description "Notification URL";
 		type inet:uri;
 	    }
             anyxml values {
-                description "Configuration values (validated against the yang spec)";
+                description
+		  "Configuration values (validated against the yang spec)";
             }
         }
 
@@ -691,9 +728,7 @@ module exodm {
         input {
             leaf name {
                 description "Name of the config data set";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
         }
 
@@ -710,51 +745,6 @@ module exodm {
 	  "augment this call if you want to add device-data";
         input {
 	  uses device-obj;
-            // leaf dev-id {
-	    //   description "Account-wide unique device-id";
-	    //   type string {
-	    // 	length "1..64";
-	    //   }
-	    //   mandatory true;
-            // }
-	    // leaf protocol {
-	    //   description "Protocol between device and Exosense server";
-	    //   type string;
-	    //   mandatory true;
-	    // }
-	    // leaf description {
-	    //   description "User-provided description of device";
-	    //   type string;
-	    // }
-            // leaf server-key {
-	    //   description "Server key";
-	    //   type uint64;
-            // }
-            // leaf device-key {
-	    //   description "Device key";
-	    //   type uint64;
-            // }
-	    // leaf msisdn {
-	    //   type string;
-	    // }
-	    // leaf imsi {
-	    //   type string;
-	    // }
-	    // leaf imei {
-	    //   type string;
-	    // }
-	    // leaf latitude {
-	    //   description "Latitude of device location";
-	    //   type decimal64 {
-	    // 	fraction-digits 6;
-	    //   }
-	    // }
-	    // leaf longitude {
-	    //   description "Longitude of device location";
-	    //   type decimal64 {
-	    // 	fraction-digits 6;
-	    //   }
-	    // }
         }
 
         output {
@@ -768,7 +758,7 @@ module exodm {
       description "RPC to update an existing device object.";
       input {
 	uses device-obj {
-	  refine protocol {
+	  refine device-type {
 	    mandatory false;
 	  }
 	}
@@ -786,9 +776,7 @@ module exodm {
 	"Returns a list of zero or one device object.";
       input {
 	leaf dev-id {
-	  type string {
-	    length "1..64";
-	  }
+	  type id-string;
 	}
       }
       output {
@@ -807,9 +795,7 @@ module exodm {
       input {
 	leaf-list dev-id {
 	  description "Account-wide unique device-id";
-	  type string {
-	    length "1..64";
-	  }
+	  type id-string;
 	}
       }
 
@@ -830,16 +816,12 @@ module exodm {
                 description
 		  "Configuration data instances to associate with " +
 		  "the given device(s)";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
             leaf-list dev-id {
                 description
 		  "Devices to push the given config data instances to (s)";
-                type string {
-                    length "1..64";
-                }
+                type id-string;
             }
         }
 
@@ -856,9 +838,7 @@ module exodm {
         input {
             leaf name {
                 description "Name of configuration data set to push.";
-                type string {
-                    length "1..32";
-                }
+                type id-string;
             }
         }
 
@@ -878,7 +858,8 @@ module exodm {
     // Package management
     //
      rpc create-package {
-         description "Create a package in the database to be forwarded to devices.";
+         description
+	   "Create a package in the database to be forwarded to devices.";
          input {
              leaf package-name {
                  description "Name of package.";
@@ -886,7 +867,7 @@ module exodm {
                      length "1..256";
                  }
              }
-             list depndencies {
+             list dependencies {
                  key package-name;
 
                  leaf package-name {
@@ -927,9 +908,7 @@ module exodm {
              leaf-list dev-id {
                  description
  		  "Devices to push the given config data instances to (s)";
-                 type string {
-                     length "1..64";
-                 }
+                 type id-string;
              }
          }
 
@@ -945,10 +924,10 @@ module exodm {
      // DIFFERENT CALLS?
      rpc push-package {
          description
-             "Pushes the given package to all member devices. Notifications will be sent back. " +
-             "If the package is already pushed to a device, it will not be transmitted again. " +
-             "Instead the specified operation will be executed for the package on the given device.";
-
+	   "Pushes the given package to all member devices. Notifications " +
+	   "will be sent back. If the package is already pushed to a device, " +
+	   "it will not be transmitted again. Instead the specified " +
+	   "operation will be executed for the package on the given device.";
 
          input {
              leaf package-name {
@@ -958,106 +937,115 @@ module exodm {
              }
 
              leaf operation {
-                 description
-                     "The operation to be carried out on the package once it has been " +
-                     "received on a device.";
+	       description
+		 "The operation to be carried out on the package once it " +
+		 "has been received on a device.";
 
-                 type enumeration {
-                     enum transmit {
-                         description
-                             "Do not do any operations apart from transmitting the " +
-                             "package. This is a no-op if the package is already " +
-                             "resident on the target device.";
-                         value 0;
-                     }
+	       type enumeration {
+		 enum transmit {
+		   description
+		     "Do not do any operations apart from transmitting the " +
+		     "package. This is a no-op if the package is already " +
+		     "resident on the target device.";
+		   value 0;
+		 }
 
-                     enum install {
-                         description
-                             "Install the package using the device-local package manager.";
-                         value 1;
-                     }
+		 enum install {
+		   description
+		     "Install the package using the device-local package " +
+		     "manager.";
+		   value 1;
+		 }
 
-                     enum upgrade {
-                         description
-                             "Upgrade the package using the device-local package manager.";
-                         value 2;
-                     }
+		 enum upgrade {
+		   description
+		     "Upgrade the package using the device-local package " +
+		     "manager.";
+		   value 2;
+		 }
 
-                     enum uninstall {
-                         description
-                             "Uninstall the package using the device-local package manager.";
-                         value 3;
-                     }
+		 enum uninstall {
+		   description
+		     "Uninstall the package using the device-local package " +
+		     "manager.";
+		   value 3;
+		 }
 
-                     enum remove {
-                         description
-                             "Remove the package from the device. If the package is not present" +
-                             "on the device, an error will be sent back through the " +
-                             "push-package-notification.";
-                         value 4;
-                     }
+		 enum remove {
+		   description
+		     "Remove the package from the device. If the package is " +
+		     "not present on the device, an error will be sent back " +
+		     "through the push-package-notification.";
+		   value 4;
+		 }
 
-                     enum remove-recursively {
-                         description
-                             "Remove the package from and recursively remove any dependent " +
-                             "packages that are no longer resolving any device-local dependencies." +
-                             "If the package is not present on the device, an error will be sent " +
-                             "back through the push-package-notification.";
-                         value 5;
-                     }
-                 }
+		 enum remove-recursively {
+		   description
+		     "Remove the package from and recursively remove any " +
+		     "dependent packages that are no longer resolving any " +
+		     "device-local dependencies. If the package is not " +
+		     "present on the device, an error will be sent " +
+		     "back through the push-package-notification.";
+		   value 5;
+		 }
+	       }
              }
 
              leaf timeout {
-                 description
-                     "Timeout specification for this operation to be carried out " +
-                     "to a device. If a timeout occur, an error is sent back for "+
-                     "the timed out device using push-package-notification. " +
-                     "Please note that some devices may time out while other succeed.";
+	       description
+		 "Timeout specification for this operation to be carried out " +
+		 "to a device. If a timeout occur, an error is sent back for "+
+		 "the timed out device using push-package-notification. " +
+		 "Please note that some devices may time out while others " +
+		 "succeed.";
 
-                 type string {
-                     length "1..64";
-                 }
+	       type string {
+		 length "1..64";
+	       }
              }
 
              leaf auto-push-dependencies {
-                 description
-                     "Specifies if any unresolved dependencies should automatically " +
-                     "be pushed to the target as well. If set to false, each device with " +
-                     "an unresolved dependency will generate an error push-package-notification";
+	       description
+		 "Specifies if any unresolved dependencies should " +
+		 "automatically be pushed to the target as well. If set to " +
+		 "false, each device with an unresolved dependency will " +
+		 "generate an error push-package-notification";
 
-                 type boolean;
+	       type boolean;
              }
 
              leaf remove-after-operation {
-                 description
-                     "Specifies if the package should be removed from device-local storage " +
-                     "once the operation (such as install) has been carried out on the device. " +
-                     "If the auto-push-dependencies flag is set, any packages automatically " +
-                     "transmitted to resolve dependencies will be removed as well.";
+	       description
+		 "Specifies if the package should be removed from " +
+		 "device-local storage once the operation (such as install) " +
+		 "has been carried out on the device. If the auto-push-" +
+		 "dependencies flag is set, any packages automatically " +
+		 "transmitted to resolve dependencies will be removed as well.";
 
-                 type boolean;
+	       type boolean;
              }
 
              leaf replace-queue {
-                 description
-                     "If set to true, any earlier operations for this package queued to the given " +
-                     "device will be removed and replaced by the operation specified by this " +
-                     "command. If set to false, this command will be queued to be executed after " +
-                     "any other pending commands for this package to the given device.";
+	       description
+		 "If set to true, any earlier operations for this package " +
+		 "queued to the given device will be removed and replaced " +
+		 "by the operation specified by this command. If set to " +
+		 "false, this command will be queued to be executed after " +
+		 "any other pending commands for this package to the given " +
+		 "device.";
 
-                 type boolean;
+	       type boolean;
              }
          }
          output {
-             leaf result {
-                 type result-code;
-             }
+	   leaf result {
+	     type result-code;
+	   }
          }
      }
 
      notification push-package-notification {
-         uses exo:std-callback;
+       uses exo:std-callback;
      }
 
 //     rpc list-packages {
