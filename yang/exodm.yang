@@ -111,10 +111,6 @@ module exodm {
 	mandatory true;
 	type id-string;
       }
-      leaf notification-url {
-	description "RPC callback notification URL";
-	type inet:uri;
-      }
     }
 
     grouping device-obj {
