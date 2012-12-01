@@ -582,10 +582,12 @@ module exodm {
 	leaf-list device-groups {
 	  description
 	    "Device groups to unlink the given device(s) from";
+	  min-elements 1;
 	  type uint32;
 	}
 	leaf-list dev-id {
 	  description "List of device ID(s)";
+	  min-elements 1;
 	  type id-string;
 	  }
 	}
@@ -827,6 +829,32 @@ module exodm {
             }
         }
     }
+
+    rpc remove-config-set-members {
+        description
+	  "Remove a config set member.";
+        input {
+            leaf-list name {
+                description
+		  "Configuration data instances from which to remove " +
+		  "the given devices";
+		min-elements 1;
+                type id-string;
+            }
+            leaf-list dev-id {
+                description
+		  "Devices to remove from the given config data instances";
+		min-elements 1;
+                type id-string;
+            }
+        }
+        output {
+            leaf result {
+                type result-code;
+            }
+        }
+    }
+
 
     rpc push-config-set {
         description "Push the given configuration data to all member devices";
