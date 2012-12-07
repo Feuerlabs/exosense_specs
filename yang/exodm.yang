@@ -151,12 +151,14 @@ module exodm {
 	description "Latitude of device location";
 	type decimal64 {
 	  fraction-digits 6;
+	  range "-90..90";
 	}
       }
       leaf longitude {
 	description "Longitude of device location";
 	type decimal64 {
 	  fraction-digits 6;
+	  range "-180..180";
 	}
       }
     }
