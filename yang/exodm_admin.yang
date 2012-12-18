@@ -1,0 +1,41 @@
+module exodm_admin {
+  namespace "http://feuerlabs.com/exodm_admin";
+  prefix admin;
+
+  import exodm {
+    prefix exodm;
+  }
+
+  description "Admin API for Exosense Device Management Server";
+
+  contact "ulf.wiger@feuerlabs.com";
+  organization "Feuerlabs, Inc.";
+
+
+  grouping user-obj {
+    leaf name       { type string; mandatory true; }
+    leaf email      { type string; mandatory true; }
+    leaf password   { type string; mandatory true; }
+    leaf fullname   { type string; }
+    leaf phone      { type string; }
+    leaf skype      { type string; }
+    leaf-list alias { type string; }
+  }
+
+  rpc create-account {
+    description "Create a new account";
+    input {
+      leaf name { type string; mandatory true; }
+      list admin-user {
+	key "name";
+	min-elements 1;
+	max-elements 1;
+	uses user-obj;
+      }
+    }
+    output {
+      leaf result { type exodm:result-code; }
+      leaf account-id { type string; }
+    }
+  }
+}

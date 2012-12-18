@@ -138,6 +138,15 @@ module exodm {
 	description "Device key";
 	type uint64;
       }
+      leaf session-timeout {
+	description
+	  "Time of inactivity before a connected device considered off-line " +
+	  "(seconds; 0 seconds means no timeout)";
+	type uint32 {
+	  range "0..43200";  // 1 sec - 12 hours
+	}
+	default 0;
+      }
       leaf msisdn {
 	type string;
       }
