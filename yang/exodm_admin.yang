@@ -13,7 +13,7 @@ module exodm_admin {
 
 
   grouping user-obj {
-    leaf name       { type string; mandatory true; }
+    leaf uname      { type exodm:id-string; mandatory true; }
     leaf email      { type string; mandatory true; }
     leaf password   { type string; mandatory true; }
     leaf fullname   { type string; }
@@ -25,9 +25,9 @@ module exodm_admin {
   rpc create-account {
     description "Create a new account";
     input {
-      leaf name { type string; mandatory true; }
+      leaf name { type exodm:id-string; mandatory true; }
       list admin-user {
-	key "name";
+	key "uname";
 	min-elements 1;
 	max-elements 1;
 	uses user-obj;
@@ -37,5 +37,60 @@ module exodm_admin {
       leaf result { type exodm:result-code; }
       leaf account-id { type string; }
     }
+  }
+
+  rpc update-account {
+      description
+	  "Update account information.";
+        input {
+            leaf name {
+                description "The account name.";
+                type exodm:id-string;
+            }
+        }
+
+        output {
+            leaf result {
+                type exodm:result-code;
+            }
+        }
+  }
+
+  rpc delete-account {
+        description
+	  "Delete an account,
+	   data must be deleted before account is removed.";
+        input {
+            leaf name {
+                description "The account name.";
+                type exodm:id-string;
+            }
+        }
+
+        output {
+            leaf result {
+                type exodm:result-code;
+            }
+        }	
+  }
+
+  rpc list-accounts {
+      description "List all account names.";
+      input {
+	leaf n {
+	  description "Number of entries to fetch";
+	  type uint32;
+	}
+	leaf previous {
+	  description 'Previous account name; "" if from beginning';
+	  type exodm:id-string;
+	}
+      }
+      output {
+	leaf-list accounts {
+	  description "List of account ID";
+	  type exodm:id-string;
+	}
+      }
   }
 }
