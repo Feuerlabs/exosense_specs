@@ -645,7 +645,9 @@ module exodm {
             }
             leaf yang-module {
                 description "The actual source of the YANG module specification";
-                type id-string;
+                type string {
+		  length "1..100000";
+		}
             }
         }
         output {
