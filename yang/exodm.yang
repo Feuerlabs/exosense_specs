@@ -657,6 +657,28 @@ module exodm {
         }
     }
 
+    rpc delete-yang-module {
+        description "RPC to delete a YANG module";
+
+        input {
+            leaf repository {
+                description
+		  "Where to delete the module: Currently \"system\" or \"user\"";
+                type id-string;
+            }
+            leaf name {
+                description "Name, including extension, e.g. 'rfzone.yang'";
+                type id-string;
+            }
+        }
+
+        output {
+            leaf result {
+                type result-code;
+            }
+        }
+    }
+
     rpc list-yang-modules {
       description "RPC to list existing yang modules.";
       input {
