@@ -468,6 +468,12 @@ module exodm {
 	      description "Previous config set; \"\" if from beginning";
                 type id-string;
             }
+ 	    leaf device-id {
+ 	      description
+ 		"Optional device ID. If given, config specs associated with " +
+ 		"the given device are listed.";
+ 	      type id-string;
+ 	    }
         }
         output {
             list config-sets {
@@ -522,6 +528,12 @@ module exodm {
 	    "Previous device group id (GID); \"\" if from beginning";
 	  type uint32;
 	}
+ 	leaf device-id {
+ 	  description
+ 	    "Optional device ID. If given, device groups associated with " +
+ 	    "the given device are listed.";
+ 	  type id-string;
+ 	}
       }
       output {
 	list device-groups {
