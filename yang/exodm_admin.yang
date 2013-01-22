@@ -22,6 +22,67 @@ module exodm_admin {
     leaf-list alias { type string; }
   }
 
+  rpc create-user {
+    description "Create a new user";
+    input {
+	uses user-obj;
+	leaf account {
+                description "The account name.";
+                type exodm:id-string;
+            }
+    }
+    output {
+	leaf result { type exodm:result-code; }
+    }
+  }
+    
+  rpc delete-user {
+    description "Delete an existing user";
+    input {
+	leaf uname      { type exodm:id-string; mandatory true; }
+    }
+   output {
+      leaf result { type exodm:result-code; }
+    }
+  }
+      
+  rpc list-users {
+      description "List all users.";
+      input {
+	leaf n {
+	  description "Number of entries to fetch";
+	  type uint32;
+	}
+	leaf previous {
+	  description 'Previous user name; "" if from beginning';
+	  type exodm:id-string;
+	}
+      }
+      output {
+	leaf-list users {
+	  description "List of user names"; 
+	  type exodm:id-string;
+	}
+      }
+  }
+  rpc add-user-accounts {
+    description "Add account(s) to an existing user";
+    input {
+	leaf uname      { type exodm:id-string; mandatory true; }
+	list account {
+	    key "account-name";
+	    min-elements 1;
+	    max-elements 10;
+	    leaf "account-name" { type exodm:id-string; mandatory true; }
+	    leaf "role" { type exodm:id-string; mandatory true; }
+	}    
+    }
+    output {
+	leaf result { type exodm:result-code; }
+    }
+  }
+
+
   rpc create-account {
     description "Create a new account";
     input {
