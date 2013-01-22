@@ -32,6 +32,13 @@ module exosense {
       argument class;
     }
 
+    extension rpc-include-module-name {
+      description
+	"Use for upstream RPCs when you don't want the module name " +
+	"included in the method attribute. Argument is 'true' or 'false'";
+      argument bool;
+    }
+
     //
     // Status codes used by the system
     //
