@@ -1,0 +1,317 @@
+submodule exodm_package {
+    belongs-to "exodm" {
+	prefix exodm;
+    }
+
+    import exosense {
+      prefix exo;
+    }
+    import exodm_type {
+      prefix exodm_type;
+    }
+
+
+    description "API for Exosense Device Management Server, package part";
+
+    contact "ulf.wiger@feuerlabs.com";
+    organization "Feuerlabs, Inc.";
+
+
+    //
+    // Package management
+    //
+     rpc create-package {
+         description
+	   "Create a package in the database to be forwarded to devices.";
+         input {
+             leaf package-name {
+                 description "Name of package.";
+                 type string {
+                     length "1..256";
+                 }
+             }
+             list dependencies {
+                 key package-name;
+
+                 leaf package-name {
+                     type string {
+                         length "1..256";
+                     }
+                 }
+             }
+
+             anyxml image {
+                 description "The package image itself.";
+             }
+         }
+
+         output {
+             leaf result {
+                 type exodm_type:result-code;
+             }
+         }
+     }
+
+     notification create-package-notification {
+       uses exo:std-callback;
+     }
+
+     rpc add-package-members {
+         description
+ 	  "Add members to the list of devices to receive the package.";
+         input {
+             leaf-list package-name {
+                 description
+ 		  "Configuration data instances to associate with " +
+ 		  "the given device(s)";
+                 type string {
+                     length "1..256";
+                 }
+             }
+             leaf-list dev-id {
+                 description
+ 		  "Devices to push the given config data instances to (s)";
+                 type exodm_type:id-string;
+             }
+         }
+
+         output {
+             leaf result {
+                 type exodm_type:result-code;
+             }
+         }
+     }
+
+
+     // MAYBE WE SHOULD BREAK UP TRANSMIT AND OPERATION INTO TWO
+     // DIFFERENT CALLS?
+     rpc push-package {
+         description
+	   "Pushes the given package to all member devices. Notifications " +
+	   "will be sent back. If the package is already pushed to a device, " +
+	   "it will not be transmitted again. Instead the specified " +
+	   "operation will be executed for the package on the given device.";
+
+         input {
+             leaf package-name {
+                 type string {
+                     length "1..64";
+                 }
+             }
+
+             leaf operation {
+	       description
+		 "The operation to be carried out on the package once it " +
+		 "has been received on a device.";
+
+	       type enumeration {
+		 enum transmit {
+		   description
+		     "Do not do any operations apart from transmitting the " +
+		     "package. This is a no-op if the package is already " +
+		     "resident on the target device.";
+		   value 0;
+		 }
+
+		 enum install {
+		   description
+		     "Install the package using the device-local package " +
+		     "manager.";
+		   value 1;
+		 }
+
+		 enum upgrade {
+		   description
+		     "Upgrade the package using the device-local package " +
+		     "manager.";
+		   value 2;
+		 }
+
+		 enum uninstall {
+		   description
+		     "Uninstall the package using the device-local package " +
+		     "manager.";
+		   value 3;
+		 }
+
+		 enum remove {
+		   description
+		     "Remove the package from the device. If the package is " +
+		     "not present on the device, an error will be sent back " +
+		     "through the push-package-notification.";
+		   value 4;
+		 }
+
+		 enum remove-recursively {
+		   description
+		     "Remove the package from and recursively remove any " +
+		     "dependent packages that are no longer resolving any " +
+		     "device-local dependencies. If the package is not " +
+		     "present on the device, an error will be sent " +
+		     "back through the push-package-notification.";
+		   value 5;
+		 }
+	       }
+             }
+
+             leaf timeout {
+	       description
+		 "Timeout specification for this operation to be carried out " +
+		 "to a device. If a timeout occur, an error is sent back for "+
+		 "the timed out device using push-package-notification. " +
+		 "Please note that some devices may time out while others " +
+		 "succeed.";
+
+	       type string {
+		 length "1..64";
+	       }
+             }
+
+             leaf auto-push-dependencies {
+	       description
+		 "Specifies if any unresolved dependencies should " +
+		 "automatically be pushed to the target as well. If set to " +
+		 "false, each device with an unresolved dependency will " +
+		 "generate an error push-package-notification";
+
+	       type boolean;
+             }
+
+             leaf remove-after-operation {
+	       description
+		 "Specifies if the package should be removed from " +
+		 "device-local storage once the operation (such as install) " +
+		 "has been carried out on the device. If the auto-push-" +
+		 "dependencies flag is set, any packages automatically " +
+		 "transmitted to resolve dependencies will be removed as well.";
+
+	       type boolean;
+             }
+
+             leaf replace-queue {
+	       description
+		 "If set to true, any earlier operations for this package " +
+		 "queued to the given device will be removed and replaced " +
+		 "by the operation specified by this command. If set to " +
+		 "false, this command will be queued to be executed after " +
+		 "any other pending commands for this package to the given " +
+		 "device.";
+
+	       type boolean;
+             }
+         }
+         output {
+	   leaf result {
+	       type exodm_type:result-code;
+	   }
+         }
+     }
+
+     notification push-package-notification {
+       uses exo:std-callback;
+     }
+
+//     rpc list-packages {
+//         description "List all packages in the system";
+
+//         output {
+//             leaf result {
+//                 type exodm_type:result-code;
+//             }
+
+//             leaf-list package-list {
+//                 description "Name of package";
+
+//                 type string {
+//                     length "1..256";
+//                 }
+//             }
+//         }
+//     }
+
+//     rpc get-package-status {
+//         description "Retrieve status for a specific package";
+
+//         input {
+//             leaf package-name {
+//                 type string {
+//                     length "1..256";
+//                 }
+//             }
+//         }
+
+//         output {
+//             leaf result {
+//                 type exodm_type:result-code;
+//             }
+
+//             list member-list {
+//                 description
+//                     "List of all members receiving the package, and their status.";
+
+//                 key dev-id;
+
+//                 leaf dev-id {
+//                     description "The device id of the member.";
+//                     type string {
+//                         length "1..64";
+//                     }
+//                 }
+
+
+//                 // The last operation carried out for the package on this device
+//                 leaf operation {
+//                     description
+//                         "Last operation carried out for the package on this device";
+
+//                     type enumeration {
+//                         enum pending {
+//                             description
+//                                 "The package has been uploaded to the server but not pushed.";
+//                         }
+
+//                         enum transmit {
+//                             description
+//                                 "The package is to be transmitted to to the device, but no" +
+//                                 "operations are to be carried out once it arrives.";
+
+//                         }
+
+//                         enum install {
+//                             description
+//                                 "The package is to be transmitted and installed on the device.";
+//                         }
+
+//                         enum upgrade {
+//                             description
+//                                 "The package is to be transmitted and upgraded on the device.";
+//                         }
+
+//                         enum uninstalled {
+//                             description
+//                                 "The package is to be uninstalled from the device.";
+//                         }
+
+//                         enum remove {
+//                             description
+//                                 "The package is to be removed.";
+//                         }
+//                     }
+//                 }
+
+//                 // The status of the last operation carried out
+//                 leaf operation-status {
+//                     description "Status of the operation.";
+//                     type enumeration {
+//                         enum completed;
+//                         enum queued;
+//                         enum timeout;
+//                         enum dependency-failure;
+//                         enum other-error;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+}
+

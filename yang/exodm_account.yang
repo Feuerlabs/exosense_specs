@@ -1,0 +1,87 @@
+submodule exodm_account {
+  belongs-to "exodm" {
+      prefix "exodm";
+  }
+
+  import exodm_type {
+    prefix exodm_type;
+  }
+
+
+  description "API for Exosense Device Management Server, account part";
+
+  contact "ulf.wiger@feuerlabs.com";
+  organization "Feuerlabs, Inc.";
+
+  rpc create-account {
+    description "Create a new account";
+    input {
+      leaf name { type exodm_type:id-string; mandatory true; }
+      list admin-user {
+	key "uname";
+	min-elements 1;
+	max-elements 1;
+	uses exodm_type:user-obj;
+      }
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+      leaf account-id { type string; }
+    }
+  }
+
+  rpc update-account {
+      description
+	  "Update account information.";
+        input {
+            leaf name {
+                description "The account name.";
+                type exodm_type:id-string;
+            }
+        }
+
+        output {
+            leaf result {
+                type exodm_type:result-code;
+            }
+        }
+  }
+
+  rpc delete-account {
+        description
+	  "Delete an account,
+	   data must be deleted before account is removed.";
+        input {
+            leaf name {
+                description "The account name.";
+                type exodm_type:id-string;
+            }
+        }
+
+        output {
+            leaf result {
+                type exodm_type:result-code;
+            }
+        }	
+  }
+
+  rpc list-accounts {
+      description "List all account names.";
+      input {
+	leaf n {
+	  description "Number of entries to fetch";
+	  type uint32;
+	}
+	leaf previous {
+	  description 'Previous account name; "" if from beginning';
+	  type exodm_type:id-string;
+	}
+      }
+      output {
+	leaf-list accounts {
+	  description "List of account ID";
+	  type exodm_type:id-string;
+	}
+      }
+  }
+}

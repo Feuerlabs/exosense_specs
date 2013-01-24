@@ -1,0 +1,65 @@
+module exodm_type {
+    namespace "http://feuerlabs.com/exodm_type";
+    prefix exodm_type;
+
+    description "API for Exosense Device Management Server, type definitions";
+
+    contact "ulf.wiger@feuerlabs.com";
+    organization "Feuerlabs, Inc.";
+
+
+    // Result codes used by all requests/replies.
+    // Can be augmented by local code in special cases.
+    typedef result-code {
+        type enumeration {
+            enum ok {
+	      description "Operation has completed successfully.";
+	      value 0;
+            }
+            enum permission-denied {
+	      description "Insufficient privileges to perform operation.";
+	      value 1;
+            }
+            enum validation-failed {
+	      description "An error occurred validating the YANG module.";
+	      value 2;
+            }
+            enum object-exists {
+	      description "An object with the same identifier already exists.";
+	      value 3;
+            }
+            enum object-not-found {
+	      description "No object with the given identifier has been found.";
+	      value 4;
+            }
+            enum device-not-found {
+	      description "No device with the given identifier has been found.";
+	      value 5;
+            }
+	    enum object-not-empty {
+	      description "Members must be removed before deleting.";
+	      value 6;
+	    }
+        }
+    }
+
+    typedef id-string {
+      description "Common type for string identifiers in exodm";
+      type string {
+	length "1..64";
+      }
+    }
+
+    grouping user-obj {
+	leaf uname      { type id-string; mandatory true; }
+	leaf email      { type string; mandatory true; }
+	leaf password   { type string; mandatory true; }
+	leaf fullname   { type string; }
+	leaf phone      { type string; }
+	leaf skype      { type string; }
+	leaf-list alias { type string; }
+    }
+
+
+}
+
