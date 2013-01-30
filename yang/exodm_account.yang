@@ -1,6 +1,6 @@
 submodule exodm_account {
   belongs-to "exodm" {
-      prefix "exodm";
+    prefix "exodm";
   }
 
   import exodm_type {
@@ -31,57 +31,111 @@ submodule exodm_account {
   }
 
   rpc update-account {
-      description
-	  "Update account information.";
-        input {
-            leaf name {
-                description "The account name.";
-                type exodm_type:id-string;
-            }
-        }
+    description
+      "Update account information.";
+    input {
+      leaf name {
+        description "The account name.";
+        type exodm_type:id-string;
+      }
+    }
 
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
   }
 
   rpc delete-account {
-        description
-	  "Delete an account,
+    description
+      "Delete an account,
 	   data must be deleted before account is removed.";
-        input {
-            leaf name {
-                description "The account name.";
-                type exodm_type:id-string;
-            }
-        }
-
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }	
+    input {
+      leaf name {
+        description "The account name.";
+        type exodm_type:id-string;
+      }
+    }
+      
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }	
+  }
+  
+  rpc list-accounts {
+    description "List all account names.";
+    input {
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+      }
+      leaf previous {
+        description 'Previous account name; "" if from beginning';
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf-list accounts {
+        description "List of account ID";
+        type exodm_type:id-string;
+      }
+    }
+  }
+  rpc add-users-to-account {
+    description "Add account access to existing user(s)." +
+      "Predefined roles are: admin, configurer, executer, viewer";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+      leaf "role" { type exodm_type:id-string; mandatory true; }
+      leaf-list unames { 
+        description
+          "Users to add to account.";
+        min-elements 1;
+        max-elements 10;
+        type exodm_type:id-string; mandatory true; 
+      }
+    }    
+    output {
+      leaf result { type exodm_type:result-code; }
+    }
   }
 
-  rpc list-accounts {
-      description "List all account names.";
-      input {
-	leaf n {
-	  description "Number of entries to fetch";
-	  type uint32;
-	}
-	leaf previous {
-	  description 'Previous account name; "" if from beginning';
-	  type exodm_type:id-string;
-	}
+  rpc remove-users-from-account {
+    description "Remove account access from existing user(s).";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+      leaf-list unames { 
+        description
+          "Users to add to account.";
+        min-elements 1;
+        max-elements 10;
+        type exodm_type:id-string; mandatory true; 
       }
-      output {
-	leaf-list accounts {
-	  description "List of account ID";
-	  type exodm_type:id-string;
-	}
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+    }
+  }
+  rpc list-account-users {
+    description "List all users with access to account.";
+    input {
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
       }
+      leaf previous {
+        description 'Previous user name; "" if from beginning';
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf-list users {
+        description "List of user names"; 
+        type exodm_type:id-string;
+      }
+    }
   }
 }

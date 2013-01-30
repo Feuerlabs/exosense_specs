@@ -1,6 +1,6 @@
 submodule exodm_user {
   belongs-to "exodm" {
-      prefix "exodm";
+    prefix "exodm";
   }
 
   import exodm_type {
@@ -15,60 +15,45 @@ submodule exodm_user {
   rpc create-user {
     description "Create a new user";
     input {
-	uses exodm_type:user-obj;
-	leaf account {
-                description "The account name.";
-                type exodm_type:id-string;
-            }
+      uses exodm_type:user-obj;
+      leaf account {
+        description "The account name.";
+        type exodm_type:id-string;
+      }
     }
     output {
-	leaf result { type exodm_type:result-code; }
+      leaf result { type exodm_type:result-code; }
     }
   }
     
   rpc delete-user {
     description "Delete an existing user";
     input {
-	leaf uname      { type exodm_type:id-string; mandatory true; }
+      leaf uname      { type exodm_type:id-string; mandatory true; }
     }
-   output {
+    output {
       leaf result { type exodm_type:result-code; }
     }
   }
       
   rpc list-users {
-      description "List all users.";
-      input {
-	leaf n {
-	  description "Number of entries to fetch";
-	  type uint32;
-	}
-	leaf previous {
-	  description 'Previous user name; "" if from beginning';
-	  type exodm_type:id-string;
-	}
-      }
-      output {
-	leaf-list users {
-	  description "List of user names"; 
-	  type exodm_type:id-string;
-	}
-      }
-  }
-  rpc add-user-accounts {
-    description "Add account(s) to an existing user";
+    description "List all users.";
     input {
-	leaf uname      { type exodm_type:id-string; mandatory true; }
-	list account {
-	    key "account-name";
-	    min-elements 1;
-	    max-elements 10;
-	    leaf "account-name" { type exodm_type:id-string; mandatory true; }
-	    leaf "role" { type exodm_type:id-string; mandatory true; }
-	}    
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+      }
+      leaf previous {
+        description 'Previous user name; "" if from beginning';
+        type exodm_type:id-string;
+      }
     }
     output {
-	leaf result { type exodm_type:result-code; }
+      leaf-list users {
+        description "List of user names"; 
+        type exodm_type:id-string;
+      }
     }
   }
+  
 }

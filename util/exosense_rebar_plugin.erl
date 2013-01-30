@@ -23,6 +23,7 @@ post_compile(Config, _AppFile) ->
 -spec compile_yang(file:filename(), file:filename(),
                    rebar_config:config()) -> ok.
 compile_yang(Source, Target, Config) ->
+    %% io:fwrite("~p:compile(~s)~n", [?MODULE, Source]),
     ok = filelib:ensure_dir(Target),
     TargetDir = filename:dirname(Target),
     SrcBase = filename:basename(Source),
@@ -30,7 +31,8 @@ compile_yang(Source, Target, Config) ->
 	{ok, Y} ->
 	    file:copy(Source, filename:join(TargetDir, SrcBase)),
 	    file:write_file(Target, term_to_binary(Y));
-	_ ->
+	_Other ->
+	    io:fwrite("~p:parse of ~s failed, reason ~p~n", [?MODULE, Source, _Other]),
 	    throw({error, failed})
     end.
 

@@ -1,224 +1,224 @@
 submodule exodm_config_set {
-    belongs-to "exodm" {
-	prefix exodm;
-    }
+  belongs-to "exodm" {
+    prefix exodm;
+  }
 
-    import ietf-inet-types {
-      prefix inet;
-    }
-    import exosense {
-      prefix exo;
-    }
-    import exodm_type {
-	prefix exodm_type;
-    }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import exosense {
+    prefix exo;
+  }
+  import exodm_type {
+    prefix exodm_type;
+  }
     
     
-    description "API for Exosense Device Management Server, config set part";
+  description "API for Exosense Device Management Server, config set part";
 
-    contact "ulf.wiger@feuerlabs.com";
-    organization "Feuerlabs, Inc.";
+  contact "ulf.wiger@feuerlabs.com";
+  organization "Feuerlabs, Inc.";
 
 
-    rpc create-config-set {
-        description "RPC to create device config data set";
-        input {
-            leaf name {
-                description "Name of the config data set";
-                type exodm_type:id-string;
-            }
-            leaf yang {
-                description "Name of the corresponding yang file - must exist.";
-                type exodm_type:id-string;
-            }
-	    leaf notification-url {
-	         description "Notification URL";
-		 type inet:uri;
-            }
-            anyxml values {
-                description "Configuration values (validated against the yang spec)";
-            }
-        }
-
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+  rpc create-config-set {
+    description "RPC to create device config data set";
+    input {
+      leaf name {
+        description "Name of the config data set";
+        type exodm_type:id-string;
+      }
+      leaf yang {
+        description "Name of the corresponding yang file - must exist.";
+        type exodm_type:id-string;
+      }
+      leaf notification-url {
+        description "Notification URL";
+        type inet:uri;
+      }
+      anyxml values {
+        description "Configuration values (validated against the yang spec)";
+      }
     }
 
-    rpc update-config-set {
-        description "RPC to update existing config data set";
-        input {
-            leaf name {
-                description "Name of the config data set";
-                type exodm_type:id-string;
-            }
-	    leaf notification-url {
-	        description "Notification URL";
-		type inet:uri;
-	    }
-            anyxml values {
-                description
-		  "Configuration values (validated against the yang spec)";
-            }
-        }
-
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
     }
+  }
 
-    rpc delete-config-set {
+  rpc update-config-set {
+    description "RPC to update existing config data set";
+    input {
+      leaf name {
+        description "Name of the config data set";
+        type exodm_type:id-string;
+      }
+      leaf notification-url {
+        description "Notification URL";
+        type inet:uri;
+      }
+      anyxml values {
         description
-	  "RPC to delete a config data set. " +
-	  "Any member devices must first be removed.";
-        input {
-            leaf name {
-                description "Name of the config data set";
-                type exodm_type:id-string;
-            }
-        }
-
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+          "Configuration values (validated against the yang spec)";
+      }
     }
 
-    rpc list-config-sets {
-        description "List config sets, N entries at a time";
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
 
-        input {
-            leaf n {
-                description "Number of entries to fetch";
-                type uint32;
-            }
-            leaf previous {
-	      description "Previous config set; \"\" if from beginning";
-                type exodm_type:id-string;
-            }
- 	    leaf device-id {
- 	      description
- 		"Optional device ID. If given, config specs associated with " +
- 		"the given device are listed.";
- 	      type exodm_type:id-string;
- 	    }
-        }
-        output {
-            list config-sets {
-                leaf name {
-		  type exodm_type:id-string;
-                }
-                leaf yang {
-                    type string;
-                }
-                leaf notification-url {
-                    type inet:uri;
-                }
-            }
-        }
+  rpc delete-config-set {
+    description
+      "RPC to delete a config data set. " +
+      "Any member devices must first be removed.";
+    input {
+      leaf name {
+        description "Name of the config data set";
+        type exodm_type:id-string;
+      }
     }
 
-    rpc list-config-set-members {
-        description "List members of a config set, N entries at a time";
-
-        input {
-	  leaf name {
-	    description "Name of the config set";
-	    type exodm_type:id-string;
-	  }
-	  leaf n {
-	    description "Number of entries to fetch";
-	    type uint32;
-	  }
-	  leaf previous {
-	    description "Previous member; \"\" if from beginning";
-	    type exodm_type:id-string;
-	  }
-        }
-        output {
-	  leaf-list config-set-members {
-	    description "";
-	    type exodm_type:id-string;
-	  }
-	}
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
     }
+  }
 
-    rpc add-config-set-members {
+  rpc list-config-sets {
+    description "List config sets, N entries at a time";
+
+    input {
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+      }
+      leaf previous {
+        description "Previous config set; \"\" if from beginning";
+        type exodm_type:id-string;
+      }
+      leaf device-id {
         description
-	  "Create a new device. augment this call if you want to add " +
-	  "device-data";
-        input {
-            leaf-list name {
-                description
-		  "Configuration data instances to associate with " +
-		  "the given device(s)";
-                type exodm_type:id-string;
-            }
-            leaf-list dev-id {
-                description
-		  "Devices to push the given config data instances to (s)";
-                type exodm_type:id-string;
-            }
-        }
-
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+          "Optional device ID. If given, config specs associated with " +
+          "the given device are listed.";
+        type exodm_type:id-string;
+      }
     }
+    output {
+      list config-sets {
+        leaf name {
+          type exodm_type:id-string;
+        }
+        leaf yang {
+          type string;
+        }
+        leaf notification-url {
+          type inet:uri;
+        }
+      }
+    }
+  }
 
-    rpc remove-config-set-members {
+  rpc list-config-set-members {
+    description "List members of a config set, N entries at a time";
+
+    input {
+      leaf name {
+        description "Name of the config set";
+        type exodm_type:id-string;
+      }
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+      }
+      leaf previous {
+        description "Previous member; \"\" if from beginning";
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf-list config-set-members {
+        description "";
+        type exodm_type:id-string;
+      }
+    }
+  }
+
+  rpc add-config-set-members {
+    description
+      "Create a new device. augment this call if you want to add " +
+      "device-data";
+    input {
+      leaf-list name {
         description
-	  "Remove a config set member.";
-        input {
-            leaf-list name {
-                description
-		  "Configuration data instances from which to remove " +
-		  "the given devices";
-		min-elements 1;
-                type exodm_type:id-string;
-            }
-            leaf-list dev-id {
-                description
-		  "Devices to remove from the given config data instances";
-		min-elements 1;
-                type exodm_type:id-string;
-            }
-        }
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+          "Configuration data instances to associate with " +
+          "the given device(s)";
+        type exodm_type:id-string;
+      }
+      leaf-list dev-id {
+        description
+          "Devices to push the given config data instances to (s)";
+        type exodm_type:id-string;
+      }
     }
 
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
 
-    rpc push-config-set {
-        description "Push the given configuration data to all member devices";
-	exo:matching-notification "push-config-set-callback";
-        input {
-            leaf name {
-                description "Name of configuration data set to push.";
-                type exodm_type:id-string;
-            }
-        }
+  rpc remove-config-set-members {
+    description
+      "Remove a config set member.";
+    input {
+      leaf-list name {
+        description
+          "Configuration data instances from which to remove " +
+          "the given devices";
+        min-elements 1;
+        type exodm_type:id-string;
+      }
+      leaf-list dev-id {
+        description
+          "Devices to remove from the given config data instances";
+        min-elements 1;
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
 
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+
+  rpc push-config-set {
+    description "Push the given configuration data to all member devices";
+    exo:matching-notification "push-config-set-callback";
+    input {
+      leaf name {
+        description "Name of configuration data set to push.";
+        type exodm_type:id-string;
+      }
     }
 
-    notification push-config-set-callback {
-      uses exo:std-callback;
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
     }
+  }
+
+  notification push-config-set-callback {
+    uses exo:std-callback;
+  }
 
 
 }
