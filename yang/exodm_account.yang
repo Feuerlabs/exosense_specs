@@ -119,7 +119,29 @@ submodule exodm_account {
       leaf result { type exodm_type:result-code; }
     }
   }
+
   rpc list-account-users {
+    description "List all users with access to account.";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+      }
+      leaf previous {
+        description 'Previous user name; "" if from beginning';
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf-list users {
+        description "List of user names"; 
+        type exodm_type:id-string;
+      }
+    }
+  }
+
+  rpc list-own-account-users {
     description "List all users with access to account.";
     input {
       leaf n {
