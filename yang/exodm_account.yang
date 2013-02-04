@@ -95,7 +95,7 @@ submodule exodm_account {
           "Users to add to account.";
         min-elements 1;
         max-elements 10;
-        type exodm_type:id-string; mandatory true; 
+        type exodm_type:id-string; 
       }
     }    
     output {
@@ -107,12 +107,13 @@ submodule exodm_account {
     description "Remove account access from existing user(s).";
     input {
       leaf "account" { type exodm_type:id-string; mandatory true; }
+      leaf "role" { type exodm_type:id-string; mandatory true; }
       leaf-list unames { 
         description
           "Users to add to account.";
         min-elements 1;
         max-elements 10;
-        type exodm_type:id-string; mandatory true; 
+        type exodm_type:id-string; 
       }
     }
     output {
