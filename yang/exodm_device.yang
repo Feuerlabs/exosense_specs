@@ -1,229 +1,249 @@
 submodule exodm_device {
-    belongs-to "exodm" {
-	prefix exodm;
+  belongs-to "exodm" {
+    prefix exodm;
+  }
+
+  import exodm_type {
+    prefix exodm_type;
+  }
+
+  description "API for Exosense Device Management Server, device part";
+
+  contact "ulf.wiger@feuerlabs.com";
+  organization "Feuerlabs, Inc.";
+
+
+  grouping device-obj {
+    description "Device object leafs";
+
+    leaf dev-id {
+      description "Account-wide unique device-id";
+      type exodm_type:id-string;
+      mandatory true;
     }
-
-    import exodm_type {
-	prefix exodm_type;
+    leaf device-type {
+      description "Type of device";
+      type exodm_type:id-string;
+      mandatory true;
     }
-
-    description "API for Exosense Device Management Server, device part";
-
-    contact "ulf.wiger@feuerlabs.com";
-    organization "Feuerlabs, Inc.";
-
-
-    grouping device-obj {
-      description "Device object leafs";
-
-      leaf dev-id {
-	description "Account-wide unique device-id";
-	type exodm_type:id-string;
-	mandatory true;
-      }
-      leaf device-type {
-	description "Type of device";
-	type exodm_type:id-string;
-	mandatory true;
-      }
-      leaf description {
-	description "User-provided description of device";
-	type string;
-      }
-      leaf server-key {
-	description "Server key";
-	type uint64;
-      }
-      leaf device-key {
-	description "Device key";
-	type uint64;
-      }
-      leaf session-timeout {
-	description
-	  "Time of inactivity before a connected device considered off-line " +
-	  "(seconds; 0 seconds means no timeout)";
-	type uint32 {
-	  range "0..43200";  // 1 sec - 12 hours
-	}
-	default 0;
-      }
-      leaf msisdn {
-	type string;
-      }
-      leaf imsi {
-	type string;
-      }
-      leaf imei {
-	type string;
-      }
-      leaf latitude {
-	description "Latitude of device location";
-	type decimal64 {
-	  fraction-digits 6;
-	  range "-90..90";
-	}
-      }
-      leaf longitude {
-	description "Longitude of device location";
-	type decimal64 {
-	  fraction-digits 6;
-	  range "-180..180";
-	}
-      }
+    leaf description {
+      description "User-provided description of device";
+      type string;
     }
-
-    // INTERNAL INFO!
-    // <uid>/devices/<did>/name    = string()
-    // <uid>/devices/<did>/msisdn  = msisdn()
-    // <uid>/devices/<did>/imsi    = imsi()
-    // <uid>/devices/<did>/imei    = imei()
-    // <uid>/devices/<did>/__ck    = uint64()
-    // <uid>/devices/<did>/__sk    = uint64()
-    // <uid>/devices/<did>/groups[1]/__gid = uint32()
-    //
-    list devices {
-	description "Device information";
-	key "did";
-
-	leaf did {
-	    description "Device identifer";
-	    // internally it must be escaped!
-	    type exodm_type:id-string;
-	}
-
-	leaf name {
-	    description "Optional device name";
-	    type string;
-	}
-
-	list groups {
-	    description "Device group member ship";
-	    key "id";
-
-	    leaf id {
-                description "access index";
-                type uint32;
-	    }
-
-	    leaf __gid {
-		description "group id";
-		type uint32;
-	    }
-	}
-
-	leaf msisdn {
-	    description "phone number used to access device if any";
-	    type string;
-	}
-
-	leaf imsi {
-	    description "simcard identity, used to sign some data";
-	    type string;
-	}
-
-	leaf imei {
-	    description "modem identity number";
-	    type string;
-	}
-
-	leaf __ck {
-	    description "device key";
-	    type uint64;
-	}
-
-	leaf __sk {
-	    description "server key";
-	    type uint64;
-	}
-
+    leaf server-key {
+      description "Server key";
+      type uint64;
     }
-
-   rpc provision-device {
-        description
-	  "Create a new device. " +
-	  "augment this call if you want to add device-data";
-        input {
-	  uses device-obj;
-        }
-
-        output {
-            leaf result {
-                type exodm_type:result-code;
-            }
-        }
+    leaf device-key {
+      description "Device key";
+      type uint64;
     }
-
-    rpc update-device {
-      description "RPC to update an existing device object.";
-      input {
-	uses device-obj {
-	  refine device-type {
-	    mandatory false;
-	  }
-	}
-      }
-      output {
-	leaf result {
-	  type exodm_type:result-code;
-	}
-      }
-    }
-
-    rpc lookup-device {
+    leaf session-timeout {
       description
-	"RPC to read a single device object." +
-	"Returns a list of zero or one device object.";
-      input {
-	leaf dev-id {
-	  type exodm_type:id-string;
-	}
+        "Time of inactivity before a connected device considered off-line " +
+        "(seconds; 0 seconds means no timeout)";
+      type uint32 {
+        range "0..43200";  // 1 sec - 12 hours
       }
-      output {
-	leaf result {
-	  type exodm_type:result-code;
-	}
-	list devices {
-	  uses device-obj;
-	}
+      default 0;
+    }
+    leaf msisdn {
+      type string;
+    }
+    leaf imsi {
+      type string;
+    }
+    leaf imei {
+      type string;
+    }
+    leaf latitude {
+      description "Latitude of device location";
+      type decimal64 {
+        fraction-digits 6;
+        range "-90..90";
+      }
+    }
+    leaf longitude {
+      description "Longitude of device location";
+      type decimal64 {
+        fraction-digits 6;
+        range "-180..180";
+      }
+    }
+  }
+
+  // INTERNAL INFO!
+  // <uid>/devices/<did>/name    = string()
+  // <uid>/devices/<did>/msisdn  = msisdn()
+  // <uid>/devices/<did>/imsi    = imsi()
+  // <uid>/devices/<did>/imei    = imei()
+  // <uid>/devices/<did>/__ck    = uint64()
+  // <uid>/devices/<did>/__sk    = uint64()
+  // <uid>/devices/<did>/groups[1]/__gid = uint32()
+  //
+  list devices {
+    description "Device information";
+    key "did";
+
+    leaf did {
+      description "Device identifer";
+      // internally it must be escaped!
+      type exodm_type:id-string;
+    }
+
+    leaf name {
+      description "Optional device name";
+      type string;
+    }
+
+    list groups {
+      description "Device group member ship";
+      key "id";
+
+      leaf id {
+        description "access index";
+        type uint32;
+      }
+
+      leaf __gid {
+        description "group id";
+        type uint32;
       }
     }
 
-    rpc list-devices {
-        description "List provisioned devices, N entries at a time";
+    leaf msisdn {
+      description "phone number used to access device if any";
+      type string;
+    }
 
-        input {
-            leaf n {
-                description "Number of entries to fetch";
-                type uint32;
-            }
-            leaf previous {
-	      description "Previous device ID; \"\" if from beginning";
-                type exodm_type:id-string;
-            }
+    leaf imsi {
+      description "simcard identity, used to sign some data";
+      type string;
+    }
+
+    leaf imei {
+      description "modem identity number";
+      type string;
+    }
+
+    leaf __ck {
+      description "device key";
+      type uint64;
+    }
+
+    leaf __sk {
+      description "server key";
+      type uint64;
+    }
+
+  }
+
+  rpc provision-device {
+    description
+      "Create a new device. " +
+      "augment this call if you want to add device-data";
+    input {
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+      uses device-obj;
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc update-device {
+    description "RPC to update an existing device object.";
+    input {
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+      uses device-obj {
+        refine device-type {
+          mandatory false;
         }
-        output {
-            list devices {
-	      uses device-obj;
-            }
-        }
-    }
-
-
-    rpc deprovision-devices {
-      description "RPC to deprovision a set of existing devices.";
-
-      input {
-	leaf-list dev-id {
-	  description "Account-wide unique device-id";
-	  type exodm_type:id-string;
-	}
-      }
-
-      output {
-	leaf result {
-	  type exodm_type:result-code;
-	}
       }
     }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc lookup-device {
+    description
+      "RPC to read a single device object." +
+      "Returns a list of zero or one device object.";
+    input {
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+     leaf dev-id {
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      list devices {
+        uses device-obj;
+      }
+    }
+  }
+
+  rpc list-devices {
+    description "List provisioned devices, N entries at a time";
+
+    input {
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+      }
+      leaf previous {
+        description "Previous device ID; \"\" if from beginning";
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      list devices {
+        uses device-obj;
+      }
+    }
+  }
+
+
+  rpc deprovision-devices {
+    description "RPC to deprovision a set of existing devices.";
+
+    input {
+       leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+     leaf-list dev-id {
+        description "Account-wide unique device-id";
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
 }
 

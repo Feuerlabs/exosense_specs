@@ -23,6 +23,10 @@ submodule exodm_config_set {
   rpc create-config-set {
     description "RPC to create device config data set";
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf name {
         description "Name of the config data set";
         type exodm_type:id-string;
@@ -50,6 +54,10 @@ submodule exodm_config_set {
   rpc update-config-set {
     description "RPC to update existing config data set";
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf name {
         description "Name of the config data set";
         type exodm_type:id-string;
@@ -76,6 +84,10 @@ submodule exodm_config_set {
       "RPC to delete a config data set. " +
       "Any member devices must first be removed.";
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf name {
         description "Name of the config data set";
         type exodm_type:id-string;
@@ -93,6 +105,10 @@ submodule exodm_config_set {
     description "List config sets, N entries at a time";
 
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
@@ -127,6 +143,10 @@ submodule exodm_config_set {
     description "List members of a config set, N entries at a time";
 
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf name {
         description "Name of the config set";
         type exodm_type:id-string;
@@ -153,6 +173,10 @@ submodule exodm_config_set {
       "Create a new device. augment this call if you want to add " +
       "device-data";
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf-list name {
         description
           "Configuration data instances to associate with " +
@@ -177,6 +201,10 @@ submodule exodm_config_set {
     description
       "Remove a config set member.";
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf-list name {
         description
           "Configuration data instances from which to remove " +
@@ -203,6 +231,10 @@ submodule exodm_config_set {
     description "Push the given configuration data to all member devices";
     exo:matching-notification "push-config-set-callback";
     input {
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
       leaf name {
         description "Name of configuration data set to push.";
         type exodm_type:id-string;

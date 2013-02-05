@@ -16,10 +16,6 @@ submodule exodm_user {
     description "Create a new user";
     input {
       uses exodm_type:user-obj;
-      leaf account {
-        description "The account name.";
-        type exodm_type:id-string;
-      }
     }
     output {
       leaf result { type exodm_type:result-code; }
@@ -39,6 +35,11 @@ submodule exodm_user {
   rpc list-users {
     description "List all users.";
     input {
+      leaf account {
+        description "If account is given only users connected to that " +
+          "account are returned.";
+        type exodm_type:id-string;
+      }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
