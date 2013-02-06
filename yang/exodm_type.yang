@@ -40,6 +40,9 @@ module exodm_type {
         description "Members must be removed before deleting.";
         value 6;
       }
+      enum account-not-specified {
+        description "An account must be given.";
+        value 7;
     }
   }
 

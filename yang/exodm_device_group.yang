@@ -95,6 +95,10 @@ submodule exodm_device_group {
     description "List device groups, N entries at a time";
 
     input {
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
