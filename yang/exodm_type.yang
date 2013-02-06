@@ -43,6 +43,7 @@ module exodm_type {
       enum account-not-specified {
         description "An account must be given.";
         value 7;
+      }
     }
   }
 
