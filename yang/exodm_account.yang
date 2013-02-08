@@ -84,7 +84,7 @@ submodule exodm_account {
       }
     }
   }
-  rpc add-users-to-account {
+  rpc add-account-users {
     description "Add account access to existing user(s)." +
       "Predefined roles are: admin, configurer, executer, viewer";
     input {
@@ -103,7 +103,7 @@ submodule exodm_account {
     }
   }
 
-  rpc remove-users-from-account {
+  rpc remove-account-users {
     description "Remove account access from existing user(s).";
     input {
       leaf "account" { type exodm_type:id-string; mandatory true; }
