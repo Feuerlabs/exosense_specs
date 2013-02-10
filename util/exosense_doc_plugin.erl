@@ -32,16 +32,22 @@ mk_markdown(Source, Target, Config) ->
 mk_markdown_(Source, Target, Config) ->
     io:fwrite("~p:mk_markdown(~p, ...)~n", [?MODULE,Source]),
     ok = filelib:ensure_dir(Target),
-    case yang_json:json_rpc(Source, yang_opts(Config)) of
-	{error, _} = Err ->
-	    io:fwrite("yang:json_rpc(~p) -> ~p~n", [Source,Err]),
-	    throw(Err);
-	[{module, Module, []}] ->
-	    file:write_file(Target, <<"## Module: ",
-				      (list_to_binary(Module))/binary, "\n\n",
-				      "No RPCs defined.\n">>);
-	JSON when is_list(JSON) ->
-	    yang_json:markdown(Target, JSON)
+    case yang:parse_file(Source) of
+	{ok, [{submodule,_,_,_}]} ->
+	    ok;
+	{ok, [{module, _, _, _}]} ->
+	    case yang_json:json_rpc(Source, yang_opts(Config)) of
+		{error, _} = Err ->
+		    io:fwrite("yang:json_rpc(~p) -> ~p~n", [Source,Err]),
+		    throw(Err);
+		[{module, Module, []}] ->
+		    file:write_file(
+		      Target, <<"## Module: ",
+				(list_to_binary(Module))/binary, "\n\n",
+				"No RPCs defined.\n">>);
+		JSON when is_list(JSON) ->
+		    yang_json:markdown(Target, JSON)
+	    end
     end.
 
 -spec clean(rebar_config:config(), _AppFile::file:filename()) -> 'ok'.
