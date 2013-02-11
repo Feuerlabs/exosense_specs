@@ -16,24 +16,27 @@ submodule exodm_yang_module {
   rpc create-yang-module {
     description "RPC to store a YANG module either in user or system space";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
-      leaf repository {
+     leaf repository {
         description
           "Where to store the module: Currently \"system\" or \"user\"";
         type exodm_type:id-string;
-      }
+        mandatory true;
+     }
       leaf name {
         description "Name, including extension, e.g. 'rfzone.yang'";
         type exodm_type:id-string;
+        mandatory true;
       }
       leaf yang-module {
         description "The actual source of the YANG module specification";
         type string {
           length "1..100000";
         }
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
     }
     output {
@@ -47,20 +50,22 @@ submodule exodm_yang_module {
     description "RPC to delete a YANG module";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf repository {
         description
           "Where to delete the module: Currently \"system\" or \"user\"";
         type exodm_type:id-string;
+        mandatory true;
       }
       leaf name {
         description "Name, including extension, e.g. 'rfzone.yang'";
         type exodm_type:id-string;
+        mandatory true;
       }
-    }
+        leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+  }
 
     output {
       leaf result {
@@ -72,10 +77,6 @@ submodule exodm_yang_module {
   rpc list-yang-modules {
     description "RPC to list existing yang modules.";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf repository {
         description "\"system\" or \"user\"; default: \"user\"";
         type exodm_type:id-string;
@@ -84,9 +85,15 @@ submodule exodm_yang_module {
       leaf n {
         description "Number of entries to fetch.";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description "Previous yang filename.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
@@ -97,5 +104,109 @@ submodule exodm_yang_module {
     }
   }
 
+  rpc add-execution-permission {
+    input {
+      leaf repository {
+        description
+          "Where the module is: Currently \"system\" or \"user\"";
+        type exodm_type:id-string;
+        default "user";
+      }
+      leaf name {
+        description "Name of module, including extension, e.g. 'rfzone.yang'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpcname {
+        description "Name of rpc e.g. 'config-device'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf role {
+        description "Name of role to add permission to.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc remove-execution-permission {
+    input {
+      leaf repository {
+        description
+          "Where the module is: Currently \"system\" or \"user\"";
+        type exodm_type:id-string;
+        default "user";
+      }
+      leaf name {
+        description "Name of module, including extension, e.g. 'rfzone.yang'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpcname {
+        description "Name of rpc e.g. 'config-device'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf role {
+        description "Name of role to remove permission from.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+
+  rpc list-execution-permission {
+    input {
+      leaf repository {
+        description
+          "Where the module is: Currently \"system\" or \"user\"";
+        type exodm_type:id-string;
+        default "user";
+      }
+      leaf modulename {
+        description "Name of module, including extension, e.g. 'rfzone.yang'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpcname {
+        description "Name of rpc e.g. 'config-device'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf-list roles {
+        description "List of role names"; 
+        type exodm_type:id-string;
+      }
+    }
+  }
 }
 

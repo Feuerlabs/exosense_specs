@@ -1,144 +1,338 @@
 submodule exodm_device_type {
-  belongs-to "exodm" {
-    prefix exodm;
-  }
-
-  import exodm_type {
-    prefix exodm_type;
-  }
-
-
-  description "API for Exosense Device Management Server, device type part";
-
-
-  contact "ulf.wiger@feuerlabs.com";
-  organization "Feuerlabs, Inc.";
-
-    
-  grouping device-type-obj {
-    description "Device type object leafs";
-    leaf name {
-      description "Account-wide unique device type name";
-      mandatory true;
-      type exodm_type:id-string;
+    belongs-to "exodm" {
+	prefix exodm;
     }
-    leaf protocol {
-      description "Protocol between device and Exosense server";
-      mandatory true;
-      type exodm_type:id-string;
+
+    import exodm_type {
+	prefix exodm_type;
     }
-  }
 
 
+    description "API for Exosense Device Management Server, device type part";
 
-  rpc create-device-type {
-    description "RPC to create a device type";
 
+    contact "ulf.wiger@feuerlabs.com";
+    organization "Feuerlabs, Inc.";
+
+
+    grouping device-type-obj {
+	description "Device type object leafs";
+	leaf name {
+	    description "Account-wide unique device type name";
+	    mandatory true;
+	    type exodm_type:id-string;
+	}
+
+	leaf protocol {
+	    description "Protocol between device and Exosense server";
+	    mandatory true;
+	    type exodm_type:id-string;
+	}
+
+	leaf yang-specification {
+	    description "Yang specification containing the device attribute specifications.";
+	    mandatory false;
+	    type exodm_type:id-string;
+	}
+
+<<<<<<< HEAD
+	leaf attribute-container {
+	    description "Container within the Yang specification containing device attribute specification.";
+	    mandatory false;
+	    type exodm_type:id-string;
+	}
+=======
     input {
+      uses device-type-obj;
       leaf account {
         description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
-      uses device-type-obj;
     }
+>>>>>>> 10f92b2b0483862cecfe3c06a16dab34aeffc914
 
-    output {
-      leaf result {
-        type exodm_type:result-code;
-      }
     }
+<<<<<<< HEAD
+
+    rpc create-device-type {
+	description "RPC to create a device type";
+
+	input {
+	    leaf account {
+		description "The account to which the yang module belongs.";
+		type exodm_type:id-string;
+	    }
+	    uses device-type-obj;
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+=======
   }
 
   rpc update-device-type {
     description "RPC to modify an existing device type.";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       uses device-type-obj {
         refine protocol {
           mandatory false;
         }
       }
-    }
-    output {
-      leaf result {
-        type exodm_type:result-code;
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
+>>>>>>> 10f92b2b0483862cecfe3c06a16dab34aeffc914
     }
+
+    rpc update-device-type {
+	description "RPC to modify an existing device type.";
+	input {
+	    leaf account {
+		description "The account to which the yang module belongs.";
+		type exodm_type:id-string;
+	    }
+	    uses device-type-obj {
+		refine protocol {
+		    mandatory false;
+		}
+	    }
+	}
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
+<<<<<<< HEAD
+
+    rpc delete-device-type {
+	description "RPC to create a device type";
+
+	input {
+	    leaf account {
+		description "The account to which the yang module belongs.";
+		type exodm_type:id-string;
+	    }
+	    leaf name {
+		description "Device type name";
+		type exodm_type:id-string;
+	    }
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+=======
   }
 
   rpc delete-device-type {
     description "RPC to create a device type";
 
     input {
+      leaf name {
+        description "Device type name";
+        type exodm_type:id-string;
+        mandatory true;
+      }
       leaf account {
         description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
-      leaf name {
-        description "Device type name";
-        type exodm_type:id-string;
-      }
+>>>>>>> 10f92b2b0483862cecfe3c06a16dab34aeffc914
     }
 
-    output {
-      leaf result {
-        type exodm_type:result-code;
-      }
+    rpc list-device-types {
+	description "RPC to list device types.";
+	input {
+	    leaf account {
+		description "The account to which the yang module belongs.";
+		type exodm_type:id-string;
+	    }
+	    leaf n {
+		description "Number of entries to fetch";
+		type uint32;
+	    }
+	    leaf previous {
+		description 'Previous device type; "" if from beginning';
+		type exodm_type:id-string;
+	    }
+	}
+	output {
+	    list device-types {
+		uses device-type-obj;
+	    }
+	}
     }
+<<<<<<< HEAD
+
+    rpc list-device-type-packages {
+	description "List all packages allowed to be installed on devices of a given type " +
+	    "N entries at a time";
+
+	input {
+	    leaf account {
+		description "The account to which the device type belongs.";
+		type exodm_type:id-string;
+
+	    }
+	    leaf device-type {
+		description "ID of the device type to list packages for";
+		type uint32;
+	    }
+
+	    leaf n {
+		description "Number of entries to fetch";
+		type uint32;
+	    }
+
+	    leaf previous {
+		description "Previous package name; \"\" if from beginning";
+		type exodm_type:id-string;
+	    }
+	}
+	output {
+	    leaf-list device-type-packages {
+		description "List of packages allowed by this device type";
+		type exodm_type:id-string;
+	    }
+	}
+=======
   }
 
   rpc list-device-types {
     description "RPC to list device types.";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description 'Previous device type; "" if from beginning';
         type exodm_type:id-string;
+        mandatory true;
       }
-    }
-    output {
-      list device-types {
-        uses device-type-obj;
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
+>>>>>>> 10f92b2b0483862cecfe3c06a16dab34aeffc914
     }
+
+
+    rpc add-device-type-package {
+	description "Add packages allowed to be installed on device types";
+	input {
+	    leaf account {
+		description "The account to which the device type belongs.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf-list packages {
+		description
+		    "List of packages that are allowed to be installed on the given device types";
+		type exodm_type:id-string;
+	    }
+	    leaf-list device-types {
+		description "List of device types that can accept the package";
+		type exodm_type:id-string;
+	    }
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
+<<<<<<< HEAD
+
+
+    rpc remove-device-group-members {
+	description "Unlink devices from device groups";
+	input {
+	    leaf account {
+		description "The account to which the yang module belongs.";
+		type exodm_type:id-string;
+	    }
+	    leaf-list device-groups {
+		description
+		    "Device groups to unlink the given device(s) from";
+		min-elements 1;
+		type uint32;
+	    }
+	    leaf-list dev-id {
+		description "List of device ID(s)";
+		min-elements 1;
+		type exodm_type:id-string;
+	    }
+	}
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+=======
   }
 
   rpc list-device-type-members {
     description "List device IDs associated with a device type";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf name {
         description "Name of device type";
         type exodm_type:id-string;
+        mandatory true;
       }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description 'Previous device ID; "" if from beginning';
         type exodm_type:id-string;
+        mandatory true;
       }
-    }
-    output {
-      leaf-list device-type-members {
-        description "Device ID";
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
+>>>>>>> 10f92b2b0483862cecfe3c06a16dab34aeffc914
     }
-  }
+
+
+    rpc list-device-type-members {
+	description "List device IDs associated with a device type";
+	input {
+	    leaf account {
+		description "The account to which the yang module belongs.";
+		type exodm_type:id-string;
+	    }
+	    leaf name {
+		description "Name of device type";
+		type exodm_type:id-string;
+	    }
+	    leaf n {
+		description "Number of entries to fetch";
+		type uint32;
+	    }
+	    leaf previous {
+		description 'Previous device ID; "" if from beginning';
+		type exodm_type:id-string;
+	    }
+	}
+	output {
+	    leaf-list device-type-members {
+		description "Device ID";
+		type exodm_type:id-string;
+	    }
+	}
+    }
 }
 

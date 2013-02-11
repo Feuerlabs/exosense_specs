@@ -4,10 +4,10 @@ submodule exodm_package {
     }
 
     import exosense {
-      prefix exo;
+	prefix exo;
     }
     import exodm_type {
-      prefix exodm_type;
+	prefix exodm_type;
     }
 
 
@@ -20,298 +20,556 @@ submodule exodm_package {
     //
     // Package management
     //
-     rpc create-package {
-         description
-	   "Create a package in the database to be forwarded to devices.";
-         input {
-             leaf package-name {
-                 description "Name of package.";
-                 type string {
-                     length "1..256";
-                 }
-             }
-             list dependencies {
-                 key package-name;
+    rpc create-package {
+	description
+	    "Create a package in the database to be forwarded to devices.";
+	input {
+	    leaf account {
+		description "The account under which the package is installed.";
+		type exodm_type:id-string;
+	    }
 
-                 leaf package-name {
-                     type string {
-                         length "1..256";
-                     }
-                 }
-             }
+	    leaf package-name {
+		description "Name of package.";
+		type string {
+		    length "1..256";
+		}
+	    }
 
-             anyxml image {
-                 description "The package image itself.";
-             }
-         }
-
-         output {
-             leaf result {
-                 type exodm_type:result-code;
-             }
-         }
-     }
-
-     notification create-package-notification {
-       uses exo:std-callback;
-     }
-
-     rpc add-package-members {
-         description
- 	  "Add members to the list of devices to receive the package.";
-         input {
-             leaf-list package-name {
-                 description
- 		  "Configuration data instances to associate with " +
- 		  "the given device(s)";
-                 type string {
-                     length "1..256";
-                 }
-             }
-             leaf-list dev-id {
-                 description
- 		  "Devices to push the given config data instances to (s)";
-                 type exodm_type:id-string;
-             }
-         }
-
-         output {
-             leaf result {
-                 type exodm_type:result-code;
-             }
-         }
-     }
+            leaf-list dependencies {
+		description "List of packages that must be installed prior to this on a device";
+		type exodm_type:id-string;
+	    }
 
 
-     // MAYBE WE SHOULD BREAK UP TRANSMIT AND OPERATION INTO TWO
-     // DIFFERENT CALLS?
-     rpc push-package {
-         description
-	   "Pushes the given package to all member devices. Notifications " +
-	   "will be sent back. If the package is already pushed to a device, " +
-	   "it will not be transmitted again. Instead the specified " +
-	   "operation will be executed for the package on the given device.";
+	    leaf-list uprade-from-packages {
+		description "List of packages that can be upgraded by this package.";
+		type exodm_type:id-string;
+	    }
 
-         input {
-             leaf package-name {
-                 type string {
-                     length "1..64";
-                 }
-             }
+	    leaf yang-specification {
+		description "Yang specification containing the API and configuration data definitions.";
+		mandatory false;
+		type exodm_type:id-string;
+	    }
 
-             leaf operation {
-	       description
-		 "The operation to be carried out on the package once it " +
-		 "has been received on a device.";
+	    leaf configuration-container {
+		description "Container within the Yang specification that has the configuration data definition.";
+		mandatory false;
+		type exodm_type:id-string;
+	    }
 
-	       type enumeration {
-		 enum transmit {
-		   description
-		     "Do not do any operations apart from transmitting the " +
-		     "package. This is a no-op if the package is already " +
-		     "resident on the target device.";
-		   value 0;
-		 }
+	    leaf api-container {
+		description "Container within the Yang specification that has the RPC API definition.";
+		mandatory false;
+		type exodm_type:id-string;
+	    }
 
-		 enum install {
-		   description
-		     "Install the package using the device-local package " +
-		     "manager.";
-		   value 1;
-		 }
+	    anyxml image {
+		description "The package image itself.";
+	    }
 
-		 enum upgrade {
-		   description
-		     "Upgrade the package using the device-local package " +
-		     "manager.";
-		   value 2;
-		 }
+	}
 
-		 enum uninstall {
-		   description
-		     "Uninstall the package using the device-local package " +
-		     "manager.";
-		   value 3;
-		 }
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
 
-		 enum remove {
-		   description
-		     "Remove the package from the device. If the package is " +
-		     "not present on the device, an error will be sent back " +
-		     "through the push-package-notification.";
-		   value 4;
-		 }
+    rpc add-package-members {
+	description
+	    "Add members to the list of devices to receive the package. The device type of each " +
+	    "added device-id must have the package as a part of its allowed packages.";
 
-		 enum remove-recursively {
-		   description
-		     "Remove the package from and recursively remove any " +
-		     "dependent packages that are no longer resolving any " +
-		     "device-local dependencies. If the package is not " +
-		     "present on the device, an error will be sent " +
-		     "back through the push-package-notification.";
-		   value 5;
-		 }
-	       }
-             }
+	input {
+	    leaf account {
+		description "The account to which the device type belongs.";
+		type exodm_type:id-string;
+	    }
 
-             leaf timeout {
-	       description
-		 "Timeout specification for this operation to be carried out " +
-		 "to a device. If a timeout occur, an error is sent back for "+
-		 "the timed out device using push-package-notification. " +
-		 "Please note that some devices may time out while others " +
-		 "succeed.";
+	    leaf-list package-name {
+		description
+		    "Configuration data instances to associate with " +
+		    "the given device(s)";
+		type exodm_type:id-string;
+	    }
 
-	       type string {
-		 length "1..64";
-	       }
-             }
+	    leaf device-id {
+		description
+		    "Device type to accept this package.";
+		type exodm_type:id-string;
+	    }
 
-             leaf auto-push-dependencies {
-	       description
-		 "Specifies if any unresolved dependencies should " +
-		 "automatically be pushed to the target as well. If set to " +
-		 "false, each device with an unresolved dependency will " +
-		 "generate an error push-package-notification";
+	    leaf install-arguments {
+		description
+		    "Arguments to be provided to the device package manager when package " +
+		    "is installed on the given device type. The arguments will be provided to " +
+		    "the install software on the device.";
 
-	       type boolean;
-             }
+		mandatory false;
+		type string {
+		    length "1..256";
+		}
+	    }
 
-             leaf remove-after-operation {
-	       description
-		 "Specifies if the package should be removed from " +
-		 "device-local storage once the operation (such as install) " +
-		 "has been carried out on the device. If the auto-push-" +
-		 "dependencies flag is set, any packages automatically " +
-		 "transmitted to resolve dependencies will be removed as well.";
+	    leaf upgrade-arguments {
+		description
+		    "Arguments to be provided to the device package manager when package " +
+		    "is upgraded from an earlier version on the given device type. " +
+		    "The arguments will be provided to the install software on the device.";
 
-	       type boolean;
-             }
+		mandatory false;
+		type string {
+		    length "1..256";
+		}
+	    }
 
-             leaf replace-queue {
-	       description
-		 "If set to true, any earlier operations for this package " +
-		 "queued to the given device will be removed and replaced " +
-		 "by the operation specified by this command. If set to " +
-		 "false, this command will be queued to be executed after " +
-		 "any other pending commands for this package to the given " +
-		 "device.";
+	    leaf uninstall-arguments {
+		description
+		    "Arguments to be provided to the device package manager when package " +
+		    "is uninstalled on the given device type. " +
+		    "The arguments will be provided to the install software on the device.";
 
-	       type boolean;
-             }
-         }
-         output {
-	   leaf result {
-	       type exodm_type:result-code;
-	   }
-         }
-     }
+		mandatory false;
+		type string {
+		    length "1..256";
+		}
+	    }
+	}
 
-     notification push-package-notification {
-       uses exo:std-callback;
-     }
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
 
-//     rpc list-packages {
-//         description "List all packages in the system";
+    rpc install-package {
+	description
+	    "Installs the package on all listed devices and/or device groups. The package " +
+	    "will be transmitted to all devices, and device group member devices, and then installed. " +
+	    "For each successful or failed transmit and install operation, a notification will be sent " +
+	    "back to the invoking server.";
 
-//         output {
-//             leaf result {
-//                 type exodm_type:result-code;
-//             }
+	input {
+	    leaf account {
+		description "The account to which the package and devices belong.";
+		type exodm_type:id-string;
+	    }
 
-//             leaf-list package-list {
-//                 description "Name of package";
+	    leaf package-name {
+		description "The name of the package to install";
+		mandatory true;
+		type exodm_type:id-string;
+	    }
 
-//                 type string {
-//                     length "1..256";
-//                 }
-//             }
-//         }
-//     }
+	    leaf-list targets {
+		description
+		    "Mix of device-ids and device group ids for all devices to have the " +
+		    "package installed.";
 
-//     rpc get-package-status {
-//         description "Retrieve status for a specific package";
+		type exodm_type:id-string;
+	    }
 
-//         input {
-//             leaf package-name {
-//                 type string {
-//                     length "1..256";
-//                 }
-//             }
-//         }
+	    leaf recursive {
+		description
+		    "Recursively transmit and install any packages that this package is dependent upon.";
 
-//         output {
-//             leaf result {
-//                 type exodm_type:result-code;
-//             }
+		default false;
+		type boolean;
+	    }
 
-//             list member-list {
-//                 description
-//                     "List of all members receiving the package, and their status.";
+	    leaf timeout {
+		description
+		    "How many seconds to wait for the package to be installed on the target " +
+		    "devices before returning a timeout error. Default is one week.";
 
-//                 key dev-id;
+		default 604800;
+		type uint32;
+	    }
+	}
 
-//                 leaf dev-id {
-//                     description "The device id of the member.";
-//                     type string {
-//                         length "1..64";
-//                     }
-//                 }
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
 
 
-//                 // The last operation carried out for the package on this device
-//                 leaf operation {
-//                     description
-//                         "Last operation carried out for the package on this device";
+    rpc upgrade-package {
+	description
+	    "Upgrades from one package to another on all listed devices and/or device groups. The package " +
+	    "will be transmitted to all devices, and device group member devices, and then installed. " +
+	    "For each successful or failed transmit and install operation, a notification will be sent " +
+	    "back to the invoking server.";
 
-//                     type enumeration {
-//                         enum pending {
-//                             description
-//                                 "The package has been uploaded to the server but not pushed.";
-//                         }
+	input {
+	    leaf account {
+		description "The account to which the package and devices belong.";
+		type exodm_type:id-string;
+	    }
 
-//                         enum transmit {
-//                             description
-//                                 "The package is to be transmitted to to the device, but no" +
-//                                 "operations are to be carried out once it arrives.";
+	    leaf from-package-name {
+		description "The name of the package already installed on the device to upgrade. ";
+		mandatory true;
+		type exodm_type:id-string;
+	    }
 
-//                         }
+	    leaf to-package-name {
+		description "The name of the package to use to upgrade the from-oackage. ";
+		mandatory true;
+		type exodm_type:id-string;
+	    }
 
-//                         enum install {
-//                             description
-//                                 "The package is to be transmitted and installed on the device.";
-//                         }
+	    leaf-list targets {
+		description
+		    "Mix of device-ids and device group ids for all devices to have the " +
+		    "upgrade performed.";
 
-//                         enum upgrade {
-//                             description
-//                                 "The package is to be transmitted and upgraded on the device.";
-//                         }
+		type exodm_type:id-string;
+	    }
 
-//                         enum uninstalled {
-//                             description
-//                                 "The package is to be uninstalled from the device.";
-//                         }
+	    leaf recursive {
+		description
+		    "Recursively transmit and install any packages that to-package-name is dependent upon.";
 
-//                         enum remove {
-//                             description
-//                                 "The package is to be removed.";
-//                         }
-//                     }
-//                 }
+		default false;
+		type boolean;
+	    }
 
-//                 // The status of the last operation carried out
-//                 leaf operation-status {
-//                     description "Status of the operation.";
-//                     type enumeration {
-//                         enum completed;
-//                         enum queued;
-//                         enum timeout;
-//                         enum dependency-failure;
-//                         enum other-error;
-//                     }
-//                 }
-//             }
-//         }
-//     }
+	    leaf remove-unused {
+		description
+		    "Remove any package images not needed after the upgrade from the device.";
+
+		default false;
+		type boolean;
+	    }
+
+	    leaf timeout {
+		description
+		    "How many seconds to wait for the package to be upgraded on the target " +
+		    "devices before returning a timeout error. Default is one week.";
+
+		default 604800;
+		type uint32;
+	    }
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
+
+
+
+    rpc uninstall-package {
+	description
+	    "Uninstalls a packagefrom all listed devices and/or device groups. The package " +
+	    "will be uninstalled from all devices, and device group member devices. " +
+	    "For each successful or failed uninstall operation, a notification will be sent " +
+	    "back to the invoking server.";
+
+	input {
+	    leaf account {
+		description "The account to which the package and devices belong.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf package {
+		description "The name of the package already installed on the device to uninstall.";
+		mandatory true;
+		type exodm_type:id-string;
+	    }
+
+
+	    leaf-list targets {
+		description
+		    "Mix of device-ids and device group ids for all devices to have the " +
+		    "uninstall performed.";
+
+		type exodm_type:id-string;
+	    }
+
+	    leaf remove-unused {
+		description
+		    "Remove the package image from the device.";
+
+		default true;
+		type boolean;
+	    }
+
+	    leaf timeout {
+		description
+		    "How many seconds to wait for the package to be removed from the target " +
+		    "devices before returning a timeout error. Default is one week.";
+
+		default 604800;
+		type uint32;
+	    }
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
+
+    notification package-operation-notification {
+	description
+	    "A notification sent back from the Exosense Server to the backend server " +
+	    "to report the progress of an install/upgrade/uninstall operation. " +
+	    "One notification will be sent back for each device that is to process the "+
+	    "operaiton. " +
+	    "The device ID that the notification is about. This device is listed, " +
+	    "either directly or as a device group member, in the targets list of " +
+	    "the install-package command that this is a notification of.";
+
+	leaf device-id {
+	    description "The device that this notificaiton is in response to";
+	    type exodm_type:id-string;
+
+	}
+
+	leaf package-name {
+	    description "The device that this notificaiton is in response to";
+	    type exodm_type:id-string;
+	}
+
+	leaf package-status {
+	    description "The status of the packge install operation";
+
+	    type enumeration {
+		enum transmitted {
+		    description
+			"Package has been transmitted to device.";
+		    value 0;
+		}
+
+		enum transmit-failed {
+		    description
+			"Package could not be transmitted to device.";
+		    value 1;
+		}
+
+		enum installed {
+		    description
+			"Package installed on device";
+		    value 2;
+		}
+
+		enum install-failed {
+		    description
+			"Package could not be installed on device";
+		    value 3;
+		}
+
+		enum upgraded {
+		    description
+			"Package upgraded on device";
+		    value 4;
+		}
+
+		enum upgrade-failed {
+		    description
+			"Package could not be upgraded device";
+		    value 5;
+		}
+
+		enum uninstalled {
+		    description
+			"Package uninstalled from device";
+		    value 6;
+		}
+
+		enum uninstall-failed {
+		    description
+			"Package could not be uninstalled from device";
+		    value 7;
+		}
+	    }
+	}
+	uses exo:std-callback;
+    }
+
+    rpc list-packages {
+	description "List all packages in the system";
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+
+	    leaf-list packages {
+		description "Name of package";
+
+		type string {
+		    length "1..256";
+		}
+	    }
+	}
+    }
+
+    rpc get-package-device-types {
+	description "List all device types that can install a given package.";
+
+	input {
+	    leaf account {
+		description "The account to which the package belongs.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf package-name {
+		description "The account to which list supported device types for.";
+		type exodm_type:id-string;
+	    }
+	    leaf n {
+		description "Number of entries to fetch";
+		type uint32;
+	    }
+	    leaf previous {
+		description
+		    "Previous device-type name (GID); \"\" if from beginning";
+		type uint32;
+	    }
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+
+	    leaf-list device-types {
+		description "List of device-types accepting the given package.";
+
+		type exodm_type:id-string;
+	    }
+	}
+    }
+
+
+    rpc get-package-devices {
+	description
+	    "List all device types that have installed, or are in the process of " +
+	    "installing the given package.";
+
+	input {
+	    leaf account {
+		description "The account to which the package belongs.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf package-name {
+		description "The account to which list supported device types for.";
+		type exodm_type:id-string;
+	    }
+	    leaf n {
+		description "Number of entries to fetch";
+		type uint32;
+	    }
+	    leaf previous {
+		description
+		    "Previous device-id; \"\" if from beginning";
+		type uint32;
+	    }
+	}
+
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+
+	    list devices {
+		leaf device-id {
+		    type exodm_type:id-string;
+		}
+		leaf package-status {
+		    type enumeration {
+			enum pending-install {
+			    description 
+				"The package is queued or in transmission to the device.";
+			    value 0;
+			}
+			enum installed {
+			    description 
+				"The package has been installed on the device.";
+			    value 1;
+			}
+			enum pending-uninstall {
+			    description 
+				"The uninstall command is queued for transmission to the device.";
+			    value 2;
+			}
+			enum uninstalled {
+			    description 
+				"The package has been uninstalled from the device.";
+			    value 3;
+			}
+			enum removed {
+			    description 
+				"The package has been uninstalled and removed from the device.";
+			    value 4;
+			}
+			enum failed-install {
+			    description 
+				"The package was transmitted to the device but could not be installed.";
+			    value 5;
+			}
+			enum failed-uninstall {
+			    description 
+				"The uninstall command was transmitted to the device but could not be executed.";
+			    value 6;
+			}
+		    }
+		}
+	    }
+
+	}
+    }
+
+    rpc update-package-config {
+	description
+	    "Set and push configuration data for a given package on a given device, " +
+	    "or all member devices of a device group, to those devices. " +
+	    "The package name is given together with an array of key/value pairs " +
+	    "for the conrfiguration data to set for the given package on the given device. " +
+	    "Each key/value pair must match an element in the yang file and container " +
+	    "specified by the create-package yang-specification and configuration-container";
+
+	input {
+	    leaf account {
+		description "The account to which the package belongs.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf device-id {
+		description "The device or group id to set the config data for.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf package-name {
+		description "The package to set the config data for in the target device.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf timeout {
+		description
+		    "How many seconds to wait for the configuration data to be sent to the " +
+		    "device before returning a timeout error. Default is one week.";
+
+		default 604800;
+		type uint32;
+	    }
+
+	    anyxml values {
+		description "Configuration values (validated against the yang specifification)";
+	    }
+	}
+    }
 }
 
