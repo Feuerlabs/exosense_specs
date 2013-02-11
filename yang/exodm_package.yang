@@ -16,10 +16,6 @@ submodule exodm_package {
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";
 
-
-    //
-    // Package management
-    //
     rpc create-package {
 	description
 	    "Create a package in the database to be forwarded to devices.";
@@ -77,6 +73,8 @@ submodule exodm_package {
 	    }
 	}
     }
+
+
 
     rpc add-package-members {
 	description
@@ -400,6 +398,13 @@ submodule exodm_package {
     rpc list-packages {
 	description "List all packages in the system";
 
+	input {
+	    leaf account {
+		description "The account to list all packages for.";
+		type exodm_type:id-string;
+	    }
+	}
+
 	output {
 	    leaf result {
 		type exodm_type:result-code;
@@ -414,6 +419,7 @@ submodule exodm_package {
 	    }
 	}
     }
+
 
     rpc get-package-device-types {
 	description "List all device types that can install a given package.";
@@ -491,37 +497,37 @@ submodule exodm_package {
 		leaf package-status {
 		    type enumeration {
 			enum pending-install {
-			    description 
+			    description
 				"The package is queued or in transmission to the device.";
 			    value 0;
 			}
 			enum installed {
-			    description 
+			    description
 				"The package has been installed on the device.";
 			    value 1;
 			}
 			enum pending-uninstall {
-			    description 
+			    description
 				"The uninstall command is queued for transmission to the device.";
 			    value 2;
 			}
 			enum uninstalled {
-			    description 
+			    description
 				"The package has been uninstalled from the device.";
 			    value 3;
 			}
 			enum removed {
-			    description 
+			    description
 				"The package has been uninstalled and removed from the device.";
 			    value 4;
 			}
 			enum failed-install {
-			    description 
+			    description
 				"The package was transmitted to the device but could not be installed.";
 			    value 5;
 			}
 			enum failed-uninstall {
-			    description 
+			    description
 				"The uninstall command was transmitted to the device but could not be executed.";
 			    value 6;
 			}

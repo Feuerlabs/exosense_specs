@@ -95,9 +95,9 @@ Delete an existing user
 {"jsonrpc": "2.0",
  "method": "exodm:list-users",
  "id": "",
- "params": {"account": "",
-            "n": "",
-            "previous": ""}}
+ "params": {"n": "",
+            "previous": "",
+            "account": ""}}
 ```
 
 List all users.
@@ -108,9 +108,9 @@ List all users.
 <dl><dt>account</dt>
 <dd>If account is given only users connected to that account are returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous user name; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous user name; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -242,7 +242,7 @@ Delete an account,
 
 **descriptions**
 <dl><dt>name</dt>
-<dd>The account name. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account name. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -278,9 +278,9 @@ List all account names.
 
 **descriptions**
 <dl><dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous account name; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous account name; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -399,11 +399,11 @@ List all users with access to account.
 
 **descriptions**
 <dl><dt>account</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous user name; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous user name; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -422,6 +422,47 @@ List all users with access to account.
 
 
 
+### RPC: exodm:list-account-roles
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:list-account-roles",
+ "id": "",
+ "params": {"account": "",
+            "n": "",
+            "previous": ""}}
+```
+
+List all roles defined for account.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>n</dt>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dt>previous</dt>
+<dd>Previous user name; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"roles": ["roles": ""]}}
+```
+
+**descriptions**
+<dl><dt>roles</dt>
+<dd>List of role names (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
 ### RPC: exodm:provision-device
 
 #### Request
@@ -429,8 +470,7 @@ List all users with access to account.
 {"jsonrpc": "2.0",
  "method": "exodm:provision-device",
  "id": "",
- "params": {"account": "",
-            "dev-id": "",
+ "params": {"dev-id": "",
             "device-type": "",
             "description": "",
             "server-key": "",
@@ -440,7 +480,8 @@ List all users with access to account.
             "imsi": "",
             "imei": "",
             "latitude": "",
-            "longitude": ""}}
+            "longitude": "",
+            "account": ""}}
 ```
 
 Create a new device. augment this call if you want to add device-data
@@ -497,8 +538,7 @@ Create a new device. augment this call if you want to add device-data
 {"jsonrpc": "2.0",
  "method": "exodm:update-device",
  "id": "",
- "params": {"account": "",
-            "dev-id": "",
+ "params": {"dev-id": "",
             "device-type": "",
             "description": "",
             "server-key": "",
@@ -508,7 +548,8 @@ Create a new device. augment this call if you want to add device-data
             "imsi": "",
             "imei": "",
             "latitude": "",
-            "longitude": ""}}
+            "longitude": "",
+            "account": ""}}
 ```
 
 RPC to update an existing device object.
@@ -565,8 +606,8 @@ RPC to update an existing device object.
 {"jsonrpc": "2.0",
  "method": "exodm:lookup-device",
  "id": "",
- "params": {"account": "",
-            "dev-id": ""}}
+ "params": {"dev-id": "",
+            "account": ""}}
 ```
 
 RPC to read a single device object.Returns a list of zero or one device object.
@@ -577,7 +618,7 @@ RPC to read a single device object.Returns a list of zero or one device object.
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>dev-id</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -638,9 +679,9 @@ RPC to read a single device object.Returns a list of zero or one device object.
 {"jsonrpc": "2.0",
  "method": "exodm:list-devices",
  "id": "",
- "params": {"account": "",
-            "n": "",
-            "previous": ""}}
+ "params": {"n": "",
+            "previous": "",
+            "account": ""}}
 ```
 
 List provisioned devices, N entries at a time
@@ -651,9 +692,9 @@ List provisioned devices, N entries at a time
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous device ID; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous device ID; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -711,8 +752,8 @@ List provisioned devices, N entries at a time
 {"jsonrpc": "2.0",
  "method": "exodm:deprovision-devices",
  "id": "",
- "params": {"account": "",
-            "dev-id": ["dev-id": ""]}}
+ "params": {"dev-id": ["dev-id": ""],
+            "account": ""}}
 ```
 
 RPC to deprovision a set of existing devices.
@@ -749,9 +790,9 @@ RPC to deprovision a set of existing devices.
 {"jsonrpc": "2.0",
  "method": "exodm:create-device-group",
  "id": "",
- "params": {"account": "",
-            "name": "",
-            "notification-url": ""}}
+ "params": {"name": "",
+            "notification-url": "",
+            "account": ""}}
 ```
 
 RPC to create a device group
@@ -762,9 +803,9 @@ RPC to create a device group
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Group name (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Group name (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
-<dd>RPC callback notification URL (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>RPC callback notification URL (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -793,8 +834,8 @@ RPC to create a device group
 {"jsonrpc": "2.0",
  "method": "exodm:delete-device-group",
  "id": "",
- "params": {"account": "",
-            "gid": ""}}
+ "params": {"gid": "",
+            "account": ""}}
 ```
 
 RPC to create a device group
@@ -805,7 +846,7 @@ RPC to create a device group
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>gid</dt>
-<dd>Group ID (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Group ID (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -831,9 +872,9 @@ RPC to create a device group
 {"jsonrpc": "2.0",
  "method": "exodm:list-device-groups",
  "id": "",
- "params": {"account": "",
-            "n": "",
+ "params": {"n": "",
             "previous": "",
+            "account": "",
             "device-id": ""}}
 ```
 
@@ -847,9 +888,9 @@ List device groups, N entries at a time
 <dt>device-id</dt>
 <dd>Optional device ID. If given, device groups associated with the given device are listed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous device group id (GID); "" if from beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Previous device group id (GID); "" if from beginning (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -883,10 +924,10 @@ List device groups, N entries at a time
 {"jsonrpc": "2.0",
  "method": "exodm:list-device-group-members",
  "id": "",
- "params": {"account": "",
-            "gid": "",
+ "params": {"gid": "",
             "n": "",
-            "previous": ""}}
+            "previous": "",
+            "account": ""}}
 ```
 
 List devices attached to a device group, N entries at a time
@@ -897,11 +938,11 @@ List devices attached to a device group, N entries at a time
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>gid</dt>
-<dd>ID of the device group (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>ID of the device group (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous device; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous device; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -927,9 +968,9 @@ List devices attached to a device group, N entries at a time
 {"jsonrpc": "2.0",
  "method": "exodm:add-device-group-members",
  "id": "",
- "params": {"account": "",
-            "device-groups": ["device-groups": ""],
-            "dev-id": ["dev-id": ""]}}
+ "params": {"device-groups": ["device-groups": ""],
+            "dev-id": ["dev-id": ""],
+            "account": ""}}
 ```
 
 Link devices to device groups
@@ -968,9 +1009,9 @@ Link devices to device groups
 {"jsonrpc": "2.0",
  "method": "exodm:remove-device-group-members",
  "id": "",
- "params": {"account": "",
-            "device-groups": ["device-groups": ""],
-            "dev-id": ["dev-id": ""]}}
+ "params": {"device-groups": ["device-groups": ""],
+            "dev-id": ["dev-id": ""],
+            "account": ""}}
 ```
 
 Unlink devices from device groups
@@ -1009,9 +1050,9 @@ Unlink devices from device groups
 {"jsonrpc": "2.0",
  "method": "exodm:update-device-group",
  "id": "",
- "params": {"account": "",
-            "gid": "",
-            "notification-url": ""}}
+ "params": {"gid": "",
+            "notification-url": "",
+            "account": ""}}
 ```
 
 RPC to change the notification URL of an existing group
@@ -1022,9 +1063,9 @@ RPC to change the notification URL of an existing group
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>gid</dt>
-<dd>Group identifier. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Group identifier. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
-<dd>RPC callback notification URL (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>RPC callback notification URL (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1052,7 +1093,9 @@ RPC to change the notification URL of an existing group
  "id": "",
  "params": {"account": "",
             "name": "",
-            "protocol": ""}}
+            "protocol": "",
+            "yang-specification": "",
+            "attribute-container": ""}}
 ```
 
 RPC to create a device type
@@ -1061,11 +1104,15 @@ RPC to create a device type
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>attribute-container</dt>
+<dd>Container within the Yang specification containing device attribute specification. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
 <dd>Account-wide unique device type name (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>yang-specification</dt>
+<dd>Yang specification containing the device attribute specifications. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1093,7 +1140,9 @@ RPC to create a device type
  "id": "",
  "params": {"account": "",
             "name": "",
-            "protocol": ""}}
+            "protocol": "",
+            "yang-specification": "",
+            "attribute-container": ""}}
 ```
 
 RPC to modify an existing device type.
@@ -1103,10 +1152,14 @@ RPC to modify an existing device type.
 **descriptions**
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>attribute-container</dt>
+<dd>Container within the Yang specification containing device attribute specification. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
 <dd>Account-wide unique device type name (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>yang-specification</dt>
+<dd>Yang specification containing the device attribute specifications. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1142,9 +1195,9 @@ RPC to create a device type
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Device type name (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Device type name (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1181,7 +1234,7 @@ RPC to list device types.
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
 <dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>previous</dt>
@@ -1195,26 +1248,158 @@ RPC to list device types.
 {"jsonrpc": "2.0",
  "id": "",
  "result": {"device-types": [{"name": "",
-                              "protocol": ""}]}}
+                              "protocol": "",
+                              "yang-specification": "",
+                              "attribute-container": ""}]}}
 ```
 
 **descriptions**
-<dl><dt>device-types</dt>
+<dl><dt>attribute-container</dt>
+<dd>Container within the Yang specification containing device attribute specification. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-types</dt>
 <dd>Device type object leafs (<b>type:</b> array)</dd>
 <dt>name</dt>
 <dd>Account-wide unique device type name (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>yang-specification</dt>
+<dd>Yang specification containing the device attribute specifications. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
 
-### RPC: exodm:list-device-type-members
+### RPC: exodm:list-device-type-packages
 
 #### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:list-device-type-members",
+ "method": "exodm:list-device-type-packages",
+ "id": "",
+ "params": {"account": "",
+            "device-type": "",
+            "n": "",
+            "previous": ""}}
+```
+
+List all packages allowed to be installed on devices of a given type N entries at a time.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-type</dt>
+<dd>ID of the device type to list packages for (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>n</dt>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>previous</dt>
+<dd>Previous package name; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"device-type-packages": ["device-type-packages": ""]}}
+```
+
+**descriptions**
+<dl><dt>device-type-packages</dt>
+<dd>List of packages allowed by this device type (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:add-device-type-package
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:add-device-type-package",
+ "id": "",
+ "params": {"account": "",
+            "packages": ["packages": ""],
+            "device-types": ["device-types": ""]}}
+```
+
+Add packages allowed to be installed on device types
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-types</dt>
+<dd>List of device types that can accept the package (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>packages</dt>
+<dd>List of packages that are allowed to be installed on the given device types (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:remove-device-type-package
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:remove-device-type-package",
+ "id": "",
+ "params": {"account": "",
+            "device-groups": ["device-groups": ""],
+            "dev-id": ["dev-id": ""]}}
+```
+
+Unlink devices from device groups
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>dev-id</dt>
+<dd>List of device ID(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-groups</dt>
+<dd>Device groups to unlink the given device(s) from (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:list-device-type-devices
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:list-device-type-devices",
  "id": "",
  "params": {"account": "",
             "name": "",
@@ -1228,13 +1413,13 @@ List device IDs associated with a device type
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>name</dt>
-<dd>Name of device type (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of device type (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous device ID; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous device ID; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1243,13 +1428,8 @@ List device IDs associated with a device type
 ```json
 {"jsonrpc": "2.0",
  "id": "",
- "result": {"device-type-members": ["device-type-members": ""]}}
+ "result": "ok"}
 ```
-
-**descriptions**
-<dl><dt>device-type-members</dt>
-<dd>Device ID (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-</dl>
 
 
 
@@ -1260,9 +1440,9 @@ List device IDs associated with a device type
 {"jsonrpc": "2.0",
  "method": "exodm:create-config-set",
  "id": "",
- "params": {"account": "",
-            "name": "",
+ "params": {"name": "",
             "yang": "",
+            "account": "",
             "notification-url": "",
             "values": ""}}
 ```
@@ -1275,13 +1455,13 @@ RPC to create device config data set
 <dl><dt>account</dt>
 <dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
 <dd>Notification URL (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>values</dt>
 <dd>Configuration values (validated against the yang spec) (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
 <dt>yang</dt>
-<dd>Name of the corresponding yang file - must exist. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of the corresponding yang file - must exist. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1307,8 +1487,8 @@ RPC to create device config data set
 {"jsonrpc": "2.0",
  "method": "exodm:update-config-set",
  "id": "",
- "params": {"account": "",
-            "name": "",
+ "params": {"name": "",
+            "account": "",
             "notification-url": "",
             "values": ""}}
 ```
@@ -1321,7 +1501,7 @@ RPC to update existing config data set
 <dl><dt>account</dt>
 <dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
 <dd>Notification URL (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>values</dt>
@@ -1351,8 +1531,8 @@ RPC to update existing config data set
 {"jsonrpc": "2.0",
  "method": "exodm:delete-config-set",
  "id": "",
- "params": {"account": "",
-            "name": ""}}
+ "params": {"name": "",
+            "account": ""}}
 ```
 
 RPC to delete a config data set. Any member devices must first be removed.
@@ -1363,7 +1543,7 @@ RPC to delete a config data set. Any member devices must first be removed.
 <dl><dt>account</dt>
 <dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1389,9 +1569,9 @@ RPC to delete a config data set. Any member devices must first be removed.
 {"jsonrpc": "2.0",
  "method": "exodm:list-config-sets",
  "id": "",
- "params": {"account": "",
-            "n": "",
+ "params": {"n": "",
             "previous": "",
+            "account": "",
             "device-id": ""}}
 ```
 
@@ -1405,9 +1585,9 @@ List config sets, N entries at a time
 <dt>device-id</dt>
 <dd>Optional device ID. If given, config specs associated with the given device are listed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous config set; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous config set; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1441,10 +1621,10 @@ List config sets, N entries at a time
 {"jsonrpc": "2.0",
  "method": "exodm:list-config-set-members",
  "id": "",
- "params": {"account": "",
-            "name": "",
+ "params": {"name": "",
             "n": "",
-            "previous": ""}}
+            "previous": "",
+            "account": ""}}
 ```
 
 List members of a config set, N entries at a time
@@ -1455,11 +1635,11 @@ List members of a config set, N entries at a time
 <dl><dt>account</dt>
 <dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config set (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of the config set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous member; "" if from beginning (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous member; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1485,12 +1665,12 @@ List members of a config set, N entries at a time
 {"jsonrpc": "2.0",
  "method": "exodm:add-config-set-members",
  "id": "",
- "params": {"account": "",
-            "name": ["name": ""],
-            "dev-id": ["dev-id": ""]}}
+ "params": {"name": ["name": ""],
+            "dev-id": ["dev-id": ""],
+            "account": ""}}
 ```
 
-Create a new device. augment this call if you want to add device-data
+Add a device to a config set.
 
 
 
@@ -1526,9 +1706,9 @@ Create a new device. augment this call if you want to add device-data
 {"jsonrpc": "2.0",
  "method": "exodm:remove-config-set-members",
  "id": "",
- "params": {"account": "",
-            "name": ["name": ""],
-            "dev-id": ["dev-id": ""]}}
+ "params": {"name": ["name": ""],
+            "dev-id": ["dev-id": ""],
+            "account": ""}}
 ```
 
 Remove a config set member.
@@ -1636,10 +1816,10 @@ Elements included in all callback notifications sent from Exosense to the backen
 {"jsonrpc": "2.0",
  "method": "exodm:create-yang-module",
  "id": "",
- "params": {"account": "",
-            "repository": "",
+ "params": {"repository": "",
             "name": "",
-            "yang-module": ""}}
+            "yang-module": "",
+            "account": ""}}
 ```
 
 RPC to store a YANG module either in user or system space
@@ -1650,11 +1830,11 @@ RPC to store a YANG module either in user or system space
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>repository</dt>
-<dd>Where to store the module: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Where to store the module: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>yang-module</dt>
-<dd>The actual source of the YANG module specification (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The actual source of the YANG module specification (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1680,9 +1860,9 @@ RPC to store a YANG module either in user or system space
 {"jsonrpc": "2.0",
  "method": "exodm:delete-yang-module",
  "id": "",
- "params": {"account": "",
-            "repository": "",
-            "name": ""}}
+ "params": {"repository": "",
+            "name": "",
+            "account": ""}}
 ```
 
 RPC to delete a YANG module
@@ -1693,9 +1873,9 @@ RPC to delete a YANG module
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>repository</dt>
-<dd>Where to delete the module: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Where to delete the module: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1721,10 +1901,10 @@ RPC to delete a YANG module
 {"jsonrpc": "2.0",
  "method": "exodm:list-yang-modules",
  "id": "",
- "params": {"account": "",
-            "repository": "",
+ "params": {"repository": "",
             "n": "",
-            "previous": ""}}
+            "previous": "",
+            "account": ""}}
 ```
 
 RPC to list existing yang modules.
@@ -1735,9 +1915,9 @@ RPC to list existing yang modules.
 <dl><dt>account</dt>
 <dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Number of entries to fetch. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous yang filename. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Previous yang filename. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>repository</dt>
 <dd>"system" or "user"; default: "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
@@ -1758,29 +1938,33 @@ RPC to list existing yang modules.
 
 
 
-### RPC: exodm:create-package
+### RPC: exodm:add-execution-permission
 
 #### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:create-package",
+ "method": "exodm:add-execution-permission",
  "id": "",
- "params": {"package-name": "",
-            "dependencies": [{"package-name": ""}],
-            "image": ""}}
+ "params": {"repository": "",
+            "name": "",
+            "rpcname": "",
+            "role": "",
+            "account": ""}}
 ```
-
-Create a package in the database to be forwarded to devices.
 
 
 
 **descriptions**
-<dl><dt>dependencies</dt>
-<dd> (<b>type:</b> array)</dd>
-<dt>image</dt>
-<dd>The package image itself. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
-<dt>package-name</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dl><dt>account</dt>
+<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>name</dt>
+<dd>Name of module, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>repository</dt>
+<dd>Where the module is: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>role</dt>
+<dd>Name of role to add permission to. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>rpcname</dt>
+<dd>Name of rpc e.g. 'config-device' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1799,29 +1983,145 @@ Create a package in the database to be forwarded to devices.
 
 
 
-#### Notification: exodm:create-package-notification
+### RPC: exodm:remove-execution-permission
+
+#### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:create-package-notification",
- "params": {"transaction-id": "",
-            "rpc-status": "",
-            "rpc-status-string": "",
-            "final": ""}}
+ "method": "exodm:remove-execution-permission",
+ "id": "",
+ "params": {"repository": "",
+            "name": "",
+            "rpcname": "",
+            "role": "",
+            "account": ""}}
 ```
-
-Elements included in all callback notifications sent from Exosense to the backend server.
 
 
 
 **descriptions**
-<dl><dt>final</dt>
-<dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
-<dt>rpc-status</dt>
-<dd>Status of operation in progress. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
-<dt>rpc-status-string</dt>
-<dd>Additional status information, in human readable format, (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>transaction-id</dt>
-<dd>The transaction that this callback is made in response to. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dl><dt>account</dt>
+<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>name</dt>
+<dd>Name of module, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>repository</dt>
+<dd>Where the module is: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>role</dt>
+<dd>Name of role to remove permission from. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>rpcname</dt>
+<dd>Name of rpc e.g. 'config-device' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:list-execution-permission
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:list-execution-permission",
+ "id": "",
+ "params": {"repository": "",
+            "modulename": "",
+            "rpcname": "",
+            "account": ""}}
+```
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>modulename</dt>
+<dd>Name of module, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>repository</dt>
+<dd>Where the module is: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>rpcname</dt>
+<dd>Name of rpc e.g. 'config-device' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"roles": ["roles": ""]}}
+```
+
+**descriptions**
+<dl><dt>roles</dt>
+<dd>List of role names (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:create-package
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:create-package",
+ "id": "",
+ "params": {"account": "",
+            "package-name": "",
+            "dependencies": ["dependencies": ""],
+            "uprade-from-packages": ["uprade-from-packages": ""],
+            "yang-specification": "",
+            "configuration-container": "",
+            "api-container": "",
+            "image": ""}}
+```
+
+Create a package in the database to be forwarded to devices.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account under which the package is installed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>api-container</dt>
+<dd>Container within the Yang specification that has the RPC API definition. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>configuration-container</dt>
+<dd>Container within the Yang specification that has the configuration data definition. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>dependencies</dt>
+<dd>List of packages that must be installed prior to this on a device (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>image</dt>
+<dd>The package image itself. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>Name of package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>uprade-from-packages</dt>
+<dd>List of packages that can be upgraded by this package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>yang-specification</dt>
+<dd>Yang specification containing the API and configuration data definitions. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1833,19 +2133,31 @@ Elements included in all callback notifications sent from Exosense to the backen
 {"jsonrpc": "2.0",
  "method": "exodm:add-package-members",
  "id": "",
- "params": {"package-name": ["package-name": ""],
-            "dev-id": ["dev-id": ""]}}
+ "params": {"account": "",
+            "package-name": ["package-name": ""],
+            "device-id": "",
+            "install-arguments": "",
+            "upgrade-arguments": "",
+            "uninstall-arguments": ""}}
 ```
 
-Add members to the list of devices to receive the package.
+Add members to the list of devices to receive the package. The device type of each added device-id must have the package as a part of its allowed packages.
 
 
 
 **descriptions**
-<dl><dt>dev-id</dt>
-<dd>Devices to push the given config data instances to (s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dl><dt>account</dt>
+<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-id</dt>
+<dd>Device type to accept this package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>install-arguments</dt>
+<dd>Arguments to be provided to the device package manager when package is installed on the given device type. The arguments will be provided to the install software on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
 <dd>Configuration data instances to associate with the given device(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>uninstall-arguments</dt>
+<dd>Arguments to be provided to the device package manager when package is uninstalled on the given device type. The arguments will be provided to the install software on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>upgrade-arguments</dt>
+<dd>Arguments to be provided to the device package manager when package is upgraded from an earlier version on the given device type. The arguments will be provided to the install software on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1864,38 +2176,35 @@ Add members to the list of devices to receive the package.
 
 
 
-### RPC: exodm:push-package
+### RPC: exodm:install-package
 
 #### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:push-package",
+ "method": "exodm:install-package",
  "id": "",
- "params": {"package-name": "",
-            "operation": "",
-            "timeout": "",
-            "auto-push-dependencies": "",
-            "remove-after-operation": "",
-            "replace-queue": ""}}
+ "params": {"account": "",
+            "package-name": "",
+            "targets": ["targets": ""],
+            "recursive": "",
+            "timeout": ""}}
 ```
 
-Pushes the given package to all member devices. Notifications will be sent back. If the package is already pushed to a device, it will not be transmitted again. Instead the specified operation will be executed for the package on the given device.
+Installs the package on all listed devices and/or device groups. The package will be transmitted to all devices, and device group member devices, and then installed. For each successful or failed transmit and install operation, a notification will be sent back to the invoking server.
 
 
 
 **descriptions**
-<dl><dt>auto-push-dependencies</dt>
-<dd>Specifies if any unresolved dependencies should automatically be pushed to the target as well. If set to false, each device with an unresolved dependency will generate an error push-package-notification (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
-<dt>operation</dt>
-<dd>The operation to be carried out on the package once it has been received on a device. (<b>type:</b> 0 (transmit) | 1 (install) | 2 (upgrade) | 3 (uninstall) | 4 (remove) | 5 (remove-recursively); [<em>mandatory: false</em>])</dd>
+<dl><dt>account</dt>
+<dd>The account to which the package and devices belong. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>remove-after-operation</dt>
-<dd>Specifies if the package should be removed from device-local storage once the operation (such as install) has been carried out on the device. If the auto-push-dependencies flag is set, any packages automatically transmitted to resolve dependencies will be removed as well. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
-<dt>replace-queue</dt>
-<dd>If set to true, any earlier operations for this package queued to the given device will be removed and replaced by the operation specified by this command. If set to false, this command will be queued to be executed after any other pending commands for this package to the given device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dd>The name of the package to install (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>recursive</dt>
+<dd>Recursively transmit and install any packages that this package is dependent upon. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dt>targets</dt>
+<dd>Mix of device-ids and device group ids for all devices to have the package installed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>timeout</dt>
-<dd>Timeout specification for this operation to be carried out to a device. If a timeout occur, an error is sent back for the timed out device using push-package-notification. Please note that some devices may time out while others succeed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>How many seconds to wait for the package to be installed on the target devices before returning a timeout error. Default is one week. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1914,23 +2223,132 @@ Pushes the given package to all member devices. Notifications will be sent back.
 
 
 
-#### Notification: exodm:push-package-notification
+### RPC: exodm:upgrade-package
+
+#### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:push-package-notification",
- "params": {"transaction-id": "",
+ "method": "exodm:upgrade-package",
+ "id": "",
+ "params": {"account": "",
+            "from-package-name": "",
+            "to-package-name": "",
+            "targets": ["targets": ""],
+            "recursive": "",
+            "remove-unused": "",
+            "timeout": ""}}
+```
+
+Upgrades from one package to another on all listed devices and/or device groups. The package will be transmitted to all devices, and device group member devices, and then installed. For each successful or failed transmit and install operation, a notification will be sent back to the invoking server.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the package and devices belong. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>from-package-name</dt>
+<dd>The name of the package already installed on the device to upgrade.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>recursive</dt>
+<dd>Recursively transmit and install any packages that to-package-name is dependent upon. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dt>remove-unused</dt>
+<dd>Remove any package images not needed after the upgrade from the device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dt>targets</dt>
+<dd>Mix of device-ids and device group ids for all devices to have the upgrade performed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>timeout</dt>
+<dd>How many seconds to wait for the package to be upgraded on the target devices before returning a timeout error. Default is one week. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>to-package-name</dt>
+<dd>The name of the package to use to upgrade the from-oackage.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:uninstall-package
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:uninstall-package",
+ "id": "",
+ "params": {"account": "",
+            "package": "",
+            "targets": ["targets": ""],
+            "remove-unused": "",
+            "timeout": ""}}
+```
+
+Uninstalls a packagefrom all listed devices and/or device groups. The package will be uninstalled from all devices, and device group member devices. For each successful or failed uninstall operation, a notification will be sent back to the invoking server.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the package and devices belong. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package</dt>
+<dd>The name of the package already installed on the device to uninstall. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>remove-unused</dt>
+<dd>Remove the package image from the device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dt>targets</dt>
+<dd>Mix of device-ids and device group ids for all devices to have the uninstall performed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>timeout</dt>
+<dd>How many seconds to wait for the package to be removed from the target devices before returning a timeout error. Default is one week. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Notification: exodm:package-operation-notification
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:package-operation-notification",
+ "params": {"device-id": "",
+            "package-name": "",
+            "package-status": "",
+            "transaction-id": "",
             "rpc-status": "",
             "rpc-status-string": "",
             "final": ""}}
 ```
 
-Elements included in all callback notifications sent from Exosense to the backend server.
+A notification sent back from the Exosense Server to the backend server to report the progress of an install/upgrade/uninstall operation. One notification will be sent back for each device that is to process the operaiton. The device ID that the notification is about. This device is listed, either directly or as a device group member, in the targets list of the install-package command that this is a notification of.
 
 
 
 **descriptions**
-<dl><dt>final</dt>
+<dl><dt>device-id</dt>
+<dd>The device that this notificaiton is in response to (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>final</dt>
 <dd>This is the final callback for the given operation (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>The device that this notificaiton is in response to (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-status</dt>
+<dd>The status of the packge install operation (<b>type:</b> 0 (transmitted) | 1 (transmit-failed) | 2 (installed) | 3 (install-failed) | 4 (upgraded) | 5 (upgrade-failed) | 6 (uninstalled) | 7 (uninstall-failed); [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
 <dd>Status of operation in progress. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
@@ -1938,6 +2356,185 @@ Elements included in all callback notifications sent from Exosense to the backen
 <dt>transaction-id</dt>
 <dd>The transaction that this callback is made in response to. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 </dl>
+
+
+
+### RPC: exodm:list-packages
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:list-packages",
+ "id": "",
+ "params": {"account": ""}}
+```
+
+List all packages in the system
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to list all packages for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": "",
+            "packages": ["packages": ""]}}
+```
+
+**descriptions**
+<dl><dt>packages</dt>
+<dd>Name of package (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:get-package-device-types
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:get-package-device-types",
+ "id": "",
+ "params": {"account": "",
+            "package-name": "",
+            "n": "",
+            "previous": ""}}
+```
+
+List all device types that can install a given package.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the package belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>n</dt>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>The account to which list supported device types for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>previous</dt>
+<dd>Previous device-type name (GID); "" if from beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": "",
+            "device-types": ["device-types": ""]}}
+```
+
+**descriptions**
+<dl><dt>device-types</dt>
+<dd>List of device-types accepting the given package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:get-package-devices
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:get-package-devices",
+ "id": "",
+ "params": {"account": "",
+            "package-name": "",
+            "n": "",
+            "previous": ""}}
+```
+
+List all device types that have installed, or are in the process of installing the given package.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the package belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>n</dt>
+<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>The account to which list supported device types for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>previous</dt>
+<dd>Previous device-id; "" if from beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": "",
+            "devices": [{"device-id": "",
+                         "package-status": ""}]}}
+```
+
+**descriptions**
+<dl><dt>device-id</dt>
+<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>devices</dt>
+<dd> (<b>type:</b> array)</dd>
+<dt>package-status</dt>
+<dd> (<b>type:</b> 0 (pending-install) | 1 (installed) | 2 (pending-uninstall) | 3 (uninstalled) | 4 (removed) | 5 (failed-install) | 6 (failed-uninstall); [<em>mandatory: false</em>])</dd>
+<dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:update-package-config
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:update-package-config",
+ "id": "",
+ "params": {"account": "",
+            "device-id": "",
+            "package-name": "",
+            "timeout": "",
+            "values": ""}}
+```
+
+Set and push configuration data for a given package on a given device, or all member devices of a device group, to those devices. The package name is given together with an array of key/value pairs for the conrfiguration data to set for the given package on the given device. Each key/value pair must match an element in the yang file and container specified by the create-package yang-specification and configuration-container
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account to which the package belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-id</dt>
+<dd>The device or group id to set the config data for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>The package to set the config data for in the target device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>timeout</dt>
+<dd>How many seconds to wait for the configuration data to be sent to the device before returning a timeout error. Default is one week. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>values</dt>
+<dd>Configuration values (validated against the yang specifification) (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": "ok"}
+```
 
 
 
