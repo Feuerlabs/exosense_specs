@@ -44,17 +44,19 @@ submodule exodm_device_group {
     description "RPC to create a device group";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf name {
         description "Group name";
         type exodm_type:id-string;
+        mandatory true;
       }
       leaf notification-url {
         description "RPC callback notification URL";
         type inet:uri;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
     }
 
@@ -73,15 +75,16 @@ submodule exodm_device_group {
     description "RPC to create a device group";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf gid {
         description "Group ID";
         type uint32;
+        mandatory true;
       }
-    }
+       leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
+      }
+   }
 
     output {
       leaf result {
@@ -95,18 +98,20 @@ submodule exodm_device_group {
     description "List device groups, N entries at a time";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description
           "Previous device group id (GID); \"\" if from beginning";
         type uint32;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
       leaf device-id {
         description
@@ -136,20 +141,23 @@ submodule exodm_device_group {
       "N entries at a time";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf gid {
         description "ID of the device group";
         type uint32;
+        mandatory true;
       }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description "Previous device; \"\" if from beginning";
+        type exodm_type:id-string;
+         mandatory true;
+     }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
@@ -165,10 +173,6 @@ submodule exodm_device_group {
   rpc add-device-group-members {
     description "Link devices to device groups";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf-list device-groups {
         description
           "Device groups to associate with the given device(s)";
@@ -176,6 +180,10 @@ submodule exodm_device_group {
       }
       leaf-list dev-id {
         description "List of Device ID(s)";
+        type exodm_type:id-string;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
@@ -190,10 +198,6 @@ submodule exodm_device_group {
   rpc remove-device-group-members {
     description "Unlink devices from device groups";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf-list device-groups {
         description
           "Device groups to unlink the given device(s) from";
@@ -203,6 +207,10 @@ submodule exodm_device_group {
       leaf-list dev-id {
         description "List of device ID(s)";
         min-elements 1;
+        type exodm_type:id-string;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
@@ -218,17 +226,19 @@ submodule exodm_device_group {
     description "RPC to change the notification URL of an existing group";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf gid {
         description "Group identifier.";
         type uint32;
+        mandatory true;
       }
       leaf notification-url {
         description "RPC callback notification URL";
         type inet:uri;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
     }
 

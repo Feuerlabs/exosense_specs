@@ -35,11 +35,11 @@ submodule exodm_device_type {
     description "RPC to create a device type";
 
     input {
+      uses device-type-obj;
       leaf account {
         description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
-      uses device-type-obj;
     }
 
     output {
@@ -52,14 +52,14 @@ submodule exodm_device_type {
   rpc update-device-type {
     description "RPC to modify an existing device type.";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       uses device-type-obj {
         refine protocol {
           mandatory false;
         }
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
+        type exodm_type:id-string;
       }
     }
     output {
@@ -73,12 +73,13 @@ submodule exodm_device_type {
     description "RPC to create a device type";
 
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf name {
         description "Device type name";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
@@ -93,16 +94,18 @@ submodule exodm_device_type {
   rpc list-device-types {
     description "RPC to list device types.";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description 'Previous device type; "" if from beginning';
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
@@ -116,20 +119,23 @@ submodule exodm_device_type {
   rpc list-device-type-members {
     description "List device IDs associated with a device type";
     input {
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
       leaf name {
         description "Name of device type";
         type exodm_type:id-string;
+        mandatory true;
       }
       leaf n {
         description "Number of entries to fetch";
         type uint32;
+        mandatory true;
       }
       leaf previous {
         description 'Previous device ID; "" if from beginning';
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf account {
+        description "The account to which the yang module belongs.";
         type exodm_type:id-string;
       }
     }
