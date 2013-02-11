@@ -149,4 +149,30 @@ submodule exodm_account {
       }
     }
   }
+
+  rpc list-account-roles {
+    description "List all roles defined for account.";
+    input {
+      leaf "account" { 
+        type exodm_type:id-string;
+        mandatory true;        
+      }
+      leaf n {
+        description "Number of entries to fetch";
+        type uint32;
+        mandatory true;        
+      }
+      leaf previous {
+        description 'Previous user name; "" if from beginning';
+        type exodm_type:id-string;
+        mandatory true;        
+      }
+    }
+    output {
+      leaf-list roles {
+        description "List of role names"; 
+        type exodm_type:id-string;
+      }
+    }
+  }
 }
