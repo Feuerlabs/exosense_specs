@@ -16,12 +16,40 @@ submodule exodm_package {
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";
 
+
     rpc create-package {
 	description
-	    "Create a package in the database to be forwarded to devices.";
+"Upload a package, with a software image, to be installed on devices. " +
+"The created package will be owned by the specified account. Once the " +
+"package has been uploaded, it can be added to device types that " +
+"supports it through the [exodm:add-package-tog-device-type] command. " +
+"<br><br>" +
+"If the given package is an upgrade, all existing packages that this " +
+"package can perform an upgrade on can be listed by the " +
+"upgrade-from-packages argument. " +
+"<br><br>" +
+"If the given package needs other packages installed on a device before " +
+"itself can be installed, the list of the required packages can be " +
+"listed in the prerequisite-packages argument. " +
+"<br><br>" +
+"When [exodm:install-package] command is called, the server will check " +
+"its device database to ensure that the prerequisite packages are " +
+"already installed. If this is not the case, and " +
+"recursive-dependency-resolve installation has not been selected, an " +
+"error will be returned. If recursive installation has been selected " +
+"for the command, all dependency packages will be resolved recursively " +
+"and transmitted with the package given in package-name to the device. ";
+
+
 	input {
 	    leaf account {
-		description "The account under which the package is installed.";
+		description
+		    "The account, associated withh the authorizing user, that will own the package." +
+		    "It is not possible to access  device types not owned " +
+		    "by the given account. " +
+		    "If no account is given, the authorizing user assumes to be associated " +
+		    "with only one account, which will be used. If no account is given, and " +
+		    "the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -32,7 +60,7 @@ submodule exodm_package {
 		}
 	    }
 
-            leaf-list dependencies {
+            leaf-list prerequisite-packages {
 		description "List of packages that must be installed prior to this on a device";
 		type exodm_type:id-string;
 	    }
@@ -76,35 +104,59 @@ submodule exodm_package {
 
 
 
-    rpc add-package-members {
+    rpc add-package-to-device-type {
 	description
-	    "Add members to the list of devices to receive the package. The device type of each " +
-	    "added device-id must have the package as a part of its allowed packages.";
+"Specify that a package can be installed on devices of a  given device type. " +
+"This commands specifies that the given package can be installed, " +
+"upgraded, and removed from devices that belongs to the provided device " +
+"type. Once the package has been added to the device type, it can be " +
+"sent out to be installed, upgraded, or uninstalled to/from a device " +
+"using the [exodm:install-package], [exodm:upgrade-package], and " +
+"[exodm:uninstall-package] calls. " +
+"In additon to the device type and package name itself, this call also " +
+"accepts arguments to be provided as command line parameters to the " +
+"local package manager on the device.  Different arguments are given for the " +
+"manager depending on if the package is to be installed, upgraded or " +
+"uninstalled. The actual syntax and semantics of the arguments are " +
+"dependent on the type of package manager running on the device. ";
+
 
 	input {
 	    leaf account {
-		description "The account to which the device type belongs.";
+		description
+"The account, associated with the authorizing user, to which the package and device type belong. " +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
 	    leaf-list package-name {
 		description
-		    "Configuration data instances to associate with " +
-		    "the given device(s)";
+"The name of the package to allow on the device type. " +
+"The name is that assigned to the package when it was created through a " +
+"[exodm:create-package] command.";
+
 		type exodm_type:id-string;
 	    }
 
-	    leaf device-id {
+	    leaf device-type {
 		description
-		    "Device type to accept this package.";
+"Device type to accept this package. " +
+"The device type is that assigned to the device type through a " +
+"[exodm:create-device-type] command.";
 		type exodm_type:id-string;
 	    }
 
 	    leaf install-arguments {
 		description
-		    "Arguments to be provided to the device package manager when package " +
-		    "is installed on the given device type. The arguments will be provided to " +
-		    "the install software on the device.";
+"Arguments to be provided to the device package manager when package is " +
+"installed on devices of the given device type. The specified string will be " +
+"supplied as a command line argument to the package manager. The exact syntax " +
+"of the string is dependent on the package manager running on the " +
+"device.";
 
 		mandatory false;
 		type string {
@@ -114,9 +166,11 @@ submodule exodm_package {
 
 	    leaf upgrade-arguments {
 		description
-		    "Arguments to be provided to the device package manager when package " +
-		    "is upgraded from an earlier version on the given device type. " +
-		    "The arguments will be provided to the install software on the device.";
+"Arguments to be provided to the device package manager when package is " +
+"upgraded on devices of the given device type. The specified string will be " +
+"supplied as a command line argument to the package manager. The exact syntax " +
+"of the string is dependent on the package manager running on the " +
+"device.";
 
 		mandatory false;
 		type string {
@@ -126,10 +180,101 @@ submodule exodm_package {
 
 	    leaf uninstall-arguments {
 		description
-		    "Arguments to be provided to the device package manager when package " +
-		    "is uninstalled on the given device type. " +
-		    "The arguments will be provided to the install software on the device.";
+"Arguments to be provided to the device package manager when package is " +
+"uninstalled from devices of the given device type. The specified string will be " +
+"supplied as a command line argument to the package manager. The exact syntax " +
+"of the string is dependent on the package manager running on the " +
+"device.";
+		mandatory false;
+		type string {
+		    length "1..256";
+		}
+	    }
+	}
 
+	output {
+	    leaf result {
+		type exodm_type:result-code;
+	    }
+	}
+    }
+
+    rpc remove-package-from-device-type {
+	description
+"Specify that a package cannot any longer be installed on devices of a given device type. " +
+"This commands specifies that the given package cannot be installed, " +
+"upgraded, or removed from devices that belongs to the provided device " +
+"type. The given package must have been added to the device-type with a previous " +
+"[exodm:add-package-to-device-type] command. " +
+"Any devices of the given device type that already have the package installed will not " +
+"be affected, although they cannot be uninstalled from them once the package is no longer " +
+"supported by the device type.";
+
+
+	input {
+	    leaf account {
+		description
+"The account, associated with the authorizing user, to which the package and device type belong. " +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf-list package-name {
+		description
+"The name of the package to allow on the device type. " +
+"The name is that assigned to the package when it was created through a " +
+"[exodm:create-package] command.";
+
+		type exodm_type:id-string;
+	    }
+
+	    leaf device-type {
+		description
+"Device type to accept this package. " +
+"The device type is that assigned to the device type through a " +
+"[exodm:create-device-type] command.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf install-arguments {
+		description
+"Arguments to be provided to the device package manager when package is " +
+"installed on devices of the given device type. The specified string will be " +
+"supplied as a command line argument to the package manager. The exact syntax " +
+"of the string is dependent on the package manager running on the " +
+"device.";
+
+		mandatory false;
+		type string {
+		    length "1..256";
+		}
+	    }
+
+	    leaf upgrade-arguments {
+		description
+"Arguments to be provided to the device package manager when package is " +
+"upgraded on devices of the given device type. The specified string will be " +
+"supplied as a command line argument to the package manager. The exact syntax " +
+"of the string is dependent on the package manager running on the " +
+"device.";
+
+		mandatory false;
+		type string {
+		    length "1..256";
+		}
+	    }
+
+	    leaf uninstall-arguments {
+		description
+"Arguments to be provided to the device package manager when package is " +
+"uninstalled from devices of the given device type. The specified string will be " +
+"supplied as a command line argument to the package manager. The exact syntax " +
+"of the string is dependent on the package manager running on the " +
+"device.";
 		mandatory false;
 		type string {
 		    length "1..256";
@@ -146,14 +291,52 @@ submodule exodm_package {
 
     rpc install-package {
 	description
-	    "Installs the package on all listed devices and/or device groups. The package " +
-	    "will be transmitted to all devices, and device group member devices, and then installed. " +
-	    "For each successful or failed transmit and install operation, a notification will be sent " +
-	    "back to the invoking server.";
+"Install a package on one or more devices. " +
+"Installs the given package on the devices provided in the targets " +
+"argument. The device IDs can either be listed directly in the " +
+"argument, or be a member of a listed device group. " +
+"The package will be transmitted to all resolved target and then installed on them. " +
+"<br><br>" +
+"Please note that all devices, either listed directly or through a " +
+"device group, must be of a device type that accepts the given " +
+"package. If one or more devices are of a type not accepting the " +
+"package, a [exodm:package-operation-notification] will be sent back " +
+"for the failed device with the error code not-supported." +
+"<br><br>" +
+"The installation is carried out by invoking the local package manager " +
+"on the device. This manager will be provided with command " +
+"line argumens retrieved from the install-arguments string specified to " +
+"the [exodm:add-package-to-device-type] when the package was added to " +
+"the device type. " +
+"<br><br>" +
+"The package to install may have dependencies on other packages that " +
+"must be installed on a device before itself can be installed. Such " +
+"dependencies are listed in the prerequisite-packages argument of the " +
+"[exodm:create-package] command that created the package." +
+"<br><br>" +
+"Prior to processing the install operation on each device, server will " +
+"check its internal database to ensure that the prerequisite packages " +
+"are already installed on the device. If this is not the case, and " +
+"recursive installation has not been selected, an error will be " +
+"returned. If the recursive-dependency-resolve argument has been set " +
+"for the install, all dependency packages will be resolved recursively " +
+"and transmitted with the package given in package-name to the device " +
+"in order to all be installed at once. on the device. " +
+"<br><br>" +
+"For each successful or failed transmit and install operation on a " +
+"device, a notification will be sent " +
+"back to the invoking backend server. This allows the backend server to " +
+"keep track of successes and failures during the install process";
 
 	input {
 	    leaf account {
-		description "The account to which the package and devices belong.";
+		description
+"The account, associated with the authorizing user, to which the package and devices belong." +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -171,9 +354,11 @@ submodule exodm_package {
 		type exodm_type:id-string;
 	    }
 
-	    leaf recursive {
+	    leaf recursive-dependency-resolve {
 		description
-		    "Recursively transmit and install any packages that this package is dependent upon.";
+		    "Recursively transmit and install any packages that this package " +
+		    "is dependent upon. This allows a complete tree of software to be " +
+		    "transmitted with a single transaciton.";
 
 		default false;
 		type boolean;
@@ -199,25 +384,52 @@ submodule exodm_package {
 
     rpc upgrade-package {
 	description
-	    "Upgrades from one package to another on all listed devices and/or device groups. The package " +
-	    "will be transmitted to all devices, and device group member devices, and then installed. " +
-	    "For each successful or failed transmit and install operation, a notification will be sent " +
-	    "back to the invoking server.";
-
+"Upgrade a package on one or more devices. " +
+"Upgrades the given package, specified by from-package-name, to a newer " +
+"version, specified in to-package-name, on the devices provided in the targets " +
+"argument. The device IDs can either be listed directly in the " +
+"argument, or be a member of a listed device group. " +
+"The package in to-package-name will be transmitted to all resolved target and then installed on them. " +
+"<br><br>" +
+"In order for the upgrade to processed, the package specified by the from-package-name " +
+"must be listed in the upgrade-from-packages element of the [exodm:create-package] " +
+"call that created the package specified by to-package-name." +
+"<br><br>" +
+"Please note that all devices, either listed directly or through a " +
+"device group, must be of a device type that accepts the given " +
+"package. If one or more devices are of a type not accepting the " +
+"package, a [exodm:package-operation-notification] will be sent back " +
+"for the failed device with the error code not-supported." +
+"<br><br>" +
+"The upgrade is carried out by invoking the local package manager " +
+"on the device. This software will be provided with command " +
+"line argumens retrieved from the upgrade-arguments string specified to " +
+"the [exodm:add-package-to-device-type] when the package was added to " +
+"the device type. " +
+"<br><br>" +
+"For each successful or failed transmit and upgrade operation on a device, a notification will be sent " +
+"back to the invoking backend server. This allows the backend server to " +
+"keep track of successes and failures during the upgrade process";
 	input {
 	    leaf account {
-		description "The account to which the package and devices belong.";
+		description
+"The account, associated with the authorizing user, to which the package and devices belong." +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
 	    leaf from-package-name {
-		description "The name of the package already installed on the device to upgrade. ";
+		description "The name of the package already installed on the devices to upgrade. ";
 		mandatory true;
 		type exodm_type:id-string;
 	    }
 
 	    leaf to-package-name {
-		description "The name of the package to use to upgrade the from-oackage. ";
+		description "The name of the package to use to upgrade the from-package. ";
 		mandatory true;
 		type exodm_type:id-string;
 	    }
@@ -230,7 +442,7 @@ submodule exodm_package {
 		type exodm_type:id-string;
 	    }
 
-	    leaf recursive {
+	    leaf  recursive-dependency-resolve {
 		description
 		    "Recursively transmit and install any packages that to-package-name is dependent upon.";
 
@@ -267,19 +479,36 @@ submodule exodm_package {
 
     rpc uninstall-package {
 	description
-	    "Uninstalls a packagefrom all listed devices and/or device groups. The package " +
-	    "will be uninstalled from all devices, and device group member devices. " +
-	    "For each successful or failed uninstall operation, a notification will be sent " +
-	    "back to the invoking server.";
+"Uninstall a package on one or more devices. " +
+"Uninstalls the given package, specified by package-name, " +
+"from the devices provided in the targets " +
+"argument. The device IDs can either be listed directly in the " +
+"argument, or be a member of a listed device group. " +
+"<br><br>" +
+"The uninstall is carried out by invoking the local package " +
+"manager  on the device. This manager will be provided with command " +
+"line argumens retrieved from the upgrade-arguments string specified to " +
+"the [exodm:add-package-to-device-type] when the package was added to " +
+"the device type. " +
+"<br><br>" +
+"For each successful or failed uninstall operation on a device, a notification will be sent " +
+"back to the invoking backend server. This allows the backend server to " +
+"keep track of successes and failures during the uninstall process";
 
 	input {
 	    leaf account {
-		description "The account to which the package and devices belong.";
+		description
+"The account, associated with the authorizing user, to which the package and devices belong." +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
-	    leaf package {
-		description "The name of the package already installed on the device to uninstall.";
+	    leaf package-name {
+		description "The name of the package, already installed on the device, to uninstall.";
 		mandatory true;
 		type exodm_type:id-string;
 	    }
@@ -295,7 +524,7 @@ submodule exodm_package {
 
 	    leaf remove-unused {
 		description
-		    "Remove the package image from the device.";
+		    "Remove the package images that are no longer in use from the device.";
 
 		default true;
 		type boolean;
@@ -318,13 +547,15 @@ submodule exodm_package {
 	}
     }
 
+
     notification package-operation-notification {
 	description
 	    "A notification sent back from the Exosense Server to the backend server " +
 	    "to report the progress of an install/upgrade/uninstall operation. " +
-	    "One notification will be sent back for each device that is to process the "+
-	    "operaiton. " +
-	    "The device ID that the notification is about. This device is listed, " +
+	    "One notification will be sent back for each device that is to process the " +
+	    "operation. " +
+	    "The device ID specifies the device that the notification refers to. " +
+	    "This device ID is listed, " +
 	    "either directly or as a device group member, in the targets list of " +
 	    "the install-package command that this is a notification of.";
 
@@ -375,7 +606,7 @@ submodule exodm_package {
 
 		enum upgrade-failed {
 		    description
-			"Package could not be upgraded device";
+			"Package could not be upgraded on device";
 		    value 5;
 		}
 
@@ -390,6 +621,31 @@ submodule exodm_package {
 			"Package could not be uninstalled from device";
 		    value 7;
 		}
+
+		enum not-installed {
+		    description
+			"Package is not installed on the given device";
+		    value 8;
+		}
+
+		enum unsupported-package {
+		    description
+			"Package is not supported on the given device or device type.";
+		    value 9;
+		}
+
+
+		enum dependency-failure {
+		    description
+			"Package is dependent on one or more additional packages not available on device.";
+		    value 10;
+		}
+
+		enum timeout {
+		    description
+			"Operation could not be completed prior to timeout.";
+		    value 11;
+		}
 	    }
 	}
 	uses exo:std-callback;
@@ -400,7 +656,13 @@ submodule exodm_package {
 
 	input {
 	    leaf account {
-		description "The account to list all packages for.";
+		description
+"The account, associated with the authorizing user, to list all packages for." +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 	}
@@ -422,16 +684,25 @@ submodule exodm_package {
 
 
     rpc get-package-device-types {
-	description "List all device types that can install a given package.";
+	description
+"List all device types that can install a given package.  All devices " +
+"types that have had the given package added to it through an " +
+	    "[exodm:add-package-to-device-type] will returned by this call.";
 
 	input {
 	    leaf account {
-		description "The account to which the package belongs.";
+		description
+"The account, associated with the authorizing user, to which the package belongs." +
+"It is not possible to access packages types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
 	    leaf package-name {
-		description "The account to which list supported device types for.";
+		description "The package to which list supporting device types for.";
 		type exodm_type:id-string;
 	    }
 	    leaf n {
@@ -459,19 +730,26 @@ submodule exodm_package {
     }
 
 
-    rpc get-package-devices {
+    rpc get-devices-with-package {
 	description
 	    "List all device types that have installed, or are in the process of " +
-	    "installing the given package.";
+	    "installing the given package. Packages returned have previously been " +
+	    "installed on the device using a [exodm:add-package-to-device] call";
 
 	input {
 	    leaf account {
-		description "The account to which the package belongs.";
+		description
+"The account, associated with the authorizing user, to which the package belongs." +
+"It is not possible to access packages or device types not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
 	    leaf package-name {
-		description "The account to which list supported device types for.";
+		description "The account to which list installed devices for.";
 		type exodm_type:id-string;
 	    }
 	    leaf n {
@@ -538,23 +816,55 @@ submodule exodm_package {
 	}
     }
 
+
     rpc update-package-config {
 	description
-	    "Set and push configuration data for a given package on a given device, " +
-	    "or all member devices of a device group, to those devices. " +
-	    "The package name is given together with an array of key/value pairs " +
-	    "for the conrfiguration data to set for the given package on the given device. " +
-	    "Each key/value pair must match an element in the yang file and container " +
-	    "specified by the create-package yang-specification and configuration-container";
+
+"Set and push configuration data for a given package to a the devices " +
+"provided in the targets argument" +
+"<br><br>" +
+"The device IDs can either be listed directly in the " +
+"argument, or be a member of a listed device group.  The configuration " +
+"data for the package will be transmitted to all resolved target and " +
+"then updated in their local configuration system.  The package name is " +
+"given together with an array of key/value pairs for the conrfiguration " +
+"data to set for the given package on the given devices.  Each " +
+"key/value pair must match an element in the yang file and container " +
+"specified by the create-package yang-specification and " +
+"configuration-container.  All given devices must have both be " +
+"supporting the specified package, and have the package installed on " +
+"them. " +
+"<br><br>" +
+"A successful configuration entry update on a device will overwrite any " +
+"earlier values that entry had. This allows default and/or general " +
+"configuration updates, such as Exosense Server addresses and call in " +
+"schedules, to be sent out to device groups covering large swaths of " +
+"devices, followed by more targeted updates to individual devices with " +
+"information such as local encryption keys, individual identities, etc. " +
+"<br><br>" +
+"For each successful or failed configuration operation on a device, a " +
+"notification will be sent back to the invoking backend server for the " +
+"given device. This allows the backend server to keep track of " +
+"successes and failures during the configuration update process.";
+
+
+
 
 	input {
 	    leaf account {
-		description "The account to which the package belongs.";
+		description
+"The account, associated with the authorizing user, to which the " +
+"package and device belongs." +
+"It is not possible to access packages or devices not owned " +
+"by the given account. " +
+"If no account is given, the authorizing user assumes to be associated " +
+"with only one account, which will be used. If no account is given, and " +
+"the user belongs to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
-	    leaf device-id {
-		description "The device or group id to set the config data for.";
+	    leaf-list targets {
+		description "A list of device ids and device group ids id to set the config data on.";
 		type exodm_type:id-string;
 	    }
 
@@ -573,9 +883,15 @@ submodule exodm_package {
 	    }
 
 	    anyxml values {
-		description "Configuration values (validated against the yang specifification)";
+		description
+		    "Configuration values (validated against the yang specifification) " +
+		    "to set on the target devices.";
 	    }
 	}
     }
+
 }
+
+
+
 

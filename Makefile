@@ -1,4 +1,4 @@
-.PHONY: all doc
+.PHONY: doc all
 
 all:
 	rebar get-deps compile

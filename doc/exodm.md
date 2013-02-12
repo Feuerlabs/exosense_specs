@@ -2079,7 +2079,7 @@ RPC to list existing yang modules.
  "id": "",
  "params": {"account": "",
             "package-name": "",
-            "dependencies": ["dependencies": ""],
+            "prerequisite-packages": ["prerequisite-packages": ""],
             "uprade-from-packages": ["uprade-from-packages": ""],
             "yang-specification": "",
             "configuration-container": "",
@@ -2087,23 +2087,23 @@ RPC to list existing yang modules.
             "image": ""}}
 ```
 
-Create a package in the database to be forwarded to devices.
+Upload a package, with a software image, to be installed on devices. The created package will be owned by the specified account. Once the package has been uploaded, it can be added to device types that supports it through the [exodm:add-package-tog-device-type] command. <br><br>If the given package is an upgrade, all existing packages that this package can perform an upgrade on can be listed by the upgrade-from-packages argument. <br><br>If the given package needs other packages installed on a device before itself can be installed, the list of the required packages can be listed in the prerequisite-packages argument. <br><br>When [exodm:install-package] command is called, the server will check its device database to ensure that the prerequisite packages are already installed. If this is not the case, and recursive-dependency-resolve installation has not been selected, an error will be returned. If recursive installation has been selected for the command, all dependency packages will be resolved recursively and transmitted with the package given in package-name to the device. 
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account under which the package is installed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated withh the authorizing user, that will own the package.It is not possible to access  device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>api-container</dt>
 <dd>Container within the Yang specification that has the RPC API definition. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>configuration-container</dt>
 <dd>Container within the Yang specification that has the configuration data definition. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>dependencies</dt>
-<dd>List of packages that must be installed prior to this on a device (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>image</dt>
 <dd>The package image itself. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
 <dd>Name of package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>prerequisite-packages</dt>
+<dd>List of packages that must be installed prior to this on a device (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>uprade-from-packages</dt>
 <dd>List of packages that can be upgraded by this package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>yang-specification</dt>
@@ -2126,38 +2126,88 @@ Create a package in the database to be forwarded to devices.
 
 
 
-### RPC: exodm:add-package-members
+### RPC: exodm:add-package-to-device-type
 
 #### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:add-package-members",
+ "method": "exodm:add-package-to-device-type",
  "id": "",
  "params": {"account": "",
             "package-name": ["package-name": ""],
-            "device-id": "",
+            "device-type": "",
             "install-arguments": "",
             "upgrade-arguments": "",
             "uninstall-arguments": ""}}
 ```
 
-Add members to the list of devices to receive the package. The device type of each added device-id must have the package as a part of its allowed packages.
+Specify that a package can be installed on devices of a  given device type. This commands specifies that the given package can be installed, upgraded, and removed from devices that belongs to the provided device type. Once the package has been added to the device type, it can be sent out to be installed, upgraded, or uninstalled to/from a device using the [exodm:install-package], [exodm:upgrade-package], and [exodm:uninstall-package] calls. In additon to the device type and package name itself, this call also accepts arguments to be provided as command line parameters to the local package manager on the device.  Different arguments are given for the manager depending on if the package is to be installed, upgraded or uninstalled. The actual syntax and semantics of the arguments are dependent on the type of package manager running on the device. 
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the device type belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>device-id</dt>
-<dd>Device type to accept this package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package and device type belong. It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-type</dt>
+<dd>Device type to accept this package. The device type is that assigned to the device type through a [exodm:create-device-type] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>install-arguments</dt>
-<dd>Arguments to be provided to the device package manager when package is installed on the given device type. The arguments will be provided to the install software on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Arguments to be provided to the device package manager when package is installed on devices of the given device type. The specified string will be supplied as a command line argument to the package manager. The exact syntax of the string is dependent on the package manager running on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
-<dd>Configuration data instances to associate with the given device(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The name of the package to allow on the device type. The name is that assigned to the package when it was created through a [exodm:create-package] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>uninstall-arguments</dt>
-<dd>Arguments to be provided to the device package manager when package is uninstalled on the given device type. The arguments will be provided to the install software on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Arguments to be provided to the device package manager when package is uninstalled from devices of the given device type. The specified string will be supplied as a command line argument to the package manager. The exact syntax of the string is dependent on the package manager running on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>upgrade-arguments</dt>
-<dd>Arguments to be provided to the device package manager when package is upgraded from an earlier version on the given device type. The arguments will be provided to the install software on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Arguments to be provided to the device package manager when package is upgraded on devices of the given device type. The specified string will be supplied as a command line argument to the package manager. The exact syntax of the string is dependent on the package manager running on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+#### Reply
+```json
+{"jsonrpc": "2.0",
+ "id": "",
+ "result": {"result": ""}}
+```
+
+**descriptions**
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### RPC: exodm:remove-package-from-device-type
+
+#### Request
+```json
+{"jsonrpc": "2.0",
+ "method": "exodm:remove-package-from-device-type",
+ "id": "",
+ "params": {"account": "",
+            "package-name": ["package-name": ""],
+            "device-type": "",
+            "install-arguments": "",
+            "upgrade-arguments": "",
+            "uninstall-arguments": ""}}
+```
+
+Specify that a package cannot any longer be installed on devices of a given device type. This commands specifies that the given package cannot be installed, upgraded, or removed from devices that belongs to the provided device type. The given package must have been added to the device-type with a previous [exodm:add-package-to-device-type] command. Any devices of the given device type that already has the package installed will not be affected, although they cannot be uninstalled from them once the package is no longer supported by the device type.
+
+
+
+**descriptions**
+<dl><dt>account</dt>
+<dd>The account, associated with the authorizing user, to which the package and device type belong. It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-type</dt>
+<dd>Device type to accept this package. The device type is that assigned to the device type through a [exodm:create-device-type] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>install-arguments</dt>
+<dd>Arguments to be provided to the device package manager when package is installed on devices of the given device type. The specified string will be supplied as a command line argument to the package manager. The exact syntax of the string is dependent on the package manager running on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>The name of the package to allow on the device type. The name is that assigned to the package when it was created through a [exodm:create-package] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>uninstall-arguments</dt>
+<dd>Arguments to be provided to the device package manager when package is uninstalled from devices of the given device type. The specified string will be supplied as a command line argument to the package manager. The exact syntax of the string is dependent on the package manager running on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>upgrade-arguments</dt>
+<dd>Arguments to be provided to the device package manager when package is upgraded on devices of the given device type. The specified string will be supplied as a command line argument to the package manager. The exact syntax of the string is dependent on the package manager running on the device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2186,21 +2236,21 @@ Add members to the list of devices to receive the package. The device type of ea
  "params": {"account": "",
             "package-name": "",
             "targets": ["targets": ""],
-            "recursive": "",
+            "recursive-dependency-resolve": "",
             "timeout": ""}}
 ```
 
-Installs the package on all listed devices and/or device groups. The package will be transmitted to all devices, and device group member devices, and then installed. For each successful or failed transmit and install operation, a notification will be sent back to the invoking server.
+Install a package on one or more devices. Installs the given package on the devices provided in the targets argument. The device IDs can either be listed directly in the argument, or be a part of a listed device group. The package will be transmitted to all resolved target and then installed on them. <br><br>Please note that all devices, either listed directly or through a device group, must be of a device type that accepts the given package. If one or more devices are of a type not accepting the package, a [exodm:package-operation-notification] will be sent back for the failed device with the error code not-supported.<br><br>The installation is carried out by invoking the local package manager on the device. This manager will be provided with command line argumens retrieved from the install-arguments string specified to the [exodm:add-package-to-device-type] when the package was added to the device type. <br><br>The package to install may have dependencies on other packages that must be installed on a device before itself can be installed. Such dependencies are listed in the prerequisite-packages argument of the [exodm:create-package] command that created the package.<br><br>Prior to processing the install operation on each device, server will check its internal database to ensure that the prerequisite packages are already installed on the device. If this is not the case, and recursive installation has not been selected, an error will be returned. If the recursive-dependency-resolve argument has been set for the install, all dependency packages will be resolved recursively and transmitted with the package given in package-name to the device in order to all be installed at once. on the device. <br><br>For each successful or failed transmit and install operation on a device, a notification will be sent back to the invoking backend server. This allows the backend server to keep track of successes and failures during the install process
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the package and devices belong. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package and devices belong.It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
 <dd>The name of the package to install (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>recursive</dt>
-<dd>Recursively transmit and install any packages that this package is dependent upon. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dt>recursive-dependency-resolve</dt>
+<dd>Recursively transmit and install any packages that this package is dependent upon. This allows a complete tree of software to be transmitted with a single transaciton. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>targets</dt>
 <dd>Mix of device-ids and device group ids for all devices to have the package installed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>timeout</dt>
@@ -2234,21 +2284,21 @@ Installs the package on all listed devices and/or device groups. The package wil
             "from-package-name": "",
             "to-package-name": "",
             "targets": ["targets": ""],
-            "recursive": "",
+            "recursive-dependency-resolve": "",
             "remove-unused": "",
             "timeout": ""}}
 ```
 
-Upgrades from one package to another on all listed devices and/or device groups. The package will be transmitted to all devices, and device group member devices, and then installed. For each successful or failed transmit and install operation, a notification will be sent back to the invoking server.
+Upgrade a package on one or more devices. Upgrades the given package, specified by from-package-name, to a newer version, specified in to-package-name, on the devices provided in the targets argument. The device IDs can either be listed directly in the argument, or be a part of a listed device group. The package in to-package-name will be transmitted to all resolved target and then installed on them. <br><br>In order for the upgrade to processed, the package specified by the from-package-name must be listed in the upgrade-from-packages element of the [exodm:create-package] call that created the package specified by to-package-name.<br><br>Please note that all devices, either listed directly or through a device group, must be of a device type that accepts the given package. If one or more devices are of a type not accepting the package, a [exodm:package-operation-notification] will be sent back for the failed device with the error code not-supported.<br><br>The upgrade is carried out by invoking the local package manager on the device. This software will be provided with command line argumens retrieved from the upgrade-arguments string specified to the [exodm:add-package-to-device-type] when the package was added to the device type. <br><br>For each successful or failed transmit and upgrade operation on a device, a notification will be sent back to the invoking backend server. This allows the backend server to keep track of successes and failures during the upgrade process
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the package and devices belong. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package and devices belong.It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>from-package-name</dt>
-<dd>The name of the package already installed on the device to upgrade.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>recursive</dt>
+<dd>The name of the package already installed on the devices to upgrade.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>recursive-dependency-resolve</dt>
 <dd>Recursively transmit and install any packages that to-package-name is dependent upon. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>remove-unused</dt>
 <dd>Remove any package images not needed after the upgrade from the device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
@@ -2257,7 +2307,7 @@ Upgrades from one package to another on all listed devices and/or device groups.
 <dt>timeout</dt>
 <dd>How many seconds to wait for the package to be upgraded on the target devices before returning a timeout error. Default is one week. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>to-package-name</dt>
-<dd>The name of the package to use to upgrade the from-oackage.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The name of the package to use to upgrade the from-package.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -2284,23 +2334,23 @@ Upgrades from one package to another on all listed devices and/or device groups.
  "method": "exodm:uninstall-package",
  "id": "",
  "params": {"account": "",
-            "package": "",
+            "package-name": "",
             "targets": ["targets": ""],
             "remove-unused": "",
             "timeout": ""}}
 ```
 
-Uninstalls a packagefrom all listed devices and/or device groups. The package will be uninstalled from all devices, and device group member devices. For each successful or failed uninstall operation, a notification will be sent back to the invoking server.
+Uninstall a package on one or more devices. Uninstalls the given package, specified by package-name, from the devices provided in the targets argument. The device IDs can either be listed directly in the argument, or be a part of a listed device group. <br><br>The uninstall is carried out by invoking the local package manager  on the device. This manager will be provided with command line argumens retrieved from the upgrade-arguments string specified to the [exodm:add-package-to-device-type] when the package was added to the device type. <br><br>For each successful or failed uninstall operation on a device, a notification will be sent back to the invoking backend server. This allows the backend server to keep track of successes and failures during the uninstall process
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the package and devices belong. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>package</dt>
-<dd>The name of the package already installed on the device to uninstall. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package and devices belong.It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>The name of the package, already installed on the device, to uninstall. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>remove-unused</dt>
-<dd>Remove the package image from the device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
+<dd>Remove the package images that are no longer in use from the device. (<b>type:</b> true | false; [<em>mandatory: false</em>])</dd>
 <dt>targets</dt>
 <dd>Mix of device-ids and device group ids for all devices to have the uninstall performed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>timeout</dt>
@@ -2336,7 +2386,7 @@ Uninstalls a packagefrom all listed devices and/or device groups. The package wi
             "final": ""}}
 ```
 
-A notification sent back from the Exosense Server to the backend server to report the progress of an install/upgrade/uninstall operation. One notification will be sent back for each device that is to process the operaiton. The device ID that the notification is about. This device is listed, either directly or as a device group member, in the targets list of the install-package command that this is a notification of.
+A notification sent back from the Exosense Server to the backend server to report the progress of an install/upgrade/uninstall operation. One notification will be sent back for each device that is to process the operation. The device ID specifies the device that the notification refers to. This device ID is listed, either directly or as a device group member, in the targets list of the install-package command that this is a notification of.
 
 
 
@@ -2348,7 +2398,7 @@ A notification sent back from the Exosense Server to the backend server to repor
 <dt>package-name</dt>
 <dd>The device that this notificaiton is in response to (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>package-status</dt>
-<dd>The status of the packge install operation (<b>type:</b> 0 (transmitted) | 1 (transmit-failed) | 2 (installed) | 3 (install-failed) | 4 (upgraded) | 5 (upgrade-failed) | 6 (uninstalled) | 7 (uninstall-failed); [<em>mandatory: false</em>])</dd>
+<dd>The status of the packge install operation (<b>type:</b> 0 (transmitted) | 1 (transmit-failed) | 2 (installed) | 3 (install-failed) | 4 (upgraded) | 5 (upgrade-failed) | 6 (uninstalled) | 7 (uninstall-failed) | 8 (not-installed) | 9 (unsupported-package) | 10 (dependency-failure) | 11 (timeout); [<em>mandatory: false</em>])</dd>
 <dt>rpc-status</dt>
 <dd>Status of operation in progress. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 <dt>rpc-status-string</dt>
@@ -2375,7 +2425,7 @@ List all packages in the system
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to list all packages for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to list all packages for.It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2410,17 +2460,17 @@ List all packages in the system
             "previous": ""}}
 ```
 
-List all device types that can install a given package.
+List all device types that can install a given package.  All devices types that have had the given package added to it through an [exodm:add-package-to-device-type] will returned by this call.
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the package belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package belongs.It is not possible to access packages types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
 <dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
-<dd>The account to which list supported device types for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The package to which list supporting device types for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>previous</dt>
 <dd>Previous device-type name (GID); "" if from beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 </dl>
@@ -2444,12 +2494,12 @@ List all device types that can install a given package.
 
 
 
-### RPC: exodm:get-package-devices
+### RPC: exodm:get-devices-with-package
 
 #### Request
 ```json
 {"jsonrpc": "2.0",
- "method": "exodm:get-package-devices",
+ "method": "exodm:get-devices-with-package",
  "id": "",
  "params": {"account": "",
             "package-name": "",
@@ -2457,17 +2507,17 @@ List all device types that can install a given package.
             "previous": ""}}
 ```
 
-List all device types that have installed, or are in the process of installing the given package.
+List all device types that have installed, or are in the process of installing the given package. Packages returned have previously been installed on the device using a [exodm:add-package-to-device] call
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the package belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package belongs.It is not possible to access packages or device types not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
 <dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
-<dd>The account to which list supported device types for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account to which list installed devices for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>previous</dt>
 <dd>Previous device-id; "" if from beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 </dl>
@@ -2504,27 +2554,27 @@ List all device types that have installed, or are in the process of installing t
  "method": "exodm:update-package-config",
  "id": "",
  "params": {"account": "",
-            "device-id": "",
+            "targets": ["targets": ""],
             "package-name": "",
             "timeout": "",
             "values": ""}}
 ```
 
-Set and push configuration data for a given package on a given device, or all member devices of a device group, to those devices. The package name is given together with an array of key/value pairs for the conrfiguration data to set for the given package on the given device. Each key/value pair must match an element in the yang file and container specified by the create-package yang-specification and configuration-container
+Set and push configuration data for a given package to a the devices provided in the targets <br><br>argument. The device IDs can either be listed directly in the argument, or be a part of a listed device group.  The configuration data for the package will be transmitted to all resolved target and then updated in their local configuration system.  The package name is given together with an array of key/value pairs for the conrfiguration data to set for the given package on the given devices.  Each key/value pair must match an element in the yang file and container specified by the create-package yang-specification and configuration-container.  All given devices must have both be supporting the specified package, and have the package installed on them. <br><br>A successful configuration entry update on a device will overwrite any earlier values that entry had. This allows default and/or general configuration updates, such as Exosense Server addresses and callin schedules, to be sent out to device groups covering large swaths of devices, followed by more targeted updates to individual devices with information such as local encryption keys, individual identities, etc. <br><br>For each successful or failed configuration operation on a device, a notification will be sent back to the invoking backend server for the given device. This allows the backend server to keep track of successes and failures during the configuration update process.
 
 
 
 **descriptions**
 <dl><dt>account</dt>
-<dd>The account to which the package belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>device-id</dt>
-<dd>The device or group id to set the config data for. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, associated with the authorizing user, to which the package and device belongs.It is not possible to access packages or devices not owned by the given account. If no account is given, the authorizing user assumes to be associated with only one account, which will be used. If no account is given, and the user belongs to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>package-name</dt>
 <dd>The package to set the config data for in the target device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>targets</dt>
+<dd>A list of device ids and device group ids id to set the config data on. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>timeout</dt>
 <dd>How many seconds to wait for the configuration data to be sent to the device before returning a timeout error. Default is one week. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>values</dt>
-<dd>Configuration values (validated against the yang specifification) (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
+<dd>Configuration values (validated against the yang specifification) to set on the target devices. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
