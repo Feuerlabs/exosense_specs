@@ -44,11 +44,11 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated withh the authorizing user, that will own the " +
+"The account, accessible by the authorizing user, that will own the " +
 "package.  It is not possible to access device types not owned by the " +
 "given account.  If no account is given, the authorizing user assumes " +
-"to be associated with only one account, which will be used. If no " +
-"account is given, and the user belongs to multiple accounts, an error " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
 "is returned.";
 		type exodm_type:id-string;
 	    }
@@ -124,12 +124,12 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package and device type belong. " +
+"The account, accessible by the authorizing user, to which the package and device type belong. " +
 "It is not possible to access packages or device types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access " +
+"to only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -214,12 +214,12 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package and device type belong. " +
+"The account, accessible by the authorizing user, to which the package and device type belong. " +
 "It is not possible to access packages or device types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access " +
+"to only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -331,15 +331,15 @@ submodule exodm_package {
 "member of. Thus, a single device operation may trigger notifications " +
 "sends to multiple callback URLs. If the same URL is registered " +
 "multiple times for a device and its groups, the notificaiton will only " +
-"be sent once to that URL."
+"be sent once to that URL.";
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the " +
+"The account, accessible by the authorizing user, to which the " +
 "package and devices belong.  It is not possible to access packages or " +
 "device types not owned by the given account.  If no account is given, " +
-"the authorizing user assumes to be associated with only one account, " +
-"which will be used. If no account is given, and the user belongs to " +
+"the authorizing user assumes to have access only one account, " +
+"which will be used. If no account is given, and the user has access to " +
 "multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
@@ -419,16 +419,16 @@ submodule exodm_package {
 "member of. Thus, a single device operation may trigger notifications " +
 "sends to multiple callback URLs. If the same URL is registered " +
 "multiple times for a device and its groups, the notificaiton will only " +
-"be sent once to that URL."
+"be sent once to that URL.";
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package and devices belong." +
+"The account, accessible by the authorizing user, to which the package and devices belong." +
 "It is not possible to access packages or device types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -509,17 +509,17 @@ submodule exodm_package {
 "member of. Thus, a single device operation may trigger notifications " +
 "sends to multiple callback URLs. If the same URL is registered " +
 "multiple times for a device and its groups, the notificaiton will only " +
-"be sent once to that URL."
+"be sent once to that URL.";
 
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package and devices belong." +
+"The account, accessible by the authorizing user, to which the package and devices belong." +
 "It is not possible to access packages or device types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to  multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -673,12 +673,12 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to list all packages for." +
+"The account, accessible the authorizing user, to list all packages for." +
 "It is not possible to access packages or device types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 	}
@@ -708,12 +708,12 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package belongs." +
+"The account, accessible by the authorizing user, to which the package belongs." +
 "It is not possible to access packages types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access " +
+"to only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -755,12 +755,12 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package belongs." +
+"The account, accessible by the authorizing user, to which the package belongs." +
 "It is not possible to access packages or device types not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access to " +
+" only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -866,13 +866,13 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the " +
+"The account, accessible by the authorizing user, to which the " +
 "package and device belongs." +
 "It is not possible to access packages or devices not owned " +
 "by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"If no account is given, the authorizing user assumes to have access " +
+"to only one account, which will be used. If no account is given, and " +
+"the user has access multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
