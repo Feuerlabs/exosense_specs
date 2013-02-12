@@ -10,14 +10,36 @@ submodule exodm_account {
 
   description "API for Exosense Device Management Server, account part";
 
-  contact "ulf.wiger@feuerlabs.com";
+  contact "magnus.feuer@feuerlabs.com";
   organization "Feuerlabs, Inc.";
 
   rpc create-account {
-    description "Create a new account";
+    description 
+"Create a new account. 
+This call, which must be invoked by the sysadm user, creates a new Exosense
+Account. The created account can then be associated with users that will
+manage the devices, device groups, packages, etc, owned by the account.
+
+When the account is created, an account admin user will be also be automatically created. This user acts as the initial administrator for the account and can be used to manage all resources owned by the account. The name of the account admin is provided in the admin-user argument of this call.
+"
+
     input {
-      leaf name { type exodm_type:id-string; mandatory true; }
+      leaf name { 
+	  description
+"The name of the account. This name has to be unique across all " +
+"accounts created in the Exosense Server.";
+
+	  type exodm_type:id-string; 
+	  mandatory true; 
+      }
+      
       list admin-user {
+	  description 
+"The initial account administrator user to create in conjunction with " +
+"the account. The username has to be unique across all users created in " +
+"the Exosense Server";
+
+
 	key "uname";
 	min-elements 1;
 	max-elements 1;
@@ -25,35 +47,45 @@ submodule exodm_account {
       }
     }
     output {
-      leaf result { type exodm_type:result-code; }
-      leaf account-id { type string; }
+      leaf result { 
+	  description "The result of the operation.";
+	  type exodm_type:result-code; }
     }
   }
 
   rpc update-account {
     description
-      "Update account information.";
+"Update an existing account.  This call modifies the name of an account " +
+"previously created with a [exodm:create-account] command. The new name " +
+"of the account must be unique across all accounts in the Exosense " +
+"Server.";
     input {
       leaf name {
-        description "The account name.";
+        description 
+"The name of the account. This name has to be unique across all " +
+"accounts created in the Exosense Server.";
+
         type exodm_type:id-string;
       }
     }
 
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "The result of the operation.";
+	  type exodm_type:result-code;
       }
     }
   }
 
   rpc delete-account {
     description
-      "Delete an account,
-	   data must be deleted before account is removed.";
+"Delete an account. This command will remove the account specified by " +
+"the name argument. If the given account owns any devices, device " +
+"types, device groups, packages, configuration sets or yang " +
+"specifications, they will be deleted together with the account.";
     input {
       leaf name {
-        description "The account name.";
+        description "The name of the account to delete.";
         type exodm_type:id-string;
         mandatory true;        
       }
@@ -67,15 +99,24 @@ submodule exodm_account {
   }
   
   rpc list-accounts {
-    description "List all account names.";
+    description 
+"List all accounts in the Exosense Server. " +
+"This command will list all accounts created in the Exosense " + 
+"Server. " +
+"The command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of accounts.";
     input {
       leaf n {
-        description "Number of entries to fetch";
+        description 
+"Maximum accounts of entries to return. More accounts may be available " +
+"after the last returned element.";
         type uint32;
         mandatory true;        
       }
       leaf previous {
-        description 'Previous account name; "" if from beginning';
+	  description 
+'Start the fetch at the first account after the account with the given ' +
+'name. Use "" if the fetch is to start from the beginning';
         type exodm_type:id-string;
         mandatory true;        
       }
@@ -125,35 +166,49 @@ submodule exodm_account {
   }
 
   rpc list-account-users {
-    description "List all users with access to account.";
+    description 
+"List all users with associated with the specified account." +
+"The command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of user names.";
     input {
       leaf "account" { 
         type exodm_type:id-string;
         mandatory true;        
       }
       leaf n {
-        description "Number of entries to fetch";
+	  description
+"Maximum accounts of entries to return. More users may be available " +
+"after the last returned element.";
+
         type uint32;
         mandatory true;        
       }
       leaf previous {
-        description 'Previous user name; "" if from beginning';
+        description 
+'Start the fetch at the first user after the user with the given ' +
+'name. Use "" if the fetch is to start from the beginning';
         type exodm_type:id-string;
         mandatory true;        
       }
     }
     output {
       leaf-list users {
-        description "List of user names"; 
+        description 
+"The (partial) list of user names associated with the given account."; 
         type exodm_type:id-string;
       }
     }
   }
 
   rpc list-account-roles {
-    description "List all roles defined for account.";
+    description 
+"List all roles defined for account.
+This command will return all roles in account that can be assigned to users.";
     input {
       leaf "account" { 
+	  description
+"The account to list all roles for. The account has been created with " +
+"a previous [exodm:create-account] call."
         type exodm_type:id-string;
         mandatory true;        
       }

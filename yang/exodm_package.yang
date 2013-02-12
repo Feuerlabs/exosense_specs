@@ -44,12 +44,12 @@ submodule exodm_package {
 	input {
 	    leaf account {
 		description
-		    "The account, associated withh the authorizing user, that will own the package." +
-		    "It is not possible to access  device types not owned " +
-		    "by the given account. " +
-		    "If no account is given, the authorizing user assumes to be associated " +
-		    "with only one account, which will be used. If no account is given, and " +
-		    "the user belongs to multiple accounts, an error is returned.";
+"The account, associated withh the authorizing user, that will own the " +
+"package.  It is not possible to access device types not owned by the " +
+"given account.  If no account is given, the authorizing user assumes " +
+"to be associated with only one account, which will be used. If no " +
+"account is given, and the user belongs to multiple accounts, an error " +
+"is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -324,19 +324,23 @@ submodule exodm_package {
 "in order to all be installed at once. on the device. " +
 "<br><br>" +
 "For each successful or failed transmit and install operation on a " +
-"device, a notification will be sent " +
-"back to the invoking backend server. This allows the backend server to " +
-"keep track of successes and failures during the install process";
-
+"device, a notification will be sent back to the backend server. This " +
+"allows the backend server to keep track of successes and failures " +
+"during the install process.  The notification will be sent to the URL " +
+"registered for the device and any device groups that the device is a " +
+"member of. Thus, a single device operation may trigger notifications " +
+"sends to multiple callback URLs. If the same URL is registered " +
+"multiple times for a device and its groups, the notificaiton will only " +
+"be sent once to that URL."
 	input {
 	    leaf account {
 		description
-"The account, associated with the authorizing user, to which the package and devices belong." +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
-"If no account is given, the authorizing user assumes to be associated " +
-"with only one account, which will be used. If no account is given, and " +
-"the user belongs to multiple accounts, an error is returned.";
+"The account, associated with the authorizing user, to which the " +
+"package and devices belong.  It is not possible to access packages or " +
+"device types not owned by the given account.  If no account is given, " +
+"the authorizing user assumes to be associated with only one account, " +
+"which will be used. If no account is given, and the user belongs to " +
+"multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
@@ -407,9 +411,15 @@ submodule exodm_package {
 "the [exodm:add-package-to-device-type] when the package was added to " +
 "the device type. " +
 "<br><br>" +
-"For each successful or failed transmit and upgrade operation on a device, a notification will be sent " +
-"back to the invoking backend server. This allows the backend server to " +
-"keep track of successes and failures during the upgrade process";
+"For each successful or failed transmit and install operation on a " +
+"device, a notification will be sent back to the backend server. This " +
+"allows the backend server to keep track of successes and failures " +
+"during the upgrade process.  The notification will be sent to the URL " +
+"registered for the device and any device groups that the device is a " +
+"member of. Thus, a single device operation may trigger notifications " +
+"sends to multiple callback URLs. If the same URL is registered " +
+"multiple times for a device and its groups, the notificaiton will only " +
+"be sent once to that URL."
 	input {
 	    leaf account {
 		description
@@ -491,9 +501,15 @@ submodule exodm_package {
 "the [exodm:add-package-to-device-type] when the package was added to " +
 "the device type. " +
 "<br><br>" +
-"For each successful or failed uninstall operation on a device, a notification will be sent " +
-"back to the invoking backend server. This allows the backend server to " +
-"keep track of successes and failures during the uninstall process";
+"For each successful or failed uninstall operation on a " +
+"device, a notification will be sent back to the backend server. This " +
+"allows the backend server to keep track of successes and failures " +
+"during the uninstall process.  The notification will be sent to the URL " +
+"registered for the device and any device groups that the device is a " +
+"member of. Thus, a single device operation may trigger notifications " +
+"sends to multiple callback URLs. If the same URL is registered " +
+"multiple times for a device and its groups, the notificaiton will only " +
+"be sent once to that URL."
 
 	input {
 	    leaf account {
@@ -819,7 +835,6 @@ submodule exodm_package {
 
     rpc update-package-config {
 	description
-
 "Set and push configuration data for a given package to a the devices " +
 "provided in the targets argument" +
 "<br><br>" +
@@ -846,8 +861,6 @@ submodule exodm_package {
 "notification will be sent back to the invoking backend server for the " +
 "given device. This allows the backend server to keep track of " +
 "successes and failures during the configuration update process.";
-
-
 
 
 	input {
