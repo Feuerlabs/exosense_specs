@@ -8,49 +8,82 @@ submodule exodm_device_type {
     }
 
 
-    description "API for Exosense Device Management Server, device type part";
+    description "API for Exosense Server - Device Types";
 
-
-    contact "ulf.wiger@feuerlabs.com";
+    contact "magnus@feuerlabs.com";
     organization "Feuerlabs, Inc.";
 
 
     grouping device-type-obj {
-	description "Device type object leafs";
+	description "Device type object used by device type JSON-RPCs";
 
 	leaf name {
-	    description "Account-wide unique device type name";
+	    description
+"Account-wide unique name of the device type..";
 	    mandatory true;
 	    type exodm_type:id-string;
 	}
 
 	leaf protocol {
-	    description "Protocol between device and Exosense server";
+	    description
+"Protocol between device and Exosense server.  The name has previously " +
+"been registered by a protocol plugin deployed on the server.";
 	    mandatory true;
 	    type exodm_type:id-string;
 	}
 
 	leaf yang-specification {
-	    description "Yang specification containing the device attribute specifications.";
+	    description
+"Yang specification containing the device attribute specifications. ";
 	    mandatory false;
 	    type exodm_type:id-string;
 	}
 
 	leaf attribute-container {
-	    description 
-		"Container within the Yang specification containing device " +
-		"attribute specification.";
+	    description
+"Container within the Yang specification hosting the device " +
+"attribute specification.";
 	    mandatory false;
 	    type exodm_type:id-string;
 	}
     }
 
     rpc create-device-type {
-	description "RPC to create a device type";
+
+	description
+"**Create a new device type under an account**<br>" +
+"This command creates a new device type that can be assigned to " +
+"devices.  The type will be owned by an account and use the specified " +
+"protocol to communicate with devices assigned to the device type. The " +
+"name of the protocol is one of those registered by protocol plugins " +
+"deployed on the server. " +
+" " +
+"<br><br> " +
+" " +
+"The device type can optionally be associated with a set of attributes " +
+"specified by a yang file uploaded through an " +
+"[exodm:create-yang-module] command. In these cases, each device " +
+"assigned to the device type will have the given attributes associated " +
+"with it in the server. Unlinke device configuration data, device "+
+"attributes will not be sent to the device. Instead they will be stored " +
+"locally on the Exosense Server." +
+"<br>" +
+"The attributes can be set through the [exodm:update-device] command " +
+"and retrieved through [exodm:lookup-device].  " +
+"Protocol plugins can also access the device attributes to locate " +
+"network addresses and other information necessary for the protocol to " +
+"communicate with a device." +
+"<br><br> " +
+"Please note that the actual configuration data and RPC APIs for a " +
+"device is managed through the packages installed on it.";
 
 	input {
 	    leaf account {
-		description "The account to which the device type belongs.";
+		description
+"The account, accessible by the authorizing user, to which the device type belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 	    uses device-type-obj;
@@ -58,16 +91,28 @@ submodule exodm_device_type {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
     }
 
     rpc update-device-type {
-	description "RPC to modify an existing device type.";
+	description
+"**Update an existing device type**<br>" +
+"This commands updates an existing device type previously created with " +
+"[exodm:create-device-type].  This command currently does nothing since " +
+"changing any information would have unforseeable consequences for the " +
+"existing devices of this type.";
+
 	input {
 	    leaf account {
-		description "The account to which the yang module belongs.";
+		description
+"The account, accessible by the authorizing user, to which the device type belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+
 		type exodm_type:id-string;
 	    }
 	    uses device-type-obj {
@@ -78,6 +123,7 @@ submodule exodm_device_type {
 	}
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -85,15 +131,24 @@ submodule exodm_device_type {
 
 
     rpc delete-device-type {
-	description "RPC to create a device type";
+	description
+"**Delete a device type and its associated devices**<br>" +
+"This command deletes a device type previously created through a " +
+"[exodm:create-device-type] command. All devices assigned to the " +
+"device type will also be deleted as if [exodm:delete-device] was called " +
+"for each one of them.";
 
 	input {
 	    leaf account {
-		description "The account to which the device type belongs.";
+		description
+"The account, accessible by the authorizing user, to which the device type belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 	    leaf name {
-		description "Device type name";
+		description "Name of the device type to delete.";
 		type exodm_type:id-string;
 		mandatory true;
 	    }
@@ -101,145 +156,88 @@ submodule exodm_device_type {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
     }
 
     rpc list-device-types {
-	description "RPC to list device types.";
+	description
+"**List all device types owned by an account**<br>" +
+"This commands will retrieve the name of all device types created under " +
+"the given account through [exodm:create-device-type] calls." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device type names.";
 	input {
 	    leaf account {
-		description "The account to which the device type belongs.";
+		description
+"The account, accessible by the authorizing user, to which the device type belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 	    leaf n {
-		description "Number of entries to fetch";
+		description
+"Maximum number of entries to return. More device types may be available " +
+"after the last returned element.";
 		type uint32;
 	    }
 	    leaf previous {
-		description 'Previous device type; "" if from beginning';
+		description
+'Start the fetch at the first device type after the one with the ' +
+'name specified by this argument. Use "" if the fetch is to start from the beginning';
+
 		type exodm_type:id-string;
 	    }
 	}
 	output {
 	    list device-types {
+		description "List of device types owned by the given account.";
 		uses device-type-obj;
 	    }
 	}
     }
 
-    rpc list-device-type-packages {
-	description 
-	    "List all packages allowed to be installed on devices of a given type " +
-	    "N entries at a time.";
-
-	input {
-	    leaf account {
-		description "The account to which the device type belongs.";
-		type exodm_type:id-string;
-
-	    }
-	    leaf device-type {
-		description "ID of the device type to list packages for";
-		type uint32;
-	    }
-
-	    leaf n {
-		description "Number of entries to fetch";
-		type uint32;
-	    }
-
-	    leaf previous {
-		description "Previous package name; \"\" if from beginning";
-		type exodm_type:id-string;
-	    }
-	}
-	output {
-	    leaf-list device-type-packages {
-		description "List of packages allowed by this device type";
-		type exodm_type:id-string;
-	    }
-	}
-    }
-
-
-    rpc add-device-type-package {
-	description "Add packages allowed to be installed on device types";
-	input {
-	    leaf account {
-		description "The account to which the device type belongs.";
-		type exodm_type:id-string;
-	    }
-
-	    leaf-list packages {
-		description
-		    "List of packages that are allowed to be installed on the given " +
-		    "device types";
-		type exodm_type:id-string;
-	    }
-	    leaf-list device-types {
-		description "List of device types that can accept the package";
-		type exodm_type:id-string;
-	    }
-	}
-
-	output {
-	    leaf result {
-		type exodm_type:result-code;
-	    }
-	}
-    }
-
-
-    rpc remove-device-type-package {
-	description "Unlink devices from device groups";
-	input {
-	    leaf account {
-		description "The account to which the yang module belongs.";
-		type exodm_type:id-string;
-	    }
-	    leaf-list device-groups {
-		description
-		    "Device groups to unlink the given device(s) from";
-		min-elements 1;
-		type uint32;
-	    }
-	    leaf-list dev-id {
-		description "List of device ID(s)";
-		min-elements 1;
-		type exodm_type:id-string;
-	    }
-	}
-	output {
-	    leaf result {
-		type exodm_type:result-code;
-	    }
-	}
-    }
-
     rpc list-device-type-devices {
-	description "List device IDs associated with a device type";
+	description
+"**List device IDs associated with a device type**<br> " +
+"This command returns the device ID of all devices that were assigned to the " +
+"given device type when they were created with a [exodm:create-device] command." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device IDs.";
 	input {
 	    leaf account {
-		description "The account to which the device type belongs.";
+		description
+"The account, accessible by the authorizing user, to which the device type belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
 
 	    leaf name {
-		description "Name of device type";
+		description
+"Name of device type for which to retrieve associated devices.";
 		type exodm_type:id-string;
 		mandatory true;
 	    }
 
 	    leaf n {
-		description "Number of entries to fetch";
+		description
+"Maximum number of entries to return. More devices may be available " +
+"after the last returned element.";
 		type uint32;
 		mandatory true;
 	    }
 
 	    leaf previous {
-		description 'Previous device ID; "" if from beginning';
+		description
+'Start the fetch at the first device after the device with the ' +
+'ID specified by this argument. Use "" if the fetch is to start from the beginning';
 		type exodm_type:id-string;
 		mandatory true;
 	    }

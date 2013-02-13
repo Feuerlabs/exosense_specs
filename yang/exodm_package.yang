@@ -11,7 +11,7 @@ submodule exodm_package {
     }
 
 
-    description "API for Exosense Device Management Server, package part";
+    description "API for Exosense Server - Packages";
 
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";
@@ -19,10 +19,10 @@ submodule exodm_package {
 
     rpc create-package {
 	description
-"Upload a package, with a software image, to be installed on devices.<br><br> " +
+"**Upload a package, with a software image, to be installed on devices**<br>" +
 "The created package will be owned by the specified account. Once the " +
 "package has been uploaded, it can be added to device types that " +
-"supports it through the [exodm:add-package-tog-device-type] command. " +
+"supports it through the [exodm:add-package-to-device-type] command. " +
 "<br><br>" +
 "If the given package is an upgrade, all existing packages that this " +
 "package can perform an upgrade on can be listed by the " +
@@ -45,8 +45,7 @@ submodule exodm_package {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, that will own the " +
-"package.  It is not possible to access device types not owned by the " +
-"given account.  If no account is given, the authorizing user assumes " +
+"package. If no account is given, the authorizing user assumes " +
 "to have access to only one account, which will be used. If no " +
 "account is given, and the user has access to multiple accounts, an error " +
 "is returned.";
@@ -97,6 +96,7 @@ submodule exodm_package {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -106,7 +106,7 @@ submodule exodm_package {
 
     rpc add-package-to-device-type {
 	description
-"Specify that a package can be installed on devices of a  given device type. " +
+"**Specify that a package can be installed on devices of a given device type**<br>" +
 "This commands specifies that the given package can be installed, " +
 "upgraded, and removed from devices that belongs to the provided device " +
 "type. Once the package has been added to the device type, it can be " +
@@ -125,8 +125,6 @@ submodule exodm_package {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the package and device type belong. " +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access " +
 "to only one account, which will be used. If no account is given, and " +
 "the user has access to multiple accounts, an error is returned.";
@@ -194,6 +192,7 @@ submodule exodm_package {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -201,11 +200,12 @@ submodule exodm_package {
 
     rpc remove-package-from-device-type {
 	description
-"Specify that a package cannot any longer be installed on devices of a given device type. " +
+"**Specify that a package cannot any longer be installed on devices of a given device type**<br>" +
 "This commands specifies that the given package cannot be installed, " +
 "upgraded, or removed from devices that belongs to the provided device " +
 "type. The given package must have been added to the device-type with a previous " +
 "[exodm:add-package-to-device-type] command. " +
+"<br><br>" +
 "Any devices of the given device type that already have the package installed will not " +
 "be affected, although they cannot be uninstalled from them once the package is no longer " +
 "supported by the device type.";
@@ -215,8 +215,6 @@ submodule exodm_package {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the package and device type belong. " +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access " +
 "to only one account, which will be used. If no account is given, and " +
 "the user has access to multiple accounts, an error is returned.";
@@ -284,6 +282,7 @@ submodule exodm_package {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -291,7 +290,7 @@ submodule exodm_package {
 
     rpc install-package {
 	description
-"Install a package on one or more devices. " +
+"**Install a package on one or more devices**<br>" +
 "Installs the given package on the devices provided in the targets " +
 "argument. The device IDs can either be listed directly in the " +
 "argument, or be a member of a listed device group. " +
@@ -336,8 +335,7 @@ submodule exodm_package {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the " +
-"package and devices belong.  It is not possible to access packages or " +
-"device types not owned by the given account.  If no account is given, " +
+"package and devices belong. If no account is given, " +
 "the authorizing user assumes to have access only one account, " +
 "which will be used. If no account is given, and the user has access to " +
 "multiple accounts, an error is returned.";
@@ -380,6 +378,7 @@ submodule exodm_package {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -388,7 +387,7 @@ submodule exodm_package {
 
     rpc upgrade-package {
 	description
-"Upgrade a package on one or more devices. " +
+"**Upgrade a package on one or more devices**<br>" +
 "Upgrades the given package, specified by from-package-name, to a newer " +
 "version, specified in to-package-name, on the devices provided in the targets " +
 "argument. The device IDs can either be listed directly in the " +
@@ -424,8 +423,6 @@ submodule exodm_package {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the package and devices belong." +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access to " +
 "only one account, which will be used. If no account is given, and " +
 "the user has access multiple accounts, an error is returned.";
@@ -480,6 +477,7 @@ submodule exodm_package {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -489,7 +487,7 @@ submodule exodm_package {
 
     rpc uninstall-package {
 	description
-"Uninstall a package on one or more devices. " +
+"**Uninstall a package on one or more devices**<br>" +
 "Uninstalls the given package, specified by package-name, " +
 "from the devices provided in the targets " +
 "argument. The device IDs can either be listed directly in the " +
@@ -515,8 +513,6 @@ submodule exodm_package {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the package and devices belong." +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access to " +
 "only one account, which will be used. If no account is given, and " +
 "the user has access to  multiple accounts, an error is returned.";
@@ -558,6 +554,7 @@ submodule exodm_package {
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 	}
@@ -668,48 +665,63 @@ submodule exodm_package {
     }
 
     rpc list-packages {
-	description "List all packages in the system";
-
+	description
+"**List all packages owned by a given account**<br>" +
+"This command returns the names of all packages created by previous " +
+"[exodm:create-package] calls in the given account." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of package names.";
 	input {
 	    leaf account {
 		description
 "The account, accessible the authorizing user, to list all packages for." +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access to " +
 "only one account, which will be used. If no account is given, and " +
 "the user has access to multiple accounts, an error is returned.";
 		type exodm_type:id-string;
 	    }
+	    leaf n {
+		description
+"Maximum number of entries to return. More packages may be available " +
+"after the last returned element.";
+		type uint32;
+	    }
+	    leaf previous {
+		description
+'Start the fetch at the first role after the package with the ' +
+'name specified by this argument. Use "" if the fetch is to start from the beginning';
+		type uint32;
+	    }
 	}
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 
 	    leaf-list packages {
-		description "Name of package";
+		description "Package names under the given account";
 
-		type string {
-		    length "1..256";
-		}
+		type exodm_type:id-string;
 	    }
 	}
     }
 
-    rpc get-package-device-types {
+    rpc list-device-types-with-package {
 	description
-"List all device types that can install a given package.  All devices " +
-"types that have had the given package added to it through an " +
-	    "[exodm:add-package-to-device-type] will returned by this call.";
+"**List all device types that can install a given package**<br>" +
+"All devices types that have had the given package added to it " +
+"through an [exodm:add-package-to-device-type] command will returned by this call." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device type names.";
 
 	input {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the package belongs." +
-"It is not possible to access packages types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access " +
 "to only one account, which will be used. If no account is given, and " +
 "the user has access to multiple accounts, an error is returned.";
@@ -721,23 +733,27 @@ submodule exodm_package {
 		type exodm_type:id-string;
 	    }
 	    leaf n {
-		description "Number of entries to fetch";
+		description
+"Maximum number of entries to return. More device types may be available " +
+"after the last returned element.";
 		type uint32;
 	    }
 	    leaf previous {
 		description
-		    "Previous device-type name (GID); \"\" if from beginning";
+'Start the fetch at the first device type after that with the ' +
+'name specified by this argument. Use "" if the fetch is to start from the beginning';
 		type uint32;
 	    }
 	}
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 
 	    leaf-list device-types {
-		description "List of device-types accepting the given package.";
+		description "List of device types accepting the given package.";
 
 		type exodm_type:id-string;
 	    }
@@ -745,18 +761,73 @@ submodule exodm_package {
     }
 
 
-    rpc get-devices-with-package {
+    rpc list-packages-on-device-type {
 	description
-	    "List all device types that have installed, or are in the process of " +
-	    "installing the given package. Packages returned have previously been " +
-	    "installed on the device using a [exodm:add-package-to-device] call";
+"**List all packages that can be installed on the given device type**<br>" +
+"All packages that have been added to a device type " +
+"through an [exodm:add-package-to-device-type] command will returned by this call." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device type names.";
+
+	input {
+	    leaf account {
+		description
+"The account, accessible by the authorizing user, to which the device type belongs." +
+"If no account is given, the authorizing user assumes to have access " +
+"to only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+		type exodm_type:id-string;
+	    }
+
+	    leaf device-type {
+		description "The device type to which list supporting device types for.";
+		type exodm_type:id-string;
+	    }
+	    leaf n {
+		description
+"Maximum number of entries to return. More package names may be available " +
+"after the last returned element.";
+		type uint32;
+	    }
+	    leaf previous {
+		description
+'Start the fetch at the first package after that with the ' +
+'name specified by this argument. Use "" if the fetch is to start from the beginning';
+		type uint32;
+	    }
+	}
+
+	output {
+	    leaf result {
+		description "Result of the operation";
+		type exodm_type:result-code;
+	    }
+
+	    leaf-list packages {
+		description "List of package names available for installation on the given device type.";
+		type exodm_type:id-string;
+	    }
+	}
+    }
+
+    rpc list-devices-with-package {
+	description
+"**List all devices that have installed or uninstalled a package**<br>" +
+"Packages returned have previously been installed on the device using a " +
+"[exodm:add-package-to-device] call." +
+"<br><br>" +
+"Each returned device will have a package-status argument indicating if " +
+"the package is in the process of being transmitted and installed on a " +
+"device, or if its installation has completed." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device names";
 
 	input {
 	    leaf account {
 		description
 "The account, accessible by the authorizing user, to which the package belongs." +
-"It is not possible to access packages or device types not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access to " +
 " only one account, which will be used. If no account is given, and " +
 "the user has access to multiple accounts, an error is returned.";
@@ -768,18 +839,22 @@ submodule exodm_package {
 		type exodm_type:id-string;
 	    }
 	    leaf n {
-		description "Number of entries to fetch";
+		description
+"Maximum number of entries to return. More devices may be available " +
+"after the last returned element.";
 		type uint32;
 	    }
 	    leaf previous {
 		description
-		    "Previous device-id; \"\" if from beginning";
+'Start the fetch at the first device after that with the ' +
+'ID specified by this argument. Use "" if the fetch is to start from the beginning';
 		type uint32;
 	    }
 	}
 
 	output {
 	    leaf result {
+		description "Result of the operation";
 		type exodm_type:result-code;
 	    }
 
@@ -799,31 +874,6 @@ submodule exodm_package {
 				"The package has been installed on the device.";
 			    value 1;
 			}
-			enum pending-uninstall {
-			    description
-				"The uninstall command is queued for transmission to the device.";
-			    value 2;
-			}
-			enum uninstalled {
-			    description
-				"The package has been uninstalled from the device.";
-			    value 3;
-			}
-			enum removed {
-			    description
-				"The package has been uninstalled and removed from the device.";
-			    value 4;
-			}
-			enum failed-install {
-			    description
-				"The package was transmitted to the device but could not be installed.";
-			    value 5;
-			}
-			enum failed-uninstall {
-			    description
-				"The uninstall command was transmitted to the device but could not be executed.";
-			    value 6;
-			}
 		    }
 		}
 	    }
@@ -834,9 +884,7 @@ submodule exodm_package {
 
     rpc update-package-config {
 	description
-"Set and push configuration data for a given package to a the devices " +
-"provided in the targets argument" +
-"<br><br>" +
+"**Set and push configuration data for a package to a device(s)**<br>" +
 "The device IDs can either be listed directly in the " +
 "argument, or be a member of a listed device group.  The configuration " +
 "data for the package will be transmitted to all resolved target and " +
@@ -867,8 +915,6 @@ submodule exodm_package {
 		description
 "The account, accessible by the authorizing user, to which the " +
 "package and device belongs." +
-"It is not possible to access packages or devices not owned " +
-"by the given account. " +
 "If no account is given, the authorizing user assumes to have access " +
 "to only one account, which will be used. If no account is given, and " +
 "the user has access multiple accounts, an error is returned.";
