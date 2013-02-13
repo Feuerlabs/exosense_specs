@@ -19,7 +19,7 @@ submodule exodm_package {
 
     rpc create-package {
 	description
-"Upload a package, with a software image, to be installed on devices. " +
+"Upload a package, with a software image, to be installed on devices.<br><br> " +
 "The created package will be owned by the specified account. Once the " +
 "package has been uploaded, it can be added to device types that " +
 "supports it through the [exodm:add-package-tog-device-type] command. " +
@@ -32,7 +32,7 @@ submodule exodm_package {
 "itself can be installed, the list of the required packages can be " +
 "listed in the prerequisite-packages argument. " +
 "<br><br>" +
-"When [exodm:install-package] command is called, the server will check " +
+"When [RPC: exodm:install-package] command is called, the server will check " +
 "its device database to ensure that the prerequisite packages are " +
 "already installed. If this is not the case, and " +
 "recursive-dependency-resolve installation has not been selected, an " +
@@ -697,7 +697,6 @@ submodule exodm_package {
 	    }
 	}
     }
-
 
     rpc get-package-device-types {
 	description
