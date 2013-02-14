@@ -11,6 +11,8 @@ module exodm {
     namespace "http://feuerlabs.com/exodm";
     prefix exodm;
 
+    // Do NOT remove
+    // Needed when parsing submodules for extension handling !!!
     import ietf-inet-types {
       prefix inet;
     }

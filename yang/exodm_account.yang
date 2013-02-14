@@ -14,14 +14,11 @@ submodule exodm_account {
   organization "Feuerlabs, Inc.";
 
   rpc create-account {
-    description "Create a new account";
+    description "Create a new account.";
     input {
       leaf name { type exodm_type:id-string; mandatory true; }
-      list admin-user {
-	key "uname";
-	min-elements 1;
-	max-elements 1;
-	uses exodm_type:user-obj;
+      uses exodm_type:user-obj {
+        refine uname {mandatory false;}
       }
     }
     output {
