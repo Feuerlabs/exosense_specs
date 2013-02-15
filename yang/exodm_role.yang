@@ -1,0 +1,318 @@
+submodule exodm_role {
+  belongs-to "exodm" {
+    prefix exodm;
+  }
+
+  import exodm_type {
+    prefix exodm_type;
+  }
+
+  description "API for Exosense  Server - Role Module";
+
+  contact "magnus.feuer@feuerlabs.com";
+  organization "Feuerlabs, Inc.";
+
+
+  rpc add-user-to-role {
+    description
+'**Add user(s) to a role in an account**<br>' +
+'This command gives one or more users access to the resources of an ' +
+'account by adding them to a role. Each role will give access to a ' +
+'predefined set of core Exosense Server JSON-RPC commands, as listed in ' +
+'the "Exosense JSON-RPC command Role assignment" chapter of the ' +
+'"Exosense Server Operations Manual". In addition to this, roles can ' +
+'also be given additional execution rights to package RPCs through the ' +
+'[exodm:add-role-execution-permission] command. ' +
+'See the "Package" chapter of the "Exosense Operations Manual" and ' +
+'[exodm:create-package] for details on RPCs and their execution rights. ' +
+'<br><br>' +
+'Once one or more roles have been assigned to a user, that user can ' +
+'execute all JSON-RPC commands that those roles have execution rights ' +
+'for on the given account. ' +
+'<br><br>' +
+'The [exodm:list-account-roles] command can be used to retrieve a list ' +
+'of all availale roles for an account that a usert can be assigned to.';
+
+    input {
+      leaf "account" {
+	  description
+"The account to give a user access to. The account has previously been " +
+"created with a [exodm:create-account] command.";
+	  type exodm_type:id-string;
+	  mandatory true;
+      }
+      leaf "role" {
+	  description
+"The role to assign to the user for the specified account. The value of " +
+"this arument must be from the list of roles returned by " +
+"[exodm:list-account-roles]";
+	  type exodm_type:id-string;
+	  mandatory true;
+      }
+
+      leaf-list names {
+        description
+"Users to add to account. " +
+"The users, previously created through the [exodm:create-user] or " +
+"[exodm:create-account] commands, to be assigned the given role for " +
+"this account.";
+
+        min-elements 1;
+        max-elements 10;
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+	  description "Result of the operation";
+	  type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc remove-user-from-role {
+    description
+'**Remove user(s) from a role**<br>' +
+"This command retracts one or more user's access to the " + 
+'resources of an account by removing the user from a role. The user ' +
+'have previously been added to the role through a ' +
+'[exodm:add-user-to-role] command. Once the user has been removed from ' +
+'the role, it can no' +
+'longer run the JSON-RPC commands that the role had execution rights ' +
+'for (unless the user is also assigned other roles that have execution ' +
+'rights for the same commands).  See the "Package" chapter of the ' +
+'"Exosense Operations Manual" and [exodm:create-package] for details on RPCs and ' +
+'Yang specifications.';
+    input {
+      leaf "account" {
+	  description
+"The account to remove user access from. The account has previously been " +
+"created with a [exodm:create-account] command.";
+	  type exodm_type:id-string;
+	  mandatory true;
+      }
+      leaf "role" {
+	  description
+"The role to strip the given user of for the specified account.The value of " +
+"this arument must be from the list of roles returned by " +
+"[exodm:list-account-roles]";
+	  type exodm_type:id-string;
+	  mandatory true;
+      }
+      leaf-list unames {
+        description
+"Users to strip of the specified role for this account. Listed users " +
+"must previously have been assingned the role through an " +
+"[exodm:add-account-users] command.";
+        min-elements 1;
+        max-elements 10;
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf result {
+	  description "Result of the operation";
+	  type exodm_type:result-code;
+      }
+    }
+  }
+
+
+  rpc add-role-execution-permission {
+      description
+"**Add permission execution for a role to an RPC**<br>  " +
+"This command adds execution rights for a role to an RPC in a " +
+"package owned by the given account. Once this command has executed, " +
+"all users assigned to the role will be able to execute the given RPC " +
+"on all devices, owned by the account, that the associated package has been " +
+"installed on. " +
+"<br><br>" +
+"Users can be added to the role through the [exodm:add-user-to-role] command. " +
+"<br><br>" +
+"If multiple roles have execution rights to a single RPC within a package, any user who " +
+"is assigned to one or more of these roles can execute the RPC. Conversely, a user must " +
+"be removed from all roles with execution rights to an RPC in order to revoke the execution " +
+"right for that user.";
+    input {
+      leaf account {
+        description "The account to which the package belongs.";
+	mandatory false;
+        type exodm_type:id-string;
+      }
+
+      leaf role {
+        description "Name of role to add execution permission to.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf package-name {
+        description 
+"Name of package to which to add role execution rights. The package has " +
+"previously been created through a [exodm:create-package] command";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpc-name {
+        description 
+"Name of the RPC in the package to add role execution rights to. The " +
+"name of the RPC should include the module prefix and a colon " +
+"(fleetmanager:get-position)";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc remove-role-execution-permission {
+      description 
+"**Remove permission for a role to execute an RPC**<br>" +
+"This command removes execution rights for a role from an RPC in a " +
+"package owned by the given account. Once this command has executed, " +
+"all users assigned to the role will no longer have permission to execute the given RPC " +
+"on devices, owned by the account, that the associated package has been " +
+"installed on. " +
+"<br><br>" +
+"If multiple roles have execution rights to a single RPC within a package, any user who " +
+"is assigned to one or more of these roles can execute the RPC. Conversely, a user must " +
+"be removed from all roles with execution rights to an RPC in order to revoke the execution " +
+"right for that user.";
+
+      input {
+
+      leaf account {
+        description 
+"The account to which the package belongs.";
+	mandatory false;
+        type exodm_type:id-string;
+      }
+
+      leaf role {
+        description "Name of role to remove execution permission from.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf package-name {
+        description 
+"Name of package fromn which to remove role execution rights.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpc-name {
+        description 
+"Name of the RPC in the package to remove role execution rights from. The " +
+"name of the RPC should include the module prefix and a colon " +
+"(fleetmanager:get-position)";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc list-rpc-roles {
+      description
+"**List all roles that have exeuction right for an RPC**<br>" +
+"This command will list all roles with execution rights for the given " +
+"account/package/RPC combination" +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of roles.";
+
+    input {
+      leaf account {
+        description "The account to which the package belongs.";
+        type exodm_type:id-string;
+      }
+      leaf package-name {
+        description "Name of package to list role access for,";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpc-name {
+        description 
+"Name of RPC inside the package to list role access for. The " +
+"name of the RPC should include the module prefix and a colon " +
+"(fleetmanager:get-position).";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf n {
+	  description
+	      "Maximum number of entries to return. More roles may be available " +
+	      "after the last returned element.";
+	  type uint32;
+      }
+      leaf previous {
+	  description
+	      'Start the fetch at the first role after the role with the ' +
+	      'name specified by this argument. Use "" if the fetch is to start from the beginning';
+	  type uint32;
+      }
+    }
+
+    output {
+      leaf-list roles {
+        description 
+"List of roles with execution right to the given RPC in the specified " +
+"package owned by the account.";
+        type exodm_type:id-string;
+      }
+    }
+  }
+
+  rpc list-account-roles {
+    description
+"**List all roles defined for account**<br>" +
+"This command will return all roles in account that can be assigned to users in order " +
+"for them to access resources owned by the account." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of roles.";
+    input {
+
+      leaf "account" {
+	  description
+"The account to list all roles for. The account has been created with " +
+"a previous [exodm:create-account] call.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+
+      leaf n {
+        description
+"Maximum number of entries to return. More roles may be available " +
+"after the last returned element.";
+        type uint32;
+        mandatory true;
+      }
+
+      leaf previous {
+        description
+'Start the fetch at the first role after the role with the ' +
+'name specified by this argument. Use "" if the fetch is to start from the beginning';
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+
+    output {
+      leaf-list roles {
+        description "List of role names assignable to users.";
+        type exodm_type:id-string;
+      }
+    }
+  }
+}
+

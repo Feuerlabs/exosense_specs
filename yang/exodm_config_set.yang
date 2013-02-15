@@ -14,7 +14,7 @@ submodule exodm_config_set {
   }
     
     
-  description "API for Exosense Device Management Server, configuration sets";
+  description "API for Exosense Server - Configuration Sets";
 
   contact "magnus.feuer@feuerlabs.com";
   organization "Feuerlabs, Inc.";

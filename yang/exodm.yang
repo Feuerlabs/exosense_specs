@@ -23,6 +23,7 @@ module exodm {
 
     include exodm_user;
     include exodm_account;
+    include exodm_role;
     include exodm_device;
     include exodm_device_group;
     include exodm_device_type;

@@ -13,9 +13,16 @@ submodule exodm_user {
 
 
   rpc create-user {
-    description "Create a new user";
+    description 
+"**Create a new user**<br>" +
+"This command creates a new user that can be given access to accounts and assigned roles."
+"The authorizing user must be either master or admin roles assigned to it for this command to be executed.
+The created user can be granted access to accounts through roles using the [exodm:add-user-to-role] command"
+
+
+
     input {
-      uses exodm_type:user-obj;
+	uses exodm_type:user-obj;
     }
     output {
       leaf result { type exodm_type:result-code; }

@@ -19,27 +19,59 @@ submodule exodm_package {
 
     rpc create-package {
 	description
-"**Upload a package, with a software image, to be installed on devices**<br>" +
-"The created package will be owned by the specified account. Once the " +
+"**Upload a package, with a software image**<br>" +
+"This command uploads a package software image and the associated meta " +
+"data to the Exosense Server." +
+"Once the " +
 "package has been uploaded, it can be added to device types that " +
-"supports it through the [exodm:add-package-to-device-type] command. " +
+"supports it through the [exodm:add-package-to-device-type] command, " +
+"and then installed on actual devices through the " +
+"[exodm:install-package] command." +
 "<br><br>" +
 "If the given package is an upgrade, all existing packages that this " +
 "package can perform an upgrade on can be listed by the " +
-"upgrade-from-packages argument. " +
+"upgrade-from-packages argument. Upgrade packages can be installed on " +
+"a device through the [exodm:upgrade-package] " +
 "<br><br>" +
 "If the given package needs other packages installed on a device before " +
 "itself can be installed, the list of the required packages can be " +
 "listed in the prerequisite-packages argument. " +
 "<br><br>" +
-"When [RPC: exodm:install-package] command is called, the server will check " +
+"When [exodm:install-package] command is called, the server will check " +
 "its device database to ensure that the prerequisite packages are " +
 "already installed. If this is not the case, and " +
 "recursive-dependency-resolve installation has not been selected, an " +
 "error will be returned. If recursive installation has been selected " +
 "for the command, all dependency packages will be resolved recursively " +
-"and transmitted with the package given in package-name to the device. ";
-
+"and transmitted with the package given in package-name to the device.  " +
+"<br><br>" +
+"If a package has functions that can be remotely invoked on a device " +
+"from the Exosense Server, the API of those RPCs is specified by the " +
+"yang module and container given in the yang-specification and " +
+"api-container arguments. Once the package has been installed on a " +
+"device, a user with access to an RPC given in the yang container can " +
+"call the function on the device through the JSON-RPC interface on the " +
+"Exosense Server. The server will store the call and forward it to the " +
+"device once it comes online. The result of the executed function will " +
+"be transported back from the device to the backend server through a " +
+"notification sent to the device callback URL and the callback URL of " +
+"any device groups that the device is a member of. " +
+"<br><br>" +
+"In order for a package RPC to be executed via a JSON-RPC call, a user " +
+"must be assigned to a role with execution rights to the RPC. A role is " +
+"given execution rights to a specific RPC in a package created in an " +
+"account through the [exodm:add-role-execution-permission] call. Users " +
+"can then be added to the role through the [exodm:add-user-to-role] the " +
+"<br><br>" +
+"If a package has configuration data that can be remotely updated from " +
+"the Exosense Server, the structure of that data is also specified in " +
+"the yang module given by the yang-specification argument. The " +
+"container hosting the configuration data structure is given in the " +
+"configuration-container argument. " +
+"<br><br>" +
+"The configuration data for a package can be set for a package, once it " +
+"has been installed on a device, through the " +
+"[exodm:update-package-configuration] command.";
 
 	input {
 	    leaf account {
@@ -689,7 +721,7 @@ submodule exodm_package {
 	    }
 	    leaf previous {
 		description
-'Start the fetch at the first role after the package with the ' +
+'Start the fetch at the first package after the package with the ' +
 'name specified by this argument. Use "" if the fetch is to start from the beginning';
 		type uint32;
 	    }
@@ -889,7 +921,7 @@ submodule exodm_package {
 "argument, or be a member of a listed device group.  The configuration " +
 "data for the package will be transmitted to all resolved target and " +
 "then updated in their local configuration system.  The package name is " +
-"given together with an array of key/value pairs for the conrfiguration " +
+"given together with an array of key/value pairs for the configuration " +
 "data to set for the given package on the given devices.  Each " +
 "key/value pair must match an element in the yang file and container " +
 "specified by the create-package yang-specification and " +
