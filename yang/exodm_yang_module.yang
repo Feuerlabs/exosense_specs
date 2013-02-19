@@ -96,7 +96,10 @@ submodule exodm_yang_module {
   }
 
     output {
-      leaf yang-module {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      leaf-list yang-modules {
         type string;
       }
     }

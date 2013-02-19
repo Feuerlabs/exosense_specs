@@ -140,9 +140,15 @@ submodule exodm_account {
       }
     }
     output {
-      leaf-list users {
-        description "List of user names"; 
-        type exodm_type:id-string;
+      list users {
+        leaf name {
+          description "List of user names"; 
+          type exodm_type:id-string;
+        }
+        leaf-list roles {
+          description "List of role names"; 
+          type exodm_type:id-string;
+        }
       }
     }
   }
