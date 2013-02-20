@@ -6,14 +6,14 @@ submodule exodm_user {
   import exodm_type {
     prefix exodm_type;
   }
-  description "API for Exosense Device Management Server, user part";
+  description "API for Exosense Device Management Server, user part.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
 
 
   rpc create-user {
-    description "Create a new user";
+    description "Create a new user.";
     input {
       uses exodm_type:user-obj;
     }
@@ -23,7 +23,7 @@ submodule exodm_user {
   }
     
   rpc delete-user {
-    description "Delete an existing user";
+    description "Delete an existing user.";
     input {
       leaf uname      { type exodm_type:id-string; mandatory true; }
     }
@@ -36,12 +36,12 @@ submodule exodm_user {
     description "List all users.";
     input {
       leaf n {
-        description "Number of entries to fetch";
+        description "Number of entries to fetch.";
         type uint32;
         mandatory true;
       }
       leaf previous {
-        description 'Previous user name; "" if from beginning';
+        description 'Previous user name; "" if from beginning.';
         type exodm_type:id-string;
         mandatory true;
       }
@@ -53,7 +53,7 @@ submodule exodm_user {
    }
     output {
       leaf-list users {
-        description "List of user names"; 
+        description "List of user names."; 
         type exodm_type:id-string;
       }
     }

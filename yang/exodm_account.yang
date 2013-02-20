@@ -8,13 +8,13 @@ submodule exodm_account {
   }
 
 
-  description "API for Exosense Device Management Server, account part";
+  description "API for Exosense Device Management Server, account part.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
 
   rpc create-account {
-    description "Create a new account.";
+    description "Creates a new account.";
     input {
       leaf name { type exodm_type:id-string; mandatory true; }
       uses exodm_type:user-obj {
@@ -67,26 +67,26 @@ submodule exodm_account {
     description "List all account names.";
     input {
       leaf n {
-        description "Number of entries to fetch";
+        description "Number of entries to fetch.";
         type uint32;
         mandatory true;        
       }
       leaf previous {
-        description 'Previous account name; "" if from beginning';
+        description 'Previous account name; "" if from beginning.';
         type exodm_type:id-string;
         mandatory true;        
       }
     }
     output {
       leaf-list accounts {
-        description "List of account ID";
+        description "List of account ID.";
         type exodm_type:id-string;
       }
     }
   }
   rpc add-account-users {
     description "Add account access to existing user(s)." +
-      "Predefined roles are: admin, configurer, executer, viewer";
+      "Predefined roles are: admin, config, execute, view.";
     input {
       leaf "account" { type exodm_type:id-string; mandatory true; }
       leaf "role" { type exodm_type:id-string; mandatory true; }
@@ -129,12 +129,12 @@ submodule exodm_account {
         mandatory true;        
       }
       leaf n {
-        description "Number of entries to fetch";
+        description "Number of entries to fetch.";
         type uint32;
         mandatory true;        
       }
       leaf previous {
-        description 'Previous user name; "" if from beginning';
+        description 'Previous user name; "" if from beginning.';
         type exodm_type:id-string;
         mandatory true;        
       }
@@ -142,11 +142,11 @@ submodule exodm_account {
     output {
       list users {
         leaf name {
-          description "List of user names"; 
+          description "List of user names."; 
           type exodm_type:id-string;
         }
         leaf-list roles {
-          description "List of role names"; 
+          description "List of role names."; 
           type exodm_type:id-string;
         }
       }
@@ -161,19 +161,19 @@ submodule exodm_account {
         mandatory true;        
       }
       leaf n {
-        description "Number of entries to fetch";
+        description "Number of entries to fetch.";
         type uint32;
         mandatory true;        
       }
       leaf previous {
-        description 'Previous user name; "" if from beginning';
+        description 'Previous user name; "" if from beginning.';
         type exodm_type:id-string;
         mandatory true;        
       }
     }
     output {
       leaf-list roles {
-        description "List of role names"; 
+        description "List of role names."; 
         type exodm_type:id-string;
       }
     }
