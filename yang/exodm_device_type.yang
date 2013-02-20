@@ -10,7 +10,7 @@ submodule exodm_device_type {
 
     description "API for Exosense Server - Device Types";
 
-    contact "magnus@feuerlabs.com";
+    contact "magnus.feuer@feuerlabs.com";
     organization "Feuerlabs, Inc.";
 
 
@@ -19,7 +19,7 @@ submodule exodm_device_type {
 
 	leaf name {
 	    description
-"Account-wide unique name of the device type..";
+"Account-wide unique name of the device type.";
 	    mandatory true;
 	    type exodm_type:id-string;
 	}

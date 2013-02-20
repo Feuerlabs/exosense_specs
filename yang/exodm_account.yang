@@ -20,11 +20,11 @@ submodule exodm_account {
 "Account. The created account can give access permission to users that will " +
 "manage the devices, device groups, packages, etc, owned by the account. " +
 "<br><br>" +
-"When the account is created, an account admin user will be also be " +
+"When the account is created, an account admin user, [name]-admin will be also be " +
 "automatically created. This user acts as the initial administrator for " +
 "the account and can be used to manage all resources owned by the " +
-"account. The name of the account admin is provided in the admin-user " +
-"argument of this call. ";
+"account. The name of the account admin is the value of the name "+
+"argument with an -admin suffix.";
 
 
     input {
@@ -37,18 +37,6 @@ submodule exodm_account {
 	  mandatory true;
       }
 
-      list admin-user {
-	  description
-"The initial account administrator user to create in conjunction with " +
-"the account. The username has to be unique across all users created in " +
-"the Exosense Server";
-
-
-	key "uname";
-	min-elements 1;
-	max-elements 1;
-	uses exodm_type:user-obj;
-      }
     }
     output {
       leaf result {
@@ -99,6 +87,7 @@ submodule exodm_account {
 
     output {
       leaf result {
+	  description "The result of the operation.";
         type exodm_type:result-code;
       }
     }
@@ -108,7 +97,7 @@ submodule exodm_account {
     description
 "**List all accounts in the Exosense Server**<br>" +
 "This command will list all accounts created in the Exosense " +
-"Server. " +
+"Server. This command can only be executed by the sysadm user." +
 "<br><br>"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of accounts.";
@@ -136,17 +125,84 @@ submodule exodm_account {
     }
   }
 
+  rpc add-user-to-account {
+      description
+"**Add a user to an account**<br>" +
+"This command adds the specified user to the given account. Once a user " +
+"has been added to an account, the user can be assigned to roles in the " +
+"given account through the [exodm:add-user-to-role] command. The user " +
+"will then be able to execute all RPCs, assigned to the role through " +
+"the [exodm:add-role-execution-permission] command, on all devices " +
+"owned by the account.";
+
+      input {
+
+	  leaf account {
+	      description
+		  "The account to add the user to";
+	      type exodm_type:id-string;
+	  }
+
+	  leaf uname {
+	      description
+		  "The user to add to the account.";
+	      type exodm_type:id-string;
+	  }
+      }
+      output {
+	  leaf result {
+	      description "The result of the operation.";
+	      type exodm_type:result-code;
+	  }
+      }
+  }
+
+  rpc remove-account-users {
+      description
+"**Remove a user from an account**<br>" +
+"This command removes the specified user to the given account. Once a " +
+"user has been removed to an account, any previous RPCs that the user " +
+"could execute on devices owned by the account will become " +
+"inaccessible.";
+
+      input {
+
+	  leaf account {
+	      description
+		  "The account to remove the user from";
+	      type exodm_type:id-string;
+	  }
+
+	  leaf uname {
+	      description
+		  "The user to remove from the account.";
+	      type exodm_type:id-string;
+	  }
+      }
+      output {
+	  leaf result {
+	      description "The result of the operation.";
+	      type exodm_type:result-code;
+	  }
+      }
+  }
+
   rpc list-account-users {
     description
 "**List all users with access to the specified account<br>**" +
 "This command will list all users who have been given access to the " +
-"given account through [exodm:add-account-users] commands." +
+"given account through [exodm:add-user-to-account] commands." +
 "<br><br>"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of user names.";
 
     input {
-      leaf "account" {
+      leaf account {
+	  description
+"The account, accessible by the authorizing user, to list the users for." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
         type exodm_type:id-string;
         mandatory true;
       }
@@ -174,5 +230,4 @@ submodule exodm_account {
       }
     }
   }
-
 }

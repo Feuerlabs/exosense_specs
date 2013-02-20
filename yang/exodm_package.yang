@@ -47,9 +47,10 @@ submodule exodm_package {
 "<br><br>" +
 "If a package has functions that can be remotely invoked on a device " +
 "from the Exosense Server, the API of those RPCs is specified by the " +
-"yang module and container given in the yang-specification and " +
-"api-container arguments. Once the package has been installed on a " +
-"device, a user with access to an RPC given in the yang container can " +
+"yang module given in the yang-specification argument. Please note that all yang
+RPC definitions are global and cannot be hosted in a container. " +
+"Once the package has been installed on a " +
+"device, a user with access to an RPC given in the yang module can " +
 "call the function on the device through the JSON-RPC interface on the " +
 "Exosense Server. The server will store the call and forward it to the " +
 "device once it comes online. The result of the executed function will " +
@@ -97,7 +98,7 @@ submodule exodm_package {
 	    }
 
 
-	    leaf-list uprade-from-packages {
+	    leaf-list upgrade-from-packages {
 		description "List of packages that can be upgraded by this package.";
 		type exodm_type:id-string;
 	    }
@@ -110,12 +111,6 @@ submodule exodm_package {
 
 	    leaf configuration-container {
 		description "Container within the Yang specification that has the configuration data definition.";
-		mandatory false;
-		type exodm_type:id-string;
-	    }
-
-	    leaf api-container {
-		description "Container within the Yang specification that has the RPC API definition.";
 		mandatory false;
 		type exodm_type:id-string;
 	    }
@@ -396,6 +391,12 @@ submodule exodm_package {
 
 		default false;
 		type boolean;
+	    }
+
+	    leaf rpc-destination-url {
+		description
+		    "The destination URL used for incoming RPCs that originate from this package in device."
+
 	    }
 
 	    leaf timeout {

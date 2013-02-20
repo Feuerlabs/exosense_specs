@@ -12,8 +12,8 @@ submodule exodm_config_set {
   import exodm_type {
     prefix exodm_type;
   }
-    
-    
+
+
   description "API for Exosense Server - Configuration Sets";
 
   contact "magnus.feuer@feuerlabs.com";
@@ -21,62 +21,108 @@ submodule exodm_config_set {
 
 
   rpc create-config-set {
-    description "RPC to create device config data set";
+    description
+"**Create a new configuration set [deprecated in 2.x]**<br>" +
+"This command creates a new configuration set describing an RPC API and " +
+"configuration data supported by a device. A configuration set is " +
+"associated with a yang module, created through a " +
+"[exodm:create-yang-module] command, that describes the configuration " +
+"data and API interface of the devices that are members of the " +
+"set. Also tied to the configuration set is a notification URL that " +
+"will receive all results from RPCs sent to a member device " +
+"The notification URL will also be used to forward incoming " +
+"incoming RPCs from the device sent to the server. " +
+"<br><br>" +
+"Once a configuration set has been created, it can have devices added " +
+"to it through the [exodm:add-config-set-members]. All such member " +
+"devices can have RPCs, as defined in the configuration set yang " +
+"module, called through the JSON-RPC interface. These devices can also " +
+"have configuration data updated by the server through the " +
+"[exodm:update-config-set] and [exodm:push-config-set] commands.";
+
+
+
     input {
+      leaf account {
+        description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+        type exodm_type:id-string;
+      }
+
       leaf name {
-        description "Name of the config data set";
-        type exodm_type:id-string; 
+        description
+	    "Name of the configuration set to create";
+        type exodm_type:id-string;
         mandatory true;
       }
       leaf yang {
-        description "Name of the corresponding yang file - must exist.";
+        description 'Name of the yang module to use. Include the ".yang" suffix.';
         type exodm_type:id-string;
         mandatory true;
       }
-      leaf account {
-        description "The account to which the config set belongs.";
-        type exodm_type:id-string;
-      }
       leaf notification-url {
-        description "Notification URL";
+        description "Notification URL to send RPC results and device-originated RPC calls to.";
         type inet:uri;
       }
       anyxml values {
-        description "Configuration values (validated against the yang spec)";
+        description
+	    "Configuration values (validated against the yang spec) to initialize " +
+	    "the newly created configuration set with.";
       }
     }
 
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
 
   rpc update-config-set {
-    description "RPC to update existing config data set";
+    description
+"**Update the data of a configuraiton set**<br>" +
+"This command will update the configuration values of a configuraiton " +
+"set. Once the data has been updated, it can be pushed out to all " +
+"configuration set member devices through the [exodm:push-config-set] " +
+"command. " +
+"<br><br>" +
+"The format of the configuration data is specified by the yang module provided " +
+"to the [exodm:create-config-set] command that created the " +
+"configuration set. Any data that does not validate against the yang " +
+"module will result in an error.";
     input {
       leaf name {
-        description "Name of the config data set";
+        description "The name of the configuration data set to update.";
         type exodm_type:id-string;
         mandatory true;
       }
       leaf account {
-        description "The account to which the config set belongs.";
+        description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
         type exodm_type:id-string;
       }
       leaf notification-url {
-        description "Notification URL";
+        description "Notification URL to send RPC results and device-originated RPC calls to.";
         type inet:uri;
+        mandatory false;
       }
       anyxml values {
         description
-          "Configuration values (validated against the yang spec)";
+          "Configuration values (validated against the yang spec) to update in the configuration set.";
+	mandatory false;
       }
     }
 
     output {
       leaf result {
+	  description "Result of the operation";
         type exodm_type:result-code;
       }
     }
@@ -84,47 +130,69 @@ submodule exodm_config_set {
 
   rpc delete-config-set {
     description
-      "RPC to delete a config data set. " +
-      "Any member devices must first be removed.";
+"**Delete an existing configuration set**<br>" +
+"This command deletes a configuration set previously created through an " +
+"[exodm:create-config-set] command. Any configuration data pushed to " +
+"the set's member devices will be delivered, although the delivery " +
+"notificatin sent back to the notification URL of the set may be lost? " +
+"Any configuration set member devices will be removed from the set " +
+"prior to its deletion.";
     input {
-      leaf name {
-        description "Name of the config data set";
-        type exodm_type:id-string;
-        mandatory true;
-      }
       leaf account {
-        description "The account to which the config set belongs.";
+        description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
         type exodm_type:id-string;
+      }
+
+      leaf name {
+	  description "The name of the configuration data set to delete.";
+	  type exodm_type:id-string;
+	  mandatory true;
       }
     }
 
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
 
-  rpc list-config-sets {
-    description "List config sets, N entries at a time";
 
+  rpc list-config-sets {
+    description
+"**List all configuraiton sets owned by an account**<br>" +
+"This commands will return all configuration sets created under the " +
+"specified account through a previous [exodm:create-config-set] " +
+"command.";
     input {
+      leaf account {
+        description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+        type exodm_type:id-string;
+      }
+
       leaf n {
         description "Number of entries to fetch";
         type uint32;
         mandatory true;
       }
+
       leaf previous {
         description "Previous config set; \"\" if from beginning";
         type exodm_type:id-string;
         mandatory true;
       }
-      leaf account {
-        description "The account to which the config set belongs.";
-        type exodm_type:id-string;
-      }
+
       leaf device-id {
-        description
+	  description
           "Optional device ID. If given, config specs associated with " +
           "the given device are listed.";
         type exodm_type:id-string;
@@ -134,11 +202,18 @@ submodule exodm_config_set {
       list config-sets {
         leaf name {
           type exodm_type:id-string;
+	  description
+"The name of the configuration set, as specified by the " +
+"[exodm:create-config-set] call taht created it.";
         }
         leaf yang {
+	    description
+"The name of the yang module associated with the configuration set.";
           type string;
         }
         leaf notification-url {
+	    description
+"The notification URL associated with the configuration set.";
           type inet:uri;
         }
       }
@@ -146,32 +221,47 @@ submodule exodm_config_set {
   }
 
   rpc list-config-set-members {
-    description "List members of a config set, N entries at a time";
+    description
+"**List all device members of a configuration set**<br>" +
+"This command will list all devices added as member to the given " +
+"configuration set through previous [exodm:add-config-set-members] commands." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of accounts.";
 
     input {
       leaf name {
-        description "Name of the config set";
+        description "Name of the config set to list member devices for";
         type exodm_type:id-string;
         mandatory true;
       }
       leaf n {
-        description "Number of entries to fetch";
+        description
+"Maximum number of entries to return. More devices may be available " +
+"after the last returned element.";
         type uint32;
         mandatory true;
       }
       leaf previous {
-        description "Previous member; \"\" if from beginning";
+        description
+'Start the fetch at the first device after the device with the ' +
+'id specified by this argument. Use "" if the fetch is to start from the beginning';
         type exodm_type:id-string;
         mandatory true;
       }
       leaf account {
-        description "The account to which the config set belongs.";
+        description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
         type exodm_type:id-string;
       }
     }
     output {
       leaf-list config-set-members {
-        description "";
+        description
+	    "Device ID of devices that are a member of the given configuration set.";
         type exodm_type:id-string;
       }
     }
@@ -179,84 +269,130 @@ submodule exodm_config_set {
 
   rpc add-config-set-members {
     description
-      "Add a device to a config set.";
+"**Add devices as a members to one or more configuration sets**<br>" +
+"This command adds the listed devices as members of a collection of configuraiton sets. " +
+"When this command returns, the RPCs of the yang specification associated " +
+"with the configuraiton set through the [exodm:create-config-set] command can be invoked "+
+"for the devices. " +
+"<br><br>" +
+"The devices will also be able to have the configuration data setup for the config " +
+"set through the [exodm:create-config-set] and [exodm:update-config-set] pushed to " +
+"them using the [exodm:push-config-set] command." +
+"<br><br>" +
+"If a member device replies to an RPC sent to it, or " +
+"originates an RPC of its own, the JSON-RPC will be sent to the " +
+"notification URL associated with the configuration set.";
     input {
+      leaf account {
+	  description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+        type exodm_type:id-string;
+      }
+
       leaf-list name {
         description
-          "Configuration data instances to associate with " +
-          "the given device(s)";
+	    "Name of configuration sets to add devices to as members.";
         type exodm_type:id-string;
       }
-      leaf-list dev-id {
+      leaf-list device-id {
         description
-          "Devices to push the given config data instances to (s)";
-        type exodm_type:id-string;
-      }
-      leaf account {
-        description "The account to which the config set belongs.";
+          "Devices to add to the listed configuration sets.";
         type exodm_type:id-string;
       }
     }
 
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
 
   rpc remove-config-set-members {
     description
-      "Remove a config set member.";
+"**Remove devices as a members from one or more configuration sets**<br>" +
+"This command removes a list of devices from one or more configuration " +
+"sets. The devices have previously been added as configuration set "  +
+"members through an [exodm:add-config-set-members] command.";
+
     input {
+      leaf account {
+	  description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+        type exodm_type:id-string;
+      }
       leaf-list name {
         description
-          "Configuration data instances from which to remove " +
+          "Configuration sets from which to remove " +
           "the given devices";
         min-elements 1;
         type exodm_type:id-string;
       }
-      leaf-list dev-id {
+      leaf-list device-id {
         description
-          "Devices to remove from the given config data instances";
+          "Device IDs to remove as members from the given configuration sets.";
         min-elements 1;
-        type exodm_type:id-string;
-      }
-      leaf account {
-        description "The account to which the config set belongs.";
         type exodm_type:id-string;
       }
     }
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
 
 
   rpc push-config-set {
-    description "Push the given configuration data to all member devices";
+    description
+"**Push configuration set data to all member devices**<br>"   +
+"This command will transfer the configuration data in the configuration " +
+"set to all member devices.  The configuration data is setup in the " +
+"configuration set through the [exodm:create-config-set] and " +
+"[exodm:update-config]. For each member device that receives the " +
+"configuration set, an [exodm:push-config-set-callback] notification " +
+"will be sent back to the notification URL associated with the " +
+"configuration set.";
+
+
     exo:matching-notification "push-config-set-callback";
+
     input {
       leaf account {
-        description "The account to which the config set belongs.";
+	  description
+"The account, accessible by the authorizing user, to which the configuration set belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
         type exodm_type:id-string;
       }
       leaf name {
-        description "Name of configuration data set to push.";
+        description "Name of configuration set whose data to push to the member devices..";
         type exodm_type:id-string;
       }
     }
 
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
 
   notification push-config-set-callback {
+      description
+"The callback made for each device member of a configuration set that " +
+"receives configuration data through an [exodm:push-config-data] " +
+"command.";
     uses exo:std-callback;
   }
 

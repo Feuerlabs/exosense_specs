@@ -13,57 +13,44 @@ submodule exodm_user {
 
 
   rpc create-user {
-    description 
+    description
 "**Create a new user**<br>" +
-"This command creates a new user that can be given access to accounts and assigned roles."
-"The authorizing user must be either master or admin roles assigned to it for this command to be executed.
-The created user can be granted access to accounts through roles using the [exodm:add-user-to-role] command"
-
-
+"This command creates a new user that can be given access to accounts " +
+"and assigned roles." +
+"The authorizing user must have either master or admin roles assigned to " +
+"it for this command to be executed. The created user can be granted " +
+"access to accounts through roles using the [exodm:add-user-to-role] " +
+"command.";
 
     input {
 	uses exodm_type:user-obj;
     }
     output {
-      leaf result { type exodm_type:result-code; }
+	leaf result {
+	    description "Result of the operation";
+	    type exodm_type:result-code;
+	}
     }
   }
-    
+
   rpc delete-user {
-    description "Delete an existing user";
+    description
+"**Delete an existing user**<br>" +
+"This command deletes an existing user previously created through an " +
+"[exodm:create-user] command.  The user will be removed from all accounts and roles " +
+"it was assigned to prior to being deleted.";
     input {
-      leaf uname      { type exodm_type:id-string; mandatory true; }
+      leaf uname {
+	description
+	    "The name of the user to delete.";
+	  type exodm_type:id-string; mandatory true;
+      }
     }
     output {
-      leaf result { type exodm_type:result-code; }
-    }
-  }
-      
-  rpc list-users {
-    description "List all users.";
-    input {
-      leaf n {
-        description "Number of entries to fetch";
-        type uint32;
-        mandatory true;
-      }
-      leaf previous {
-        description 'Previous user name; "" if from beginning';
-        type exodm_type:id-string;
-        mandatory true;
-      }
-       leaf account {
-        description "If account is given only users connected to that " +
-          "account are returned.";
-        type exodm_type:id-string;
-      }
-   }
-    output {
-      leaf-list users {
-        description "List of user names"; 
-        type exodm_type:id-string;
+      leaf result {
+	description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
-  
 }

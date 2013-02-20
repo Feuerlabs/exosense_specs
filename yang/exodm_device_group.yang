@@ -10,7 +10,7 @@ submodule exodm_device_group {
     prefix exodm_type;
   }
 
-  description "API for Exosense Device Management Server, device group part";
+  description "API for Exosense Server - Device Groups";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
@@ -41,181 +41,307 @@ submodule exodm_device_group {
 
 
   rpc create-device-group {
-    description "RPC to create a device group";
+    description
+"**Create a device group**<br>
+This command creates a new device group that can have devices added to it.
+The name of the group must be unique across all device IDs and device groups
+owned by the given account.
 
+A device group can have devices added to it through the [exodm:add-device-group-memberss]
+Once a group has been created, and devices have been added to it , an RPC
+command in a package can be invoked on all member devices by sending the
+RPC to the device group instead of individual devices.
+
+Incoming RPCs from member devices will be sent to the callback URL of the device group marked
+as primary. See [exodm:add-device-group-members] for details.
+
+Packages installed on a group will be pushed out to all devices of that group.";
     input {
-      leaf name {
-        description "Group name";
-        type exodm_type:id-string;
-        mandatory true;
-      }
-      leaf notification-url {
-        description "RPC callback notification URL";
-        type inet:uri;
-        mandatory true;
-      }
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
+	leaf account {
+	    description
+"The account, accessible by the authorizing user, that will own the " +
+"device group. If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
+
+	    type exodm_type:id-string;
+	}
+
+	leaf group-name {
+	    description
+"Name of the device group. Must be unqiue across all devices and groups " +
+"owned by the account.";
+	    type exodm_type:id-string;
+	    mandatory true;
+	}
+
+	leaf notification-url {
+	    description "Callback to forward device originated RPCs to.";
+	    type inet:uri;
+	    mandatory true;
+	}
+
     }
 
     output {
-      leaf result {
-        type exodm_type:result-code;
-      }
-      leaf gid {
-        description "Group identifier. 0 (zero) if operation failed.";
-        type uint32;
-      }
+	leaf result {
+	    description "Result of the operation";
+	    type exodm_type:result-code;
+	}
     }
   }
 
   rpc delete-device-group {
-    description "RPC to create a device group";
+    description
+"**Delete a device group**<br>" +
+"This command deletes a device group previously created through a " +
+"[exodm:create-device-group] command.  Any devices added to the group " +
+"through an [exodm:add-device-group-members] will be " +
+"removed as members from it prior to the groups deletion.";
 
     input {
-      leaf gid {
-        description "Group ID";
-        type uint32;
-        mandatory true;
-      }
-       leaf account {
-        description "The account to which the yang module belongs.";
+	leaf account {
+        description
+"The account, accessible by the authorizing user, that owns the " +
+"device group to delete. If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
         type exodm_type:id-string;
+      }
+
+      leaf group-name {
+        description "Name of the device group to delete";
+	type exodm_type:id-string;
+        mandatory true;
       }
    }
 
     output {
       leaf result {
-        type exodm_type:result-code;
+	  description "Result of the operation";
+	  type exodm_type:result-code;
       }
     }
   }
 
- 
+
   rpc list-device-groups {
-    description "List device groups, N entries at a time";
+    description
+"**List all device groups owned by an account**<br> " +
+"This command will return all device groups created under an account " +
+"through the [exodm:create-device-group] command." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device names";
 
     input {
-      leaf n {
-        description "Number of entries to fetch";
-        type uint32;
-        mandatory true;
-      }
-      leaf previous {
-        description
-          "Previous device group id (GID); \"\" if from beginning";
-        type uint32;
-        mandatory true;
-      }
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
-      }
-      leaf device-id {
-        description
-          "Optional device ID. If given, device groups associated with " +
-          "the given device are listed.";
-        type exodm_type:id-string;
-      }
+	leaf account {
+	    description
+"The account, accessible by the authorizing user, to list the device " +
+"groups for. If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
+	    type exodm_type:id-string;
+	}
+
+	leaf n {
+	    description
+		"Maximum number of entries to return. More device groups may be available " +
+		"after the last returned element.";
+	    mandatory true;
+		type uint32;
+	}
+	leaf previous {
+	    description
+		'Start the fetch at the first device group after that with the ' +
+		'name specified by this argument. Use "" if the fetch is to start from the beginning';
+	    mandatory true;
+	    type exodm_type:id-string;
+	}
+
+	leaf device-id {
+	    description
+		"Optional device ID. If given, device groups associated with " +
+		"the given device are listed.";
+	    type exodm_type:id-string;
+	}
     }
     output {
-      list device-groups {
-        leaf gid {
-          type uint32;
-        }
-        leaf name {
-          type exodm_type:id-string;
-        }
-        leaf notification-url {
-          type inet:uri;
-        }
-      }
+	list device-groups {
+	    leaf group-name {
+		description "The name of the device group";
+		type exodm_type:id-string;
+	    }
+	    leaf notification-url {
+		description "The callback URL of the device group";
+		type inet:uri;
+	    }
+	}
     }
   }
 
 
   rpc list-device-group-members {
-    description "List devices attached to a device group, " +
-      "N entries at a time";
+    description
+"**List all device members of a device group under an account**<br> " +
+"This command will list all devices that are a member of the given " +
+"device group. The listed devices have previously been added to the " +
+"group through an [exodm:add-device-group-members] call." +
+"<br><br>"+
+"This command allows for chunks of the result set to be returned " +
+"to facilitate a sequential retrieval of device names";
 
     input {
-      leaf gid {
-        description "ID of the device group";
-        type uint32;
+      leaf account {
+	    description
+"The account, accessible by the authorizing user, that owns the device " +
+"group.  If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
+
+        type exodm_type:id-string;
+      }
+      leaf group-name {
+        description "Name of the device group to list members for";
+	type exodm_type:id-string;
         mandatory true;
       }
       leaf n {
-        description "Number of entries to fetch";
-        type uint32;
-        mandatory true;
+	  description
+	      "Maximum number of entries to return. More devices may be available " +
+	      "after the last returned element.";
+	  mandatory true;
+	  type uint32;
       }
       leaf previous {
-        description "Previous device; \"\" if from beginning";
-        type exodm_type:id-string;
-         mandatory true;
-     }
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
+	  description
+	      'Start the fetch at the first devices after that with the ' +
+	      'device ID specified by this argument. Use "" if the fetch is to start from the beginning';
+	  mandatory true;
+	  type exodm_type:id-string;
       }
     }
     output {
-      leaf-list device-group-members {
-        description "";
-        type exodm_type:id-string;
+	list devices {
+	    leaf device-id {
+		description "The ID of the device";
+		type exodm_type:id-string;
+	    }
+
+	    leaf primary {
+		description "Set to true if this is the primary group for the given device";
+		type boolean;
+	    }
+	}
       }
     }
-  }
+
 
 
   rpc add-device-group-members {
-    description "Link devices to device groups";
+    description
+"**Add one or more devices as members of a  device group**<br>" +
+"This command will add a list of devices as members to a single " +
+"device group.  Once this command has been completed, JSON-RPCs sent " +
+"to the device group will be forwarded to all member devices. " +
+"<br><br> " +
+"If a device, who is a member of multiple groups, sends an RPC to the " +
+"Exosense Server, the RPC will be forwarded to the callback URL (as " +
+"JSON-RPC) of the group that is marked as primary. This ensures that only " +
+"one URL receives, processes, and replies to an RPC send by a device. " +
+"<br><br> " +
+"If a device is only member of a single group, the primary flag is " +
+"ignored and that group will always receive the forwarded RPC." +
+"<br> " +
+"If a device itself has a callback URL configured, the RPC will be " +
+"forwarded to that URL, regardless of which device groups it is a " +
+"member of and their status as primary. " +
+"<br><br> " +
+"If a device is member of a device group, and has it marked as primary, " +
+"when the [exodm:add-device-group-members] command also has the primary flag " +
+"set, the primary flag will be moved from the previous group to the new " +
+"one. Thus, only one group will be marked as primary for a device at " +
+"any given time.";
+
     input {
-      leaf-list device-groups {
-        description
-          "Device groups to associate with the given device(s)";
-        type uint32;
-      }
-      leaf-list dev-id {
-        description "List of Device ID(s)";
-        type exodm_type:id-string;
-      }
       leaf account {
-        description "The account to which the yang module belongs.";
+	    description
+"The account, accessible by the authorizing user, that owns the device " +
+"group and devices.  If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
         type exodm_type:id-string;
+      }
+
+      leaf group-name {
+        description
+	    "Name of device group to which to add the given device(s) as members";
+	type exodm_type:id-string;
+
+      }
+
+      leaf-list device-id {
+        description "List of device IDs to add as members to the given device group";
+        type exodm_type:id-string;
+      }
+      leaf primary {
+	  description
+"Flag to indicate that this group should be marked as the primary group for all added devices.
+If any of the added devices already have primary groups setup, those groups will be de-selected
+in favor of the group specified by this call.";
+	  type boolean;
+	  default false;
       }
     }
 
     output {
       leaf result {
+	  description "Result of the operation";
         type exodm_type:result-code;
       }
     }
   }
 
   rpc remove-device-group-members {
-    description "Unlink devices from device groups";
+    description
+"**Remove a list of devices as members from a device group**<br>" +
+"This command removes the specified devices from the given group. The " +
+"devices have previously been added to the group through the " +
+"[exodm:add-device-group-members] command.  If one or more of the " +
+"devices have the group marked as primary, and the device itself does " +
+"not have a configured callback URL, then any future RPCs received from " +
+"the device will result in an error being sent back to the device " +
+"directly by the Exosense Server.";
     input {
-      leaf-list device-groups {
-        description
-          "Device groups to unlink the given device(s) from";
-        min-elements 1;
-        type uint32;
+      leaf account {
+	    description
+"The account, accessible by the authorizing user, that owns the device " +
+"group and devices.  If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
+
+	    type exodm_type:id-string;
       }
-      leaf-list dev-id {
-        description "List of device ID(s)";
-        min-elements 1;
+      leaf group-name {
+        description
+          "Name of the device group to remove the device(s) from.";
         type exodm_type:id-string;
       }
-      leaf account {
-        description "The account to which the yang module belongs.";
+
+      leaf-list device-id {
+        description "The Device IDs of the devices to remove as members from the device group.";
         type exodm_type:id-string;
       }
     }
     output {
       leaf result {
+	  description "Result of the operation";
         type exodm_type:result-code;
       }
     }
@@ -223,27 +349,40 @@ submodule exodm_device_group {
 
 
   rpc update-device-group {
-    description "RPC to change the notification URL of an existing group";
+    description
+"**Update a device group**<br>" +
+"This command will update the notification URL of the given device " +
+"group. Once this command has completed, any incoming, device-orignated " +
+"RPCs sent to the device group will be forwarded as JSON-RPC to the "+
+"given URL.";
 
     input {
-      leaf gid {
-        description "Group identifier.";
-        type uint32;
-        mandatory true;
+      leaf account {
+	    description
+"The account, accessible by the authorizing user, that owns the device " +
+"group.  If no account is given, the authorizing user assumes " +
+"to have access to only one account, which will be used. If no " +
+"account is given, and the user has access to multiple accounts, an error " +
+"is returned.";
+        type exodm_type:id-string;
       }
-      leaf notification-url {
-        description "RPC callback notification URL";
+	leaf group-name {
+	    description
+		"Name of the device group to update.";
+	    type exodm_type:id-string;
+	    mandatory true;
+	}
+
+	leaf notification-url {
+	    description "RPC callback URL to forward for incoming device-originated RPCs to.";
         type inet:uri;
         mandatory true;
-      }
-      leaf account {
-        description "The account to which the yang module belongs.";
-        type exodm_type:id-string;
       }
     }
 
     output {
       leaf result {
+	  description "Result of the operation";
         type exodm_type:result-code;
       }
     }

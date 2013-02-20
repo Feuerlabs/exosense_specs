@@ -23,7 +23,7 @@
     }
 
 
-Create a new user
+**Create a new user**<br>This command creates a new user that can be given access to accounts and assigned roles.The authorizing user must be either master or admin roles assigned to it for this command to be executed. The created user can be granted access to accounts through roles using the [exodm:add-user-to-role] command
 
 #### descriptions
 <dl><dt>alias</dt>
@@ -331,7 +331,7 @@ List all users.
     }
 
 
-**List all accounts in the Exosense Server**<br>This command will list all accounts created in the Exosense Server. <br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of accounts.
+**List all accounts in the Exosense Server**<br>This command will list all accounts created in the Exosense Server. This command can only be executed by the sysadm user.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of accounts.
 
 #### descriptions
 <dl><dt>n</dt>
@@ -363,108 +363,6 @@ List all users.
 
 
 
-## exodm:add-account-users
-
-### Request
-
-
-    {
-        "jsonrpc": "2.0",
-        "method": "exodm:add-account-users",
-        "id": "",
-        "params": {
-            "account": "",
-            "role": "",
-            "unames": [
-                "unames": ""
-            ]
-        }
-    }
-
-
-**Add account access to existing user(s)**<br>This command gives one or more users access to the resources of an account through a role. Each role will give access to a predefined set of core Exosense Server JSON-RPC commands, as listed in the "Exosense JSON-RPC command Role assignment" chapter of the "Exosense Server Operations Manual. In addition to this, roles can also be given additional execution rights to RPCs defined for packages through their yang-specification. See the "Package" chapter of the "Exosense Operations Manual" and [exodm:create-package] for details on RPCs and Yang specifications. <br><br>Once one or more roles have been assigned to a user, that user can execute all JSON-RPC commands that those roles have execution rights for on the given account. <br><br>The [exodm:list-account-roles] command can be used to retrieve a list of all availale roles for an account
-
-#### descriptions
-<dl><dt>account</dt>
-<dd>The account to give a user access to. The account has previously been created with a [exodm:create-account] command. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>role</dt>
-<dd>The role to assign to the user for the specified account. The value of this arument must be from the list of roles returned by [exodm:list-account-roles] (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>unames</dt>
-<dd>Users to add to account. The users, previously created through the [exodm:create-user] or [exodm:create-account] commands, to be assigned the given role for this account. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-### Reply
-
-
-    {
-        "jsonrpc": "2.0",
-        "id": "",
-        "result": {
-            "result": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>result</dt>
-<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-## exodm:remove-account-users
-
-### Request
-
-
-    {
-        "jsonrpc": "2.0",
-        "method": "exodm:remove-account-users",
-        "id": "",
-        "params": {
-            "account": "",
-            "role": "",
-            "unames": [
-                "unames": ""
-            ]
-        }
-    }
-
-
-**Remove account access from one or more existing user(s)**<br>This command removes access for one or more users access to the resources of an account. Access retraction is done by removing a specific role, previously asssigned with [exodm:add-account-users], from users. Once the role has been removed from the user, it can no longer run the JSON-RPC commands that the role had execution rights for (unless the user is also assigned other roles that have execution rights for the same commands).  See the "Package" chapter of the "Exosense Operations Manual" and [exodm:create-package] for details on RPCs and Yang specifications.<br><br>The [exodm:list-account-roles] command can be used to retrieve a list of all availale roles for an account Any other roles that the user may have in other accounts than the one specified bythe account argument, are unaffected by this command.
-
-#### descriptions
-<dl><dt>account</dt>
-<dd>The account to remove user access from. The account has previously been created with a [exodm:create-account] command. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>role</dt>
-<dd>The role to strip the given user of for the specified account.The value of this arument must be from the list of roles returned by [exodm:list-account-roles] (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>unames</dt>
-<dd>Users to strip of the specified role for this account. Listed users must previously have been assingned the role through an [exodm:add-account-users] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-### Reply
-
-
-    {
-        "jsonrpc": "2.0",
-        "id": "",
-        "result": {
-            "result": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>result</dt>
-<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
 ## exodm:list-account-users
 
 ### Request
@@ -486,7 +384,7 @@ List all users.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The account, accessible by the authorizing user, to list the users for.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>n</dt>
 <dd>Maximum number of entries to return. More users may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
@@ -516,6 +414,269 @@ List all users.
 
 
 
+## exodm:add-user-to-role
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:add-user-to-role",
+        "id": "",
+        "params": {
+            "account": "",
+            "role": "",
+            "names": [
+                "names": ""
+            ]
+        }
+    }
+
+
+**Add user(s) to a role in an account**<br>This command gives one or more users access to the resources of an account by adding them to a role. Each role will give access to a predefined set of core Exosense Server JSON-RPC commands, as listed in the "Exosense JSON-RPC command Role assignment" chapter of the "Exosense Server Operations Manual". In addition to this, roles can also be given additional execution rights to package RPCs through the [exodm:add-role-execution-permission] command. See the "Package" chapter of the "Exosense Operations Manual" and [exodm:create-package] for details on RPCs and their execution rights. <br><br>Once one or more roles have been assigned to a user, that user can execute all JSON-RPC commands that those roles have execution rights for on the given account. <br><br>The [exodm:list-account-roles] command can be used to retrieve a list of all availale roles for an account that a usert can be assigned to.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account, accessible by the authorizing user, to which the role belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>names</dt>
+<dd>Users to add to account. The users, previously created through the [exodm:create-user] or [exodm:create-account] commands, to be assigned the given role for this account. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>role</dt>
+<dd>The role to assign to the user for the specified account. The value of this arument must be from the list of roles returned by [exodm:list-account-roles] (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "result": ""
+        }
+    }
+
+
+#### descriptions
+<dl><dt>result</dt>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+## exodm:remove-user-from-role
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:remove-user-from-role",
+        "id": "",
+        "params": {
+            "account": "",
+            "role": "",
+            "unames": [
+                "unames": ""
+            ]
+        }
+    }
+
+
+**Remove user(s) from a role**<br>This command retracts one or more user's access to the resources of an account by removing the user from a role. The user have previously been added to the role through a [exodm:add-user-to-role] command. Once the user has been removed from the role, it can nolonger run the JSON-RPC commands that the role had execution rights for (unless the user is also assigned other roles that have execution rights for the same commands).  See the "Package" chapter of the "Exosense Operations Manual" and [exodm:create-package] for details on RPCs and Yang specifications.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account, accessible by the authorizing user, to which the role belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>role</dt>
+<dd>The role to strip the given user of for the specified account.The value of this arument must be from the list of roles returned by [exodm:list-account-roles] (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>unames</dt>
+<dd>Users to strip of the specified role for this account. Listed users must previously have been assingned the role through an [exodm:add-account-users] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "result": ""
+        }
+    }
+
+
+#### descriptions
+<dl><dt>result</dt>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+## exodm:add-role-execution-permission
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:add-role-execution-permission",
+        "id": "",
+        "params": {
+            "account": "",
+            "role": "",
+            "package-name": "",
+            "rpc-name": ""
+        }
+    }
+
+
+**Add permission execution for a role to an RPC**<br>  This command adds execution rights for a role to an RPC in a package owned by the given account. Once this command has executed, all users assigned to the role will be able to execute the given RPC on all devices, owned by the account, that the associated package has been installed on. <br><br>Users can be added to the role through the [exodm:add-user-to-role] command. <br><br>If multiple roles have execution rights to a single RPC within a package, any user who is assigned to one or more of these roles can execute the RPC. Conversely, a user must be removed from all roles with execution rights to an RPC in order to revoke the execution right for that user.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account, accessible by the authorizing user, to which the role and package belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>Name of package to which to add role execution rights. The package has previously been created through a [exodm:create-package] command (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>role</dt>
+<dd>Name of role to add execution permission to. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>rpc-name</dt>
+<dd>Name of the RPC in the package to add role execution rights to. The name of the RPC should include the module prefix and a colon (fleetmanager:get-position) (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "result": ""
+        }
+    }
+
+
+#### descriptions
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+## exodm:remove-role-execution-permission
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:remove-role-execution-permission",
+        "id": "",
+        "params": {
+            "account": "",
+            "role": "",
+            "package-name": "",
+            "rpc-name": ""
+        }
+    }
+
+
+**Remove permission for a role to execute an RPC**<br>This command removes execution rights for a role from an RPC in a package owned by the given account. Once this command has executed, all users assigned to the role will no longer have permission to execute the given RPC on devices, owned by the account, that the associated package has been installed on. <br><br>If multiple roles have execution rights to a single RPC within a package, any user who is assigned to one or more of these roles can execute the RPC. Conversely, a user must be removed from all roles with execution rights to an RPC in order to revoke the execution right for that user.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account, accessible by the authorizing user, to which the role and package belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>Name of package fromn which to remove role execution rights. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>role</dt>
+<dd>Name of role to remove execution permission from. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>rpc-name</dt>
+<dd>Name of the RPC in the package to remove role execution rights from. The name of the RPC should include the module prefix and a colon (fleetmanager:get-position) (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "result": ""
+        }
+    }
+
+
+#### descriptions
+<dl><dt>result</dt>
+<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+## exodm:list-rpc-roles
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:list-rpc-roles",
+        "id": "",
+        "params": {
+            "account": "",
+            "package-name": "",
+            "rpc-name": "",
+            "n": "",
+            "previous": ""
+        }
+    }
+
+
+**List all roles that have exeuction right for an RPC**<br>This command will list all roles with execution rights for the given account/package/RPC combination<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of roles.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account, accessible by the authorizing user, to which the role and package belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>n</dt>
+<dd>Maximum number of entries to return. More roles may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>package-name</dt>
+<dd>Name of package to list role access for, (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dt>previous</dt>
+<dd>Start the fetch at the first role after the role with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dt>rpc-name</dt>
+<dd>Name of RPC inside the package to list role access for. The name of the RPC should include the module prefix and a colon (fleetmanager:get-position). (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "roles": [
+                "roles": ""
+            ]
+        }
+    }
+
+
+#### descriptions
+<dl><dt>roles</dt>
+<dd>List of roles with execution right to the given RPC in the specified package owned by the account. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
 ## exodm:list-account-roles
 
 ### Request
@@ -533,15 +694,15 @@ List all users.
     }
 
 
-**List all roles defined for account**<br>This command will return all roles in account that can be assigned to users in order for them to access resources owned by the account.
+**List all roles defined for account**<br>This command will return all roles in account that can be assigned to users in order for them to access resources owned by the account.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of roles.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to list all roles for. The account has been created with a previous [exodm:create-account] call. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the roles belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>n</dt>
 <dd>Maximum number of entries to return. More roles may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Start the fetch at the first role after the user with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Start the fetch at the first role after the role with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1222,7 +1383,7 @@ RPC to change the notification URL of an existing group
 <dt>attribute-container</dt>
 <dd>Container within the Yang specification hosting the device attribute specification. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Account-wide unique name of the device type.. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Account-wide unique name of the device type. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server.  The name has previously been registered by a protocol plugin deployed on the server. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>yang-specification</dt>
@@ -1277,7 +1438,7 @@ RPC to change the notification URL of an existing group
 <dt>attribute-container</dt>
 <dd>Container within the Yang specification hosting the device attribute specification. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Account-wide unique name of the device type.. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Account-wide unique name of the device type. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server.  The name has previously been registered by a protocol plugin deployed on the server. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>yang-specification</dt>
@@ -1406,7 +1567,7 @@ RPC to change the notification URL of an existing group
 <dt>device-types</dt>
 <dd>List of device types owned by the given account. (<b>type:</b> array)</dd>
 <dt>name</dt>
-<dd>Account-wide unique name of the device type.. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Account-wide unique name of the device type. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>protocol</dt>
 <dd>Protocol between device and Exosense server.  The name has previously been registered by a protocol plugin deployed on the server. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>yang-specification</dt>
@@ -1470,28 +1631,28 @@ RPC to change the notification URL of an existing group
         "method": "exodm:create-config-set",
         "id": "",
         "params": {
+            "account": "",
             "name": "",
             "yang": "",
-            "account": "",
             "notification-url": "",
             "values": ""
         }
     }
 
 
-RPC to create device config data set
+**Create a new configuration set [deprecated in 2.x]**<br>This command creates a new configuration set describing an RPC API and configuration data supported by a device. A configuration set is associated with a yang module, created through a [exodm:create-yang-module] command, that describes the configuration data and API interface of the devices that are members of the set. Also tied to the configuration set is a notification URL that will receive all results from RPCs sent to a member device The notification URL will also be used to forward incoming incoming RPCs from the device sent to the server. <br><br>Once a configuration set has been created, it can have devices added to it through the [exodm:add-config-set-members]. All such member devices can have RPCs, as defined in the configuration set yang module, called through the JSON-RPC interface. These devices can also have configuration data updated by the server through the [exodm:update-config-set] and [exodm:push-config-set] commands.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Name of the configuration set to create (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
-<dd>Notification URL (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Notification URL to send RPC results and device-originated RPC calls to. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>values</dt>
-<dd>Configuration values (validated against the yang spec) (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
+<dd>Configuration values (validated against the yang spec) to initialize the newly created configuration set with. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
 <dt>yang</dt>
-<dd>Name of the corresponding yang file - must exist. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Name of the yang module to use. Include the ".yang" suffix. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1510,7 +1671,7 @@ RPC to create device config data set
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1533,17 +1694,17 @@ RPC to create device config data set
     }
 
 
-RPC to update existing config data set
+**Update the data of a configuraiton set**<br>This command will update the configuration values of a configuraiton set. Once the data has been updated, it can be pushed out to all configuration set member devices through the [exodm:push-config-set] command. <br><br>The format of the configuration data is specified by the yang module provided to the [exodm:create-config-set] command that created the configuration set. Any data that does not validate against the yang module will result in an error.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The name of the configuration data set to update. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
-<dd>Notification URL (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Notification URL to send RPC results and device-originated RPC calls to. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>values</dt>
-<dd>Configuration values (validated against the yang spec) (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
+<dd>Configuration values (validated against the yang spec) to update in the configuration set. (<b>type:</b> XML; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1562,7 +1723,7 @@ RPC to update existing config data set
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1577,19 +1738,19 @@ RPC to update existing config data set
         "method": "exodm:delete-config-set",
         "id": "",
         "params": {
-            "name": "",
-            "account": ""
+            "account": "",
+            "name": ""
         }
     }
 
 
-RPC to delete a config data set. Any member devices must first be removed.
+**Delete an existing configuration set**<br>This command deletes a configuration set previously created through an [exodm:create-config-set] command. Any configuration data pushed to the set's member devices will be delivered, although the delivery notificatin sent back to the notification URL of the set may be lost? Any configuration set member devices will be removed from the set prior to its deletion.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config data set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The name of the configuration data set to delete. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1608,7 +1769,7 @@ RPC to delete a config data set. Any member devices must first be removed.
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1631,7 +1792,7 @@ RPC to delete a config data set. Any member devices must first be removed.
     }
 
 
-List config sets, N entries at a time
+**List all configuraiton sets owned by an account**<br>This commands will return all configuration sets created under the specified account through a previous [exodm:create-config-set] command.
 
 #### descriptions
 <dl><dt>account</dt>
@@ -1923,25 +2084,25 @@ Elements included in all callback notifications sent from Exosense to the backen
         "method": "exodm:create-yang-module",
         "id": "",
         "params": {
+            "account": "",
             "repository": "",
             "name": "",
-            "yang-module": "",
-            "account": ""
+            "yang-module": ""
         }
     }
 
 
-RPC to store a YANG module either in user or system space
+**Upload a yang file**<br>This commands parses the provided yang file and stores it as a yang module in the Exosense Server. The yang file is expected to be compliant with RFC 6020. Once a yang module has been created, it can be used to specify the structure of device attributes, package RPC APIs, and package configuration data. Please see [exodm:create-device-type] for details on device attributes, and [exodm:create-package] for details on package RPC API and configuration data structure. <br><br> A yang module can be created either in the account or system repository on the Exosense Server. Modules created in the "system\ repository will be accessible to all accounts on the system, while modules created in the "account" repository will only be visible and accessible to the account invoking this command.  Only the sysadm account can create a yang module in the system repository.<br><br>If the yang module is uploaded to the "user" repo, then the name of the yang module must be unique among all existing yang modules under the given account, as well as being unique among all existing yang modules in the "system" repository. <br>If the yang module is uploaded to the "system" repo, then the name of the yang module must be unique among all existing yang modules created in the Exosense Server. No existing yang module in any "user" repository under any account can have the same name as the new module. Neither can the new module have the same name as an existing yang module in the "system" repository.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, in whose repository the yang modules should be created.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned.<br> This argument is not used if the yang module to is to be created in the "system" repository. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Name of the uploaded yang module, including the .yang prefix. Example is commands.yang.  (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>repository</dt>
-<dd>Where to store the module: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Where to store the module in the Exosense Server: Can be "system" or "account" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>yang-module</dt>
-<dd>The actual source of the YANG module specification (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The yang code to create the module from (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1960,7 +2121,7 @@ RPC to store a YANG module either in user or system space
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1975,22 +2136,19 @@ RPC to store a YANG module either in user or system space
         "method": "exodm:delete-yang-module",
         "id": "",
         "params": {
-            "repository": "",
-            "name": "",
-            "account": ""
+            "account": "",
+            "name": ""
         }
     }
 
 
-RPC to delete a YANG module
+**Delete an existing yang module**<br> This commands deletes a yang module previously created through [exodm:create-yang-module]. This command will fail if there are any device types and/or packages currently referring to the given yang module.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the yang modules belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned.<br> This argument is not used if the yang module to delete resides in the "system" repository. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>repository</dt>
-<dd>Where to delete the module: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Name of the yang module to delete. Example iscommands.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -2009,7 +2167,7 @@ RPC to delete a YANG module
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2024,25 +2182,25 @@ RPC to delete a YANG module
         "method": "exodm:list-yang-modules",
         "id": "",
         "params": {
+            "account": "",
             "repository": "",
             "n": "",
-            "previous": "",
-            "account": ""
+            "previous": ""
         }
     }
 
 
-RPC to list existing yang modules.
+**List the yang modules created in a repository**This commands lists all yang modules under the account-specific or system-wide repository.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of device IDs.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the yang modules belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned.<br> This argument is not used if the yang modules to list resides in the "system" repository. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>Maximum number of entries to return. More modules may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous yang filename. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Start the fetch at the first module after themodule with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>repository</dt>
-<dd>"system" or "user"; default: "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The repository to list modules under "system" or "account"; default: "account" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2063,165 +2221,7 @@ RPC to list existing yang modules.
 
 #### descriptions
 <dl><dt>yang-modules</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-## exodm:add-execution-permission
-
-### Request
-
-
-    {
-        "jsonrpc": "2.0",
-        "method": "exodm:add-execution-permission",
-        "id": "",
-        "params": {
-            "repository": "",
-            "name": "",
-            "rpcname": "",
-            "role": "",
-            "account": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>name</dt>
-<dd>Name of module, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>repository</dt>
-<dd>Where the module is: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>role</dt>
-<dd>Name of role to add permission to. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>rpcname</dt>
-<dd>Name of rpc e.g. 'config-device' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-</dl>
-
-
-
-### Reply
-
-
-    {
-        "jsonrpc": "2.0",
-        "id": "",
-        "result": {
-            "result": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-## exodm:remove-execution-permission
-
-### Request
-
-
-    {
-        "jsonrpc": "2.0",
-        "method": "exodm:remove-execution-permission",
-        "id": "",
-        "params": {
-            "repository": "",
-            "name": "",
-            "rpcname": "",
-            "role": "",
-            "account": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>name</dt>
-<dd>Name of module, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>repository</dt>
-<dd>Where the module is: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>role</dt>
-<dd>Name of role to remove permission from. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>rpcname</dt>
-<dd>Name of rpc e.g. 'config-device' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-</dl>
-
-
-
-### Reply
-
-
-    {
-        "jsonrpc": "2.0",
-        "id": "",
-        "result": {
-            "result": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-## exodm:list-execution-permission
-
-### Request
-
-
-    {
-        "jsonrpc": "2.0",
-        "method": "exodm:list-execution-permission",
-        "id": "",
-        "params": {
-            "repository": "",
-            "modulename": "",
-            "rpcname": "",
-            "account": ""
-        }
-    }
-
-
-#### descriptions
-<dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>modulename</dt>
-<dd>Name of module, including extension, e.g. 'rfzone.yang' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>repository</dt>
-<dd>Where the module is: Currently "system" or "user" (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>rpcname</dt>
-<dd>Name of rpc e.g. 'config-device' (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-</dl>
-
-
-
-### Reply
-
-
-    {
-        "jsonrpc": "2.0",
-        "id": "",
-        "result": {
-            "roles": [
-                "roles": ""
-            ]
-        }
-    }
-
-
-#### descriptions
-<dl><dt>roles</dt>
-<dd>List of role names (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>List of yang modules. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2241,8 +2241,8 @@ RPC to list existing yang modules.
             "prerequisite-packages": [
                 "prerequisite-packages": ""
             ],
-            "uprade-from-packages": [
-                "uprade-from-packages": ""
+            "upgrade-from-packages": [
+                "upgrade-from-packages": ""
             ],
             "yang-specification": "",
             "configuration-container": "",
@@ -2252,7 +2252,7 @@ RPC to list existing yang modules.
     }
 
 
-**Upload a package, with a software image, to be installed on devices**<br>The created package will be owned by the specified account. Once the package has been uploaded, it can be added to device types that supports it through the [exodm:add-package-to-device-type] command. <br><br>If the given package is an upgrade, all existing packages that this package can perform an upgrade on can be listed by the upgrade-from-packages argument. <br><br>If the given package needs other packages installed on a device before itself can be installed, the list of the required packages can be listed in the prerequisite-packages argument. <br><br>When [RPC: exodm:install-package] command is called, the server will check its device database to ensure that the prerequisite packages are already installed. If this is not the case, and recursive-dependency-resolve installation has not been selected, an error will be returned. If recursive installation has been selected for the command, all dependency packages will be resolved recursively and transmitted with the package given in package-name to the device. 
+**Upload a package, with a software image**<br>This command uploads a package software image and the associated meta data to the Exosense Server.Once the package has been uploaded, it can be added to device types that supports it through the [exodm:add-package-to-device-type] command, and then installed on actual devices through the [exodm:install-package] command.<br><br>If the given package is an upgrade, all existing packages that this package can perform an upgrade on can be listed by the upgrade-from-packages argument. Upgrade packages can be installed on a device through the [exodm:upgrade-package] <br><br>If the given package needs other packages installed on a device before itself can be installed, the list of the required packages can be listed in the prerequisite-packages argument. <br><br>When [exodm:install-package] command is called, the server will check its device database to ensure that the prerequisite packages are already installed. If this is not the case, and recursive-dependency-resolve installation has not been selected, an error will be returned. If recursive installation has been selected for the command, all dependency packages will be resolved recursively and transmitted with the package given in package-name to the device.  <br><br>If a package has functions that can be remotely invoked on a device from the Exosense Server, the API of those RPCs is specified by the yang module and container given in the yang-specification and api-container arguments. Once the package has been installed on a device, a user with access to an RPC given in the yang container can call the function on the device through the JSON-RPC interface on the Exosense Server. The server will store the call and forward it to the device once it comes online. The result of the executed function will be transported back from the device to the backend server through a notification sent to the device callback URL and the callback URL of any device groups that the device is a member of. <br><br>In order for a package RPC to be executed via a JSON-RPC call, a user must be assigned to a role with execution rights to the RPC. A role is given execution rights to a specific RPC in a package created in an account through the [exodm:add-role-execution-permission] call. Users can then be added to the role through the [exodm:add-user-to-role] the <br><br>If a package has configuration data that can be remotely updated from the Exosense Server, the structure of that data is also specified in the yang module given by the yang-specification argument. The container hosting the configuration data structure is given in the configuration-container argument. <br><br>The configuration data for a package can be set for a package, once it has been installed on a device, through the [exodm:update-package-configuration] command.
 
 #### descriptions
 <dl><dt>account</dt>
@@ -2267,7 +2267,7 @@ RPC to list existing yang modules.
 <dd>Name of package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>prerequisite-packages</dt>
 <dd>List of packages that must be installed prior to this on a device (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>uprade-from-packages</dt>
+<dt>upgrade-from-packages</dt>
 <dd>List of packages that can be upgraded by this package. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>yang-specification</dt>
 <dd>Yang specification containing the API and configuration data definitions. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
@@ -2655,7 +2655,7 @@ A notification sent back from the Exosense Server to the backend server to repor
 <dt>n</dt>
 <dd>Maximum number of entries to return. More packages may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 <dt>previous</dt>
-<dd>Start the fetch at the first role after the package with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>Start the fetch at the first package after the package with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2883,7 +2883,7 @@ A notification sent back from the Exosense Server to the backend server to repor
     }
 
 
-**Set and push configuration data for a package to a device(s)**<br>The device IDs can either be listed directly in the argument, or be a member of a listed device group.  The configuration data for the package will be transmitted to all resolved target and then updated in their local configuration system.  The package name is given together with an array of key/value pairs for the conrfiguration data to set for the given package on the given devices.  Each key/value pair must match an element in the yang file and container specified by the create-package yang-specification and configuration-container.  All given devices must have both be supporting the specified package, and have the package installed on them. <br><br>A successful configuration entry update on a device will overwrite any earlier values that entry had. This allows default and/or general configuration updates, such as Exosense Server addresses and call in schedules, to be sent out to device groups covering large swaths of devices, followed by more targeted updates to individual devices with information such as local encryption keys, individual identities, etc. <br><br>For each successful or failed configuration operation on a device, a notification will be sent back to the invoking backend server for the given device. This allows the backend server to keep track of successes and failures during the configuration update process.
+**Set and push configuration data for a package to a device(s)**<br>The device IDs can either be listed directly in the argument, or be a member of a listed device group.  The configuration data for the package will be transmitted to all resolved target and then updated in their local configuration system.  The package name is given together with an array of key/value pairs for the configuration data to set for the given package on the given devices.  Each key/value pair must match an element in the yang file and container specified by the create-package yang-specification and configuration-container.  All given devices must have both be supporting the specified package, and have the package installed on them. <br><br>A successful configuration entry update on a device will overwrite any earlier values that entry had. This allows default and/or general configuration updates, such as Exosense Server addresses and call in schedules, to be sent out to device groups covering large swaths of devices, followed by more targeted updates to individual devices with information such as local encryption keys, individual identities, etc. <br><br>For each successful or failed configuration operation on a device, a notification will be sent back to the invoking backend server for the given device. This allows the backend server to keep track of successes and failures during the configuration update process.
 
 #### descriptions
 <dl><dt>account</dt>

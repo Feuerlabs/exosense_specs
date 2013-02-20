@@ -36,8 +36,10 @@ submodule exodm_role {
     input {
       leaf "account" {
 	  description
-"The account to give a user access to. The account has previously been " +
-"created with a [exodm:create-account] command.";
+"The account, accessible by the authorizing user, to which the role belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 	  type exodm_type:id-string;
 	  mandatory true;
       }
@@ -73,7 +75,7 @@ submodule exodm_role {
   rpc remove-user-from-role {
     description
 '**Remove user(s) from a role**<br>' +
-"This command retracts one or more user's access to the " + 
+"This command retracts one or more user's access to the " +
 'resources of an account by removing the user from a role. The user ' +
 'have previously been added to the role through a ' +
 '[exodm:add-user-to-role] command. Once the user has been removed from ' +
@@ -86,8 +88,10 @@ submodule exodm_role {
     input {
       leaf "account" {
 	  description
-"The account to remove user access from. The account has previously been " +
-"created with a [exodm:create-account] command.";
+"The account, accessible by the authorizing user, to which the role belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 	  type exodm_type:id-string;
 	  mandatory true;
       }
@@ -95,7 +99,7 @@ submodule exodm_role {
 	  description
 "The role to strip the given user of for the specified account.The value of " +
 "this arument must be from the list of roles returned by " +
-"[exodm:list-account-roles]";
+"[exodm:list-account-roles];"
 	  type exodm_type:id-string;
 	  mandatory true;
       }
@@ -103,7 +107,7 @@ submodule exodm_role {
         description
 "Users to strip of the specified role for this account. Listed users " +
 "must previously have been assingned the role through an " +
-"[exodm:add-account-users] command.";
+"[exodm:add-user-to-role] command.";
         min-elements 1;
         max-elements 10;
         type exodm_type:id-string;
@@ -136,7 +140,11 @@ submodule exodm_role {
 "right for that user.";
     input {
       leaf account {
-        description "The account to which the package belongs.";
+        description
+"The account, accessible by the authorizing user, to which the role and package belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 	mandatory false;
         type exodm_type:id-string;
       }
@@ -147,14 +155,14 @@ submodule exodm_role {
         mandatory true;
       }
       leaf package-name {
-        description 
+        description
 "Name of package to which to add role execution rights. The package has " +
 "previously been created through a [exodm:create-package] command";
         type exodm_type:id-string;
         mandatory true;
       }
       leaf rpc-name {
-        description 
+        description
 "Name of the RPC in the package to add role execution rights to. The " +
 "name of the RPC should include the module prefix and a colon " +
 "(fleetmanager:get-position)";
@@ -171,7 +179,7 @@ submodule exodm_role {
   }
 
   rpc remove-role-execution-permission {
-      description 
+      description
 "**Remove permission for a role to execute an RPC**<br>" +
 "This command removes execution rights for a role from an RPC in a " +
 "package owned by the given account. Once this command has executed, " +
@@ -187,8 +195,11 @@ submodule exodm_role {
       input {
 
       leaf account {
-        description 
-"The account to which the package belongs.";
+        description
+"The account, accessible by the authorizing user, to which the role and package belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
 	mandatory false;
         type exodm_type:id-string;
       }
@@ -199,13 +210,13 @@ submodule exodm_role {
         mandatory true;
       }
       leaf package-name {
-        description 
+        description
 "Name of package fromn which to remove role execution rights.";
         type exodm_type:id-string;
         mandatory true;
       }
       leaf rpc-name {
-        description 
+        description
 "Name of the RPC in the package to remove role execution rights from. The " +
 "name of the RPC should include the module prefix and a colon " +
 "(fleetmanager:get-position)";
@@ -232,7 +243,12 @@ submodule exodm_role {
 
     input {
       leaf account {
-        description "The account to which the package belongs.";
+        description
+"The account, accessible by the authorizing user, to which the role and package belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
+
         type exodm_type:id-string;
       }
       leaf package-name {
@@ -241,7 +257,7 @@ submodule exodm_role {
         mandatory true;
       }
       leaf rpc-name {
-        description 
+        description
 "Name of RPC inside the package to list role access for. The " +
 "name of the RPC should include the module prefix and a colon " +
 "(fleetmanager:get-position).";
@@ -264,7 +280,7 @@ submodule exodm_role {
 
     output {
       leaf-list roles {
-        description 
+        description
 "List of roles with execution right to the given RPC in the specified " +
 "package owned by the account.";
         type exodm_type:id-string;
@@ -284,8 +300,10 @@ submodule exodm_role {
 
       leaf "account" {
 	  description
-"The account to list all roles for. The account has been created with " +
-"a previous [exodm:create-account] call.";
+"The account, accessible by the authorizing user, to which the roles belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.";
         type exodm_type:id-string;
         mandatory true;
       }
