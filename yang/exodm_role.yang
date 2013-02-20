@@ -99,7 +99,7 @@ submodule exodm_role {
 	  description
 "The role to strip the given user of for the specified account.The value of " +
 "this arument must be from the list of roles returned by " +
-"[exodm:list-account-roles];"
+"[exodm:list-account-roles]";
 	  type exodm_type:id-string;
 	  mandatory true;
       }

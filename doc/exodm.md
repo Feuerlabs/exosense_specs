@@ -23,7 +23,7 @@
     }
 
 
-**Create a new user**<br>This command creates a new user that can be given access to accounts and assigned roles.The authorizing user must be either master or admin roles assigned to it for this command to be executed. The created user can be granted access to accounts through roles using the [exodm:add-user-to-role] command
+**Create a new user**<br>This command creates a new user that can be given access to accounts and assigned roles.The authorizing user must have either master or admin roles assigned to it for this command to be executed. The created user can be granted access to accounts through roles using the [exodm:add-user-to-role] command.
 
 #### descriptions
 <dl><dt>alias</dt>
@@ -58,7 +58,7 @@
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -78,11 +78,11 @@
     }
 
 
-Delete an existing user
+**Delete an existing user**<br>This command deletes an existing user previously created through an [exodm:create-user] command.  The user will be removed from all accounts and roles it was assigned to prior to being deleted.
 
 #### descriptions
 <dl><dt>uname</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The name of the user to delete. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -101,58 +101,7 @@ Delete an existing user
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
-</dl>
-
-
-
-## exodm:list-users
-
-### Request
-
-
-    {
-        "jsonrpc": "2.0",
-        "method": "exodm:list-users",
-        "id": "",
-        "params": {
-            "n": "",
-            "previous": "",
-            "account": ""
-        }
-    }
-
-
-List all users.
-
-#### descriptions
-<dl><dt>account</dt>
-<dd>If account is given only users connected to that account are returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
-<dt>previous</dt>
-<dd>Previous user name; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-</dl>
-
-
-
-### Reply
-
-
-    {
-        "jsonrpc": "2.0",
-        "id": "",
-        "result": {
-            "users": [
-                "users": ""
-            ]
-        }
-    }
-
-
-#### descriptions
-<dl><dt>users</dt>
-<dd>List of user names (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -167,45 +116,16 @@ List all users.
         "method": "exodm:create-account",
         "id": "",
         "params": {
-            "name": "",
-            "admin-user": [
-                {
-                    "uname": "",
-                    "email": "",
-                    "password": "",
-                    "fullname": "",
-                    "phone": "",
-                    "skype": "",
-                    "alias": [
-                        "alias": ""
-                    ]
-                }
-            ]
+            "name": ""
         }
     }
 
 
-**Create a new account**<br>This call, which must be invoked by the sysadm user, creates a new Exosense Account. The created account can give access permission to users that will manage the devices, device groups, packages, etc, owned by the account. <br><br>When the account is created, an account admin user will be also be automatically created. This user acts as the initial administrator for the account and can be used to manage all resources owned by the account. The name of the account admin is provided in the admin-user argument of this call. 
+**Create a new account**<br>This call, which must be invoked by the sysadm user, creates a new Exosense Account. The created account can give access permission to users that will manage the devices, device groups, packages, etc, owned by the account. <br><br>When the account is created, an account admin user, [name]-admin will be also be automatically created. This user acts as the initial administrator for the account and can be used to manage all resources owned by the account. The name of the account admin is the value of the name argument with an -admin suffix.
 
 #### descriptions
-<dl><dt>admin-user</dt>
-<dd>The initial account administrator user to create in conjunction with the account. The username has to be unique across all users created in the Exosense Server (<b>type:</b> array)</dd>
-<dt>alias</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>email</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>fullname</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>name</dt>
+<dl><dt>name</dt>
 <dd>The name of the account. This name has to be unique across all accounts created in the Exosense Server. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>password</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
-<dt>phone</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>skype</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>uname</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -310,7 +230,7 @@ List all users.
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>The result of the operation. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -363,6 +283,98 @@ List all users.
 
 
 
+## exodm:add-user-to-account
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:add-user-to-account",
+        "id": "",
+        "params": {
+            "account": "",
+            "uname": ""
+        }
+    }
+
+
+**Add a user to an account**<br>This command adds the specified user to the given account. Once a user has been added to an account, the user can be assigned to roles in the given account through the [exodm:add-user-to-role] command. The user will then be able to execute all RPCs, assigned to the role through the [exodm:add-role-execution-permission] command, on all devices owned by the account.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account to add the user to (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>uname</dt>
+<dd>The user to add to the account. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "result": ""
+        }
+    }
+
+
+#### descriptions
+<dl><dt>result</dt>
+<dd>The result of the operation. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+## exodm:remove-account-users
+
+### Request
+
+
+    {
+        "jsonrpc": "2.0",
+        "method": "exodm:remove-account-users",
+        "id": "",
+        "params": {
+            "account": "",
+            "uname": ""
+        }
+    }
+
+
+**Remove a user from an account**<br>This command removes the specified user to the given account. Once a user has been removed to an account, any previous RPCs that the user could execute on devices owned by the account will become inaccessible.
+
+#### descriptions
+<dl><dt>account</dt>
+<dd>The account to remove the user from (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>uname</dt>
+<dd>The user to remove from the account. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
+### Reply
+
+
+    {
+        "jsonrpc": "2.0",
+        "id": "",
+        "result": {
+            "result": ""
+        }
+    }
+
+
+#### descriptions
+<dl><dt>result</dt>
+<dd>The result of the operation. (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+</dl>
+
+
+
 ## exodm:list-account-users
 
 ### Request
@@ -380,7 +392,7 @@ List all users.
     }
 
 
-**List all users with access to the specified account<br>**This command will list all users who have been given access to the given account through [exodm:add-account-users] commands.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of user names.
+**List all users with access to the specified account<br>**This command will list all users who have been given access to the given account through [exodm:add-user-to-account] commands.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of user names.
 
 #### descriptions
 <dl><dt>account</dt>
@@ -492,7 +504,7 @@ List all users.
 <dt>role</dt>
 <dd>The role to strip the given user of for the specified account.The value of this arument must be from the list of roles returned by [exodm:list-account-roles] (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>unames</dt>
-<dd>Users to strip of the specified role for this account. Listed users must previously have been assingned the role through an [exodm:add-account-users] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Users to strip of the specified role for this account. Listed users must previously have been assingned the role through an [exodm:add-user-to-role] command. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -995,22 +1007,35 @@ List all users.
         "method": "exodm:create-device-group",
         "id": "",
         "params": {
-            "name": "",
-            "notification-url": "",
-            "account": ""
+            "account": "",
+            "group-name": "",
+            "notification-url": ""
         }
     }
 
 
-RPC to create a device group
+**Create a device group**<br>
+This command creates a new device group that can have devices added to it.
+The name of the group must be unique across all device IDs and device groups
+owned by the given account.
+
+A device group can have devices added to it through the [exodm:add-device-group-memberss]
+Once a group has been created, and devices have been added to it , an RPC
+command in a package can be invoked on all member devices by sending the
+RPC to the device group instead of individual devices.
+
+Incoming RPCs from member devices will be sent to the callback URL of the device group marked
+as primary. See [exodm:add-device-group-members] for details.
+
+Packages installed on a group will be pushed out to all devices of that group.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>name</dt>
-<dd>Group name (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>The account, accessible by the authorizing user, that will own the device group. If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>Name of the device group. Must be unqiue across all devices and groups owned by the account. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
-<dd>RPC callback notification URL (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Callback to forward device originated RPCs to. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1022,17 +1047,14 @@ RPC to create a device group
         "jsonrpc": "2.0",
         "id": "",
         "result": {
-            "result": "",
-            "gid": ""
+            "result": ""
         }
     }
 
 
 #### descriptions
-<dl><dt>gid</dt>
-<dd>Group identifier. 0 (zero) if operation failed. (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
-<dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dl><dt>result</dt>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1047,19 +1069,19 @@ RPC to create a device group
         "method": "exodm:delete-device-group",
         "id": "",
         "params": {
-            "gid": "",
-            "account": ""
+            "account": "",
+            "group-name": ""
         }
     }
 
 
-RPC to create a device group
+**Delete a device group**<br>This command deletes a device group previously created through a [exodm:create-device-group] command.  Any devices added to the group through an [exodm:add-device-group-members] will be removed as members from it prior to the groups deletion.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>gid</dt>
-<dd>Group ID (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>The account, accessible by the authorizing user, that owns the device group to delete. If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>Name of the device group to delete (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1078,7 +1100,7 @@ RPC to create a device group
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1093,25 +1115,25 @@ RPC to create a device group
         "method": "exodm:list-device-groups",
         "id": "",
         "params": {
+            "account": "",
             "n": "",
             "previous": "",
-            "account": "",
             "device-id": ""
         }
     }
 
 
-List device groups, N entries at a time
+**List all device groups owned by an account**<br> This command will return all device groups created under an account through the [exodm:create-device-group] command.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of device names
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to list the device groups for. If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>device-id</dt>
 <dd>Optional device ID. If given, device groups associated with the given device are listed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>Maximum number of entries to return. More device groups may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous device group id (GID); "" if from beginning (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>Start the fetch at the first device group after that with the name specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1125,8 +1147,7 @@ List device groups, N entries at a time
         "result": {
             "device-groups": [
                 {
-                    "gid": "",
-                    "name": "",
+                    "group-name": "",
                     "notification-url": ""
                 }
             ]
@@ -1137,12 +1158,10 @@ List device groups, N entries at a time
 #### descriptions
 <dl><dt>device-groups</dt>
 <dd> (<b>type:</b> array)</dd>
-<dt>gid</dt>
-<dd> (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
-<dt>name</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>The name of the device group (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>notification-url</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The callback URL of the device group (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1157,25 +1176,25 @@ List device groups, N entries at a time
         "method": "exodm:list-device-group-members",
         "id": "",
         "params": {
-            "gid": "",
+            "account": "",
+            "group-name": "",
             "n": "",
-            "previous": "",
-            "account": ""
+            "previous": ""
         }
     }
 
 
-List devices attached to a device group, N entries at a time
+**List all device members of a device group under an account**<br> This command will list all devices that are a member of the given device group. The listed devices have previously been added to the group through an [exodm:add-device-group-members] call.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of device names
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>gid</dt>
-<dd>ID of the device group (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>The account, accessible by the authorizing user, that owns the device group.  If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>Name of the device group to list members for (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>Maximum number of entries to return. More devices may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous device; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Start the fetch at the first devices after that with the device ID specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1187,16 +1206,23 @@ List devices attached to a device group, N entries at a time
         "jsonrpc": "2.0",
         "id": "",
         "result": {
-            "device-group-members": [
-                "device-group-members": ""
+            "devices": [
+                {
+                    "device-id": "",
+                    "primary": ""
+                }
             ]
         }
     }
 
 
 #### descriptions
-<dl><dt>device-group-members</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dl><dt>device-id</dt>
+<dd>The ID of the device (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>devices</dt>
+<dd> (<b>type:</b> array)</dd>
+<dt>primary</dt>
+<dd>Set to true if this is the primary group for the given device (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1211,26 +1237,29 @@ List devices attached to a device group, N entries at a time
         "method": "exodm:add-device-group-members",
         "id": "",
         "params": {
-            "device-groups": [
-                "device-groups": ""
+            "account": "",
+            "group-name": "",
+            "device-id": [
+                "device-id": ""
             ],
-            "dev-id": [
-                "dev-id": ""
-            ],
-            "account": ""
+            "primary": ""
         }
     }
 
 
-Link devices to device groups
+**Add one or more devices as members of a  device group**<br>This command will add a list of devices as members to a single device group.  Once this command has been completed, JSON-RPCs sent to the device group will be forwarded to all member devices. <br><br> If a device, who is a member of multiple groups, sends an RPC to the Exosense Server, the RPC will be forwarded to the callback URL (as JSON-RPC) of the group that is marked as primary. This ensures that only one URL receives, processes, and replies to an RPC send by a device. <br><br> If a device is only member of a single group, the primary flag is ignored and that group will always receive the forwarded RPC.<br> If a device itself has a callback URL configured, the RPC will be forwarded to that URL, regardless of which device groups it is a member of and their status as primary. <br><br> If a device is member of a device group, and has it marked as primary, when the [exodm:add-device-group-members] command also has the primary flag set, the primary flag will be moved from the previous group to the new one. Thus, only one group will be marked as primary for a device at any given time.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>dev-id</dt>
-<dd>List of Device ID(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>device-groups</dt>
-<dd>Device groups to associate with the given device(s) (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, that owns the device group and devices.  If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-id</dt>
+<dd>List of device IDs to add as members to the given device group (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>Name of device group to which to add the given device(s) as members (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>primary</dt>
+<dd>Flag to indicate that this group should be marked as the primary group for all added devices.
+If any of the added devices already have primary groups setup, those groups will be de-selected
+in favor of the group specified by this call. (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1249,7 +1278,7 @@ Link devices to device groups
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1264,26 +1293,24 @@ Link devices to device groups
         "method": "exodm:remove-device-group-members",
         "id": "",
         "params": {
-            "device-groups": [
-                "device-groups": ""
-            ],
-            "dev-id": [
-                "dev-id": ""
-            ],
-            "account": ""
+            "account": "",
+            "group-name": "",
+            "device-id": [
+                "device-id": ""
+            ]
         }
     }
 
 
-Unlink devices from device groups
+**Remove a list of devices as members from a device group**<br>This command removes the specified devices from the given group. The devices have previously been added to the group through the [exodm:add-device-group-members] command.  If one or more of the devices have the group marked as primary, and the device itself does not have a configured callback URL, then any future RPCs received from the device will result in an error being sent back to the device directly by the Exosense Server.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>dev-id</dt>
-<dd>List of device ID(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>device-groups</dt>
-<dd>Device groups to unlink the given device(s) from (<b>type:</b> uint32; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, that owns the device group and devices.  If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-id</dt>
+<dd>The Device IDs of the devices to remove as members from the device group. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>Name of the device group to remove the device(s) from. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1302,7 +1329,7 @@ Unlink devices from device groups
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1317,22 +1344,22 @@ Unlink devices from device groups
         "method": "exodm:update-device-group",
         "id": "",
         "params": {
-            "gid": "",
-            "notification-url": "",
-            "account": ""
+            "account": "",
+            "group-name": "",
+            "notification-url": ""
         }
     }
 
 
-RPC to change the notification URL of an existing group
+**Update a device group**<br>This command will update the notification URL of the given device group. Once this command has completed, any incoming, device-orignated RPCs sent to the device group will be forwarded as JSON-RPC to the given URL.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the yang module belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>gid</dt>
-<dd>Group identifier. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>The account, accessible by the authorizing user, that owns the device group.  If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>group-name</dt>
+<dd>Name of the device group to update. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>notification-url</dt>
-<dd>RPC callback notification URL (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>RPC callback URL to forward for incoming device-originated RPCs to. (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1351,7 +1378,7 @@ RPC to change the notification URL of an existing group
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1640,7 +1667,7 @@ RPC to change the notification URL of an existing group
     }
 
 
-**Create a new configuration set [deprecated in 2.x]**<br>This command creates a new configuration set describing an RPC API and configuration data supported by a device. A configuration set is associated with a yang module, created through a [exodm:create-yang-module] command, that describes the configuration data and API interface of the devices that are members of the set. Also tied to the configuration set is a notification URL that will receive all results from RPCs sent to a member device The notification URL will also be used to forward incoming incoming RPCs from the device sent to the server. <br><br>Once a configuration set has been created, it can have devices added to it through the [exodm:add-config-set-members]. All such member devices can have RPCs, as defined in the configuration set yang module, called through the JSON-RPC interface. These devices can also have configuration data updated by the server through the [exodm:update-config-set] and [exodm:push-config-set] commands.
+**Create a new configuration set [deprecated in 2.x]**<br>This command creates a new configuration set describing an RPC API and configuration data supported by a device. A configuration set is associated with a yang module, created through a [exodm:create-yang-module] command, that describes the configuration data and API interface of the devices that are members of the set. Also tied to the configuration set is a notification URL that will receive all results from RPCs sent to a member device The notification URL will also be used to forward incoming incoming RPCs from the device sent to the server. <br><br>Once a configuration set has been created, it can have devices added to it through the [exodm:add-config-set-members]. All such member devices can have RPCs, as defined in the configuration set yang module, called through the JSON-RPC interface. These devices can also have configuration data updated by the server through the [exodm:update-config-set] and [exodm:push-config-set] commands.<br><br>Please note that any RPCs defined in the yang module tied to a configuration set must have a "uses exo:std-request" line in it to include transaction elements used by the Exosense Server to route the RPC to the correct device. See [exo:std-request] for details.
 
 #### descriptions
 <dl><dt>account</dt>
@@ -1784,9 +1811,9 @@ RPC to change the notification URL of an existing group
         "method": "exodm:list-config-sets",
         "id": "",
         "params": {
+            "account": "",
             "n": "",
             "previous": "",
-            "account": "",
             "device-id": ""
         }
     }
@@ -1796,7 +1823,7 @@ RPC to change the notification URL of an existing group
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>device-id</dt>
 <dd>Optional device ID. If given, config specs associated with the given device are listed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
@@ -1829,11 +1856,11 @@ RPC to change the notification URL of an existing group
 <dl><dt>config-sets</dt>
 <dd> (<b>type:</b> array)</dd>
 <dt>name</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The name of the configuration set, as specified by the [exodm:create-config-set] call taht created it. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>notification-url</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The notification URL associated with the configuration set. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>yang</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The name of the yang module associated with the configuration set. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1856,17 +1883,17 @@ RPC to change the notification URL of an existing group
     }
 
 
-List members of a config set, N entries at a time
+**List all device members of a configuration set**<br>This command will list all devices added as member to the given configuration set through previous [exodm:add-config-set-members] commands.<br><br>This command allows for chunks of the result set to be returned to facilitate a sequential retrieval of accounts.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>n</dt>
-<dd>Number of entries to fetch (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
+<dd>Maximum number of entries to return. More devices may be available after the last returned element. (<b>type:</b> uint32; [<em>mandatory: true</em>])</dd>
 <dt>name</dt>
-<dd>Name of the config set (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Name of the config set to list member devices for (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>previous</dt>
-<dd>Previous member; "" if from beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
+<dd>Start the fetch at the first device after the device with the id specified by this argument. Use "" if the fetch is to start from the beginning (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 </dl>
 
 
@@ -1887,7 +1914,7 @@ List members of a config set, N entries at a time
 
 #### descriptions
 <dl><dt>config-set-members</dt>
-<dd> (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Device ID of devices that are a member of the given configuration set. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1902,26 +1929,26 @@ List members of a config set, N entries at a time
         "method": "exodm:add-config-set-members",
         "id": "",
         "params": {
+            "account": "",
             "name": [
                 "name": ""
             ],
-            "dev-id": [
-                "dev-id": ""
-            ],
-            "account": ""
+            "device-id": [
+                "device-id": ""
+            ]
         }
     }
 
 
-Add a device to a config set.
+**Add devices as a members to one or more configuration sets**<br>This command adds the listed devices as members of a collection of configuraiton sets. When this command returns, the RPCs of the yang specification associated with the configuraiton set through the [exodm:create-config-set] command can be invoked for the devices. <br><br>The devices will also be able to have the configuration data setup for the config set through the [exodm:create-config-set] and [exodm:update-config-set] pushed to them using the [exodm:push-config-set] command.<br><br>If a member device replies to an RPC sent to it, or originates an RPC of its own, the JSON-RPC will be sent to the notification URL associated with the configuration set.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>dev-id</dt>
-<dd>Devices to push the given config data instances to (s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-id</dt>
+<dd>Devices to add to the listed configuration sets. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Configuration data instances to associate with the given device(s) (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of configuration sets to add devices to as members. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1940,7 +1967,7 @@ Add a device to a config set.
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1955,26 +1982,26 @@ Add a device to a config set.
         "method": "exodm:remove-config-set-members",
         "id": "",
         "params": {
+            "account": "",
             "name": [
                 "name": ""
             ],
-            "dev-id": [
-                "dev-id": ""
-            ],
-            "account": ""
+            "device-id": [
+                "device-id": ""
+            ]
         }
     }
 
 
-Remove a config set member.
+**Remove devices as a members from one or more configuration sets**<br>This command removes a list of devices from one or more configuration sets. The devices have previously been added as configuration set members through an [exodm:add-config-set-members] command.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>dev-id</dt>
-<dd>Devices to remove from the given config data instances (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dt>device-id</dt>
+<dd>Device IDs to remove as members from the given configuration sets. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Configuration data instances from which to remove the given devices (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Configuration sets from which to remove the given devices (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -1993,7 +2020,7 @@ Remove a config set member.
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2014,13 +2041,13 @@ Remove a config set member.
     }
 
 
-Push the given configuration data to all member devices
+**Push configuration set data to all member devices**<br>This command will transfer the configuration data in the configuration set to all member devices.  The configuration data is setup in the configuration set through the [exodm:create-config-set] and [exodm:update-config]. For each member device that receives the configuration set, an [exodm:push-config-set-callback] notification will be sent back to the notification URL associated with the configuration set.
 
 #### descriptions
 <dl><dt>account</dt>
-<dd>The account to which the config set belongs. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>The account, accessible by the authorizing user, to which the configuration set belongs.If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>name</dt>
-<dd>Name of configuration data set to push. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
+<dd>Name of configuration set whose data to push to the member devices.. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2039,7 +2066,7 @@ Push the given configuration data to all member devices
 
 #### descriptions
 <dl><dt>result</dt>
-<dd> (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
+<dd>Result of the operation (<b>type:</b> enumeration; [<em>mandatory: false</em>])</dd>
 </dl>
 
 
@@ -2059,7 +2086,7 @@ Push the given configuration data to all member devices
     }
 
 
-Elements included in all callback notifications sent from Exosense to the backend server.
+The callback made for each device member of a configuration set that receives configuration data through an [exodm:push-config-data] command.
 
 #### descriptions
 <dl><dt>final</dt>
@@ -2246,19 +2273,17 @@ Elements included in all callback notifications sent from Exosense to the backen
             ],
             "yang-specification": "",
             "configuration-container": "",
-            "api-container": "",
             "image": ""
         }
     }
 
 
-**Upload a package, with a software image**<br>This command uploads a package software image and the associated meta data to the Exosense Server.Once the package has been uploaded, it can be added to device types that supports it through the [exodm:add-package-to-device-type] command, and then installed on actual devices through the [exodm:install-package] command.<br><br>If the given package is an upgrade, all existing packages that this package can perform an upgrade on can be listed by the upgrade-from-packages argument. Upgrade packages can be installed on a device through the [exodm:upgrade-package] <br><br>If the given package needs other packages installed on a device before itself can be installed, the list of the required packages can be listed in the prerequisite-packages argument. <br><br>When [exodm:install-package] command is called, the server will check its device database to ensure that the prerequisite packages are already installed. If this is not the case, and recursive-dependency-resolve installation has not been selected, an error will be returned. If recursive installation has been selected for the command, all dependency packages will be resolved recursively and transmitted with the package given in package-name to the device.  <br><br>If a package has functions that can be remotely invoked on a device from the Exosense Server, the API of those RPCs is specified by the yang module and container given in the yang-specification and api-container arguments. Once the package has been installed on a device, a user with access to an RPC given in the yang container can call the function on the device through the JSON-RPC interface on the Exosense Server. The server will store the call and forward it to the device once it comes online. The result of the executed function will be transported back from the device to the backend server through a notification sent to the device callback URL and the callback URL of any device groups that the device is a member of. <br><br>In order for a package RPC to be executed via a JSON-RPC call, a user must be assigned to a role with execution rights to the RPC. A role is given execution rights to a specific RPC in a package created in an account through the [exodm:add-role-execution-permission] call. Users can then be added to the role through the [exodm:add-user-to-role] the <br><br>If a package has configuration data that can be remotely updated from the Exosense Server, the structure of that data is also specified in the yang module given by the yang-specification argument. The container hosting the configuration data structure is given in the configuration-container argument. <br><br>The configuration data for a package can be set for a package, once it has been installed on a device, through the [exodm:update-package-configuration] command.
+**Upload a package, with a software image**<br>This command uploads a package software image and the associated meta data to the Exosense Server.Once the package has been uploaded, it can be added to device types that supports it through the [exodm:add-package-to-device-type] command, and then installed on actual devices through the [exodm:install-package] command.<br><br>If the given package is an upgrade, all existing packages that this package can perform an upgrade on can be listed by the upgrade-from-packages argument. Upgrade packages can be installed on a device through the [exodm:upgrade-package] <br><br>If the given package needs other packages installed on a device before itself can be installed, the list of the required packages can be listed in the prerequisite-packages argument. <br><br>When [exodm:install-package] command is called, the server will check its device database to ensure that the prerequisite packages are already installed. If this is not the case, and recursive-dependency-resolve installation has not been selected, an error will be returned. If recursive installation has been selected for the command, all dependency packages will be resolved recursively and transmitted with the package given in package-name to the device.  <br><br>If a package has functions that can be remotely invoked on a device from the Exosense Server, the API of those RPCs is specified by the yang module given in the yang-specification argument. Please note that all yang
+RPC definitions are global and cannot be hosted in a container. Once the package has been installed on a device, a user with access to an RPC given in the yang module can call the function on the device through the JSON-RPC interface on the Exosense Server. The server will store the call and forward it to the device once it comes online. The result of the executed function will be transported back from the device to the backend server through a notification sent to the device callback URL and the callback URL of any device groups that the device is a member of. <br><br>Please note that any RPCs defined in the yang module tied to a package must have a "uses exo:std-request" line in it to include transaction elements used by the Exosense Server to route the RPC to the correct device. See [exo:std-request] for details.<br><br>In order for a package RPC to be executed via a JSON-RPC call, a user must be assigned to a role with execution rights to the RPC. A role is given execution rights to a specific RPC in a package created in an account through the [exodm:add-role-execution-permission] call. Users can then be added to the role through the [exodm:add-user-to-role] the <br><br>If a package has configuration data that can be remotely updated from the Exosense Server, the structure of that data is also specified in the yang module given by the yang-specification argument. The container hosting the configuration data structure is given in the configuration-container argument. <br><br>The configuration data for a package can be set for a package, once it has been installed on a device, through the [exodm:update-package-configuration] command.
 
 #### descriptions
 <dl><dt>account</dt>
 <dd>The account, accessible by the authorizing user, that will own the package. If no account is given, the authorizing user assumes to have access to only one account, which will be used. If no account is given, and the user has access to multiple accounts, an error is returned. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
-<dt>api-container</dt>
-<dd>Container within the Yang specification that has the RPC API definition. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>configuration-container</dt>
 <dd>Container within the Yang specification that has the configuration data definition. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>image</dt>
@@ -2430,6 +2455,7 @@ Elements included in all callback notifications sent from Exosense to the backen
                 "targets": ""
             ],
             "recursive-dependency-resolve": "",
+            "rpc-destination-url": "",
             "timeout": ""
         }
     }
@@ -2444,6 +2470,8 @@ Elements included in all callback notifications sent from Exosense to the backen
 <dd>The name of the package to install (<b>type:</b> string; [<em>mandatory: true</em>])</dd>
 <dt>recursive-dependency-resolve</dt>
 <dd>Recursively transmit and install any packages that this package is dependent upon. This allows a complete tree of software to be transmitted with a single transaciton. (<b>type:</b> "1" (true) | "0" (false); [<em>mandatory: false</em>])</dd>
+<dt>rpc-destination-url</dt>
+<dd>The destination URL used for incoming RPCs that originate from this package in device. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>targets</dt>
 <dd>Mix of device-ids and device group ids for all devices to have the package installed. (<b>type:</b> string; [<em>mandatory: false</em>])</dd>
 <dt>timeout</dt>

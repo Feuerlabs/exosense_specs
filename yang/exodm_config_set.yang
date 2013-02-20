@@ -38,9 +38,12 @@ submodule exodm_config_set {
 "devices can have RPCs, as defined in the configuration set yang " +
 "module, called through the JSON-RPC interface. These devices can also " +
 "have configuration data updated by the server through the " +
-"[exodm:update-config-set] and [exodm:push-config-set] commands.";
-
-
+"[exodm:update-config-set] and [exodm:push-config-set] commands." +
+"<br><br>" +
+"Please note that any RPCs defined in the yang module tied to a " +
+"configuration set must have a \"uses exo:std-request\" line in it to " +
+"include transaction elements used by the Exosense Server to route the " +
+"RPC to the correct device. See [exo:std-request] for details.";
 
     input {
       leaf account {

@@ -58,6 +58,11 @@ RPC definitions are global and cannot be hosted in a container. " +
 "notification sent to the device callback URL and the callback URL of " +
 "any device groups that the device is a member of. " +
 "<br><br>" +
+"Please note that any RPCs defined in the yang module tied to a " +
+"package must have a \"uses exo:std-request\" line in it to " +
+"include transaction elements used by the Exosense Server to route the " +
+"RPC to the correct device. See [exo:std-request] for details." +
+"<br><br>" +
 "In order for a package RPC to be executed via a JSON-RPC call, a user " +
 "must be assigned to a role with execution rights to the RPC. A role is " +
 "given execution rights to a specific RPC in a package created in an " +
@@ -395,8 +400,10 @@ RPC definitions are global and cannot be hosted in a container. " +
 
 	    leaf rpc-destination-url {
 		description
-		    "The destination URL used for incoming RPCs that originate from this package in device."
-
+		    "The destination URL used for incoming RPCs that originate from this package in device.";
+		type string {
+		    length "1..256";
+		}
 	    }
 
 	    leaf timeout {

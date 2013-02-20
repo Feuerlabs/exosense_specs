@@ -3,6 +3,10 @@ module exosense {
     prefix exo;
 
     namespace "http://feuerlabs.com/exosense";
+    import exodm_type {
+	prefix exodm_type;
+    }
+
 
     description "Exosense standard RPC structures.";
 
@@ -13,12 +17,15 @@ module exosense {
       }
     }
 
+
     // Transaction id.
     typedef transaction-id {
 	type uint32;
 	description
-	  "A transaction ID associated with an operation. " +
-	  "Assigned by caller";
+"A transaction ID associated with an operation. " +
+"Unlike the JSON-RPC level \"id\" element, the transaction-id can tie a " +
+"single request together with one or more notifications and/or callback " +
+"RPCs that are sent back as a result of the initial request.";
     }
 
     extension matching-notification {
@@ -100,32 +107,54 @@ module exosense {
     // Leafs included in all rpc requests
     //
     grouping std-request {
-        description "Elements included in all RPC requests sent"
-	  + " from the backend server to Exosense.";
+        description 
+"Elements included in all RPC requests sent from the backend server to " +
+"a device. This group must be included in all yang RPCs specified in " +
+"configuration sets and packages to define elements needed by the " +
+"Exosense Server when it routes RPCs to target devices.";
 
+	leaf account {
+	    description
+"The account, accessible by the authorizing user, to which the target " +
+"device or device group belongs.  If no account is given, the " +
+"authorizing user assumes to have access to only one account, which " +
+"will be used. If no account is given, and the user has access to " +
+"multiple accounts, an error is returned.";
+	    type exodm_type:id-string;
+	}
 	leaf timeout {
-	  type timer;
-	  exo:semantics "timeout";
-	  description "UTC time when this operation times out.";
+	    type timer;
+	    exo:semantics "timeout";
+	    description 
+"UTC time when this operation times out. If the device has not " +
+"processed and replied to this request by the given time, a time-out " +
+"error will be sent back to the notificaiton-url.";
 	}
 
 	leaf notification-url {
 	    type string {
-		length "1..256";
+		length "1..512";
 	    }
-	    description "URL to send operation notifications on.";
+	    description 
+"URL to send transaction notifications to.  This URL will be used for
+all notifications sent back by either the device or the Exosense
+Server that have the same transaction-id as the original RPC call.";
 	}
 
 	leaf device-id {
-	    type string {
-		length "1..32";
-	    }
-	    description "Target device. Can also be a group,";
+	    type exodm_type:id-string;
+	    description 
+"Device ID or Group Name of the device/group that is to receive the " +
+"request.";
 	}
 
 	leaf transaction-id {
 	    type transaction-id;
-	    description "Transaction ID assigned by the caller.";
+	    description 
+"Transaction ID assigned by the caller. This ID will be provided in the " +
+"JSON-RPC reply and in any callback notifications sent to the backend server, " +
+"by either the device or the Exosense Server, in response to the " +
+"transaction.";
 	}
     }
 
@@ -134,12 +163,15 @@ module exosense {
     // Standard callback elements
     //
     grouping std-callback {
-        description "Elements included in all callback notifications"
-	  + " sent from Exosense to the backend server.";
+        description 
+"Elements included in all callback notifications, sent from Exosense or " +
+"a device, to the backend server in response to a previous JSON-RPC " +
+"request.";
 
 	leaf transaction-id {
 	    type transaction-id;
-	    description "The transaction that this callback is made"
+	    description 
+		"The transaction that this callback is made"
 	      + " in response to.";
 	}
 
