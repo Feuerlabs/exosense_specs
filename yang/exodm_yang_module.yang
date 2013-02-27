@@ -15,7 +15,7 @@ submodule exodm_yang_module {
 
   rpc create-yang-module {
     description
-"**Upload a yang file**<br>" +
+"**Upload a yang file**\n\n" +
 "This commands parses the provided yang file and stores it as a yang " +
 "module in the Exosense Server. The yang file is expected to be " +
 "compliant with RFC 6020. Once a yang module has been created, " +
@@ -24,19 +24,19 @@ submodule exodm_yang_module {
 "[exodm:create-device-type] for details on device attributes, and " +
 "[exodm:create-package] for details on package RPC API and " +
 "configuration data structure. " +
-"<br><br> " +
+"\n\n\n\n " +
 "A yang module can be created either in the account or system " +
 "repository on the Exosense Server. Modules created in the \"system\ " +
 "repository will be accessible to all accounts on the system, while " +
 "modules created in the \"account\" repository will only be visible and " +
 "accessible to the account invoking this command.  Only the sysadm " +
 "account can create a yang module in the system repository." +
-"<br><br>" +
+"\n\n\n\n" +
 "If the yang module is uploaded to the \"user\" repo, " +
 "then the name of the yang module must be unique among all existing yang " +
 "modules under the given account, as well as being unique among all " +
 "existing yang modules in the \"system\" repository. " +
-"<br>" +
+"\n\n" +
 "If the yang module is uploaded to the \"system\" repo, " +
 "then the name of the yang module must be unique among all existing yang " +
 "modules created in the Exosense Server. No existing yang module in any \"user\" repository "+
@@ -50,7 +50,7 @@ submodule exodm_yang_module {
 "the yang modules should be created." +
 "If no account is given, the authorizing user assumes to have access to " +
 "only one account, which will be used. If no account is given, and " +
-"the user has access to multiple accounts, an error is returned.<br> " +
+"the user has access to multiple accounts, an error is returned.\n\n " +
 "This argument is not used if the yang module to is to be created in the \"system\" repository.";
         type exodm_type:id-string;
       }
@@ -86,7 +86,7 @@ submodule exodm_yang_module {
 
   rpc delete-yang-module {
     description
-"**Delete an existing yang module**<br> " +
+"**Delete an existing yang module**\n\n " +
 "This commands deletes a yang module previously created through [exodm:create-yang-module]. " +
 "This command will fail if there are any device types and/or packages currently referring " +
 "to the given yang module.";
@@ -98,7 +98,7 @@ submodule exodm_yang_module {
 "The account, accessible by the authorizing user, to which the yang modules belongs." +
 "If no account is given, the authorizing user assumes to have access to " +
 "only one account, which will be used. If no account is given, and " +
-"the user has access to multiple accounts, an error is returned.<br> " +
+"the user has access to multiple accounts, an error is returned.\n\n " +
 "This argument is not used if the yang module to delete resides in the \"system\" repository.";
 	  type exodm_type:id-string;
       }
@@ -124,7 +124,7 @@ submodule exodm_yang_module {
 "**List the yang modules created in a repository**" +
 "This commands lists all yang modules under the account-specific or "+
 "system-wide repository." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device IDs.";
 
@@ -134,7 +134,7 @@ submodule exodm_yang_module {
 "The account, accessible by the authorizing user, to which the yang modules belongs." +
 "If no account is given, the authorizing user assumes to have access to " +
 "only one account, which will be used. If no account is given, and " +
-"the user has access to multiple accounts, an error is returned.<br> " +
+"the user has access to multiple accounts, an error is returned.\n\n " +
 "This argument is not used if the yang modules to list resides in the \"system\" repository.";
 
         type exodm_type:id-string;

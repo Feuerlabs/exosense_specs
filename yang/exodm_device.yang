@@ -70,29 +70,29 @@ submodule exodm_device {
 
   rpc create-device {
     description
-"**Create a new device in the Exosense Server**<br> " +
+"**Create a new device in the Exosense Server**\n\n " +
 "This commands sets up a new device to be owned and managed by the given account. " +
 "The mandatory device-id must be unique across all devices and device groups under " +
 "the owning account. The device type is previously created through a " +
 "[exodm:create-device-type] command." +
-"<br><br>" +
+"\n\n\n\n" +
 "The new device can optionally have attributes set for it, where the " +
 "structure of these attributes is defined by the provided device type. " +
 "The device type has a yang module, created through an " +
 "[exodm:create-yang-module] command, tied to it. Inside this module, a " +
 "container defines the attribute structure that should be applied to " +
 "all devices assigned to the given device type. " +
-"<br><br>" +
+"\n\n\n\n" +
 "Unlinke device configuration data (see [exodm:create-package]), device "+
 "attributes will not be sent to the device. Instead they will be stored " +
 "locally on the Exosense Server." +
-"<br><br>" +
+"\n\n\n\n" +
 "The attributes can be set through this command and [exodm:update-device], " +
 "and retrieved through [exodm:lookup-device].  " +
 "Protocol plugins can also access the device attributes to locate " +
 "network addresses and other information necessary for the protocol to " +
 "communicate with a device." +
-"<br><br>" +
+"\n\n\n\n" +
 "Once a device has been provisioned through this command, the protocol " +
 "plugin associated with the assigned device type can match an incoming " +
 "device ID from the connected device with device attribute data in " +
@@ -133,12 +133,12 @@ submodule exodm_device {
 
   rpc update-device {
     description
-"**Update the attributes of an existing device**<br>" +
+"**Update the attributes of an existing device**\n\n" +
 "This command updates the attributes of the given device. Please note " +
 "that the device-id and device type of an existing device cannot be " +
 "modified. For these operations, the device needs to be deleted with " +
 "[exodm:delete-device] and then re-created with [exodm:create-device]. " +
-"<br><br> " +
+"\n\n\n\n " +
 "The attributes that can be updated for a device is defined by the " +
 "assigned device type. Please see [exodm:create-device] for information " +
 "on how device attributes are specified and managed.";
@@ -170,10 +170,10 @@ submodule exodm_device {
 
   rpc lookup-device {
     description
-"**Retrieve information about a given device**<br>" +
+"**Retrieve information about a given device**\n\n" +
 "This command retrieves the device id, the device type, and the optional device " +
 "attributes for a given device owned by the provided avcount. " +
-"<br><br> " +
+"\n\n\n\n " +
 "The format of the device attributes, if present, is specified by the device type " +
 "the device is assgined to.  The device type, when it is created " +
 "through the [exodm:create-device-type] command, can optionally refer " +
@@ -217,12 +217,12 @@ submodule exodm_device {
 
   rpc list-devices {
     description
-"**List all devices created under an account**<br>" +
+"**List all devices created under an account**\n\n" +
 "This command lists the device ID of all devices created under the " +
 "given account through the [exodm:create-device] command. Detailed " +
 "information can be given for a device through the " +
 "[exodm:lookup-device] command." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device IDs.";
 
@@ -261,7 +261,7 @@ submodule exodm_device {
 
   rpc delete-devices {
     description
-"**Delete an existing device**<br>" +
+"**Delete an existing device**\n\n" +
 "This command deletes a device, previously created with " +
 "[exodm:create-device], from the Exosense Server. This command also " +
 "deletes the device's attributes, previously set-up throguh through the " +

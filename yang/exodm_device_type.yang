@@ -51,14 +51,14 @@ submodule exodm_device_type {
     rpc create-device-type {
 
 	description
-"**Create a new device type under an account**<br>" +
+"**Create a new device type under an account**\n\n" +
 "This command creates a new device type that can be assigned to " +
 "devices.  The type will be owned by an account and use the specified " +
 "protocol to communicate with devices assigned to the device type. The " +
 "name of the protocol is one of those registered by protocol plugins " +
 "deployed on the server. " +
 " " +
-"<br><br> " +
+"\n\n\n\n " +
 " " +
 "The device type can optionally be associated with a set of attributes " +
 "specified by a yang file uploaded through an " +
@@ -67,13 +67,13 @@ submodule exodm_device_type {
 "with it in the server. Unlinke device configuration data, device "+
 "attributes will not be sent to the device. Instead they will be stored " +
 "locally on the Exosense Server." +
-"<br>" +
+"\n\n" +
 "The attributes can be set through the [exodm:update-device] command " +
 "and retrieved through [exodm:lookup-device].  " +
 "Protocol plugins can also access the device attributes to locate " +
 "network addresses and other information necessary for the protocol to " +
 "communicate with a device." +
-"<br><br> " +
+"\n\n\n\n " +
 "Please note that the actual configuration data and RPC APIs for a " +
 "device is managed through the packages installed on it.";
 
@@ -99,7 +99,7 @@ submodule exodm_device_type {
 
     rpc update-device-type {
 	description
-"**Update an existing device type**<br>" +
+"**Update an existing device type**\n\n" +
 "This commands updates an existing device type previously created with " +
 "[exodm:create-device-type].  This command currently does nothing since " +
 "changing any information would have unforseeable consequences for the " +
@@ -132,7 +132,7 @@ submodule exodm_device_type {
 
     rpc delete-device-type {
 	description
-"**Delete a device type and its associated devices**<br>" +
+"**Delete a device type and its associated devices**\n\n" +
 "This command deletes a device type previously created through a " +
 "[exodm:create-device-type] command. All devices assigned to the " +
 "device type will also be deleted as if [exodm:delete-device] was called " +
@@ -164,10 +164,10 @@ submodule exodm_device_type {
 
     rpc list-device-types {
 	description
-"**List all device types owned by an account**<br>" +
+"**List all device types owned by an account**\n\n" +
 "This commands will retrieve the name of all device types created under " +
 "the given account through [exodm:create-device-type] calls." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device type names.";
 	input {
@@ -203,10 +203,10 @@ submodule exodm_device_type {
 
     rpc list-device-type-devices {
 	description
-"**List device IDs associated with a device type**<br> " +
+"**List device IDs associated with a device type**\n\n " +
 "This command returns the device ID of all devices that were assigned to the " +
 "given device type when they were created with a [exodm:create-device] command." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device IDs.";
 	input {

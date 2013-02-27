@@ -42,7 +42,7 @@ submodule exodm_device_group {
 
   rpc create-device-group {
     description
-"**Create a device group**<br>
+"**Create a device group**\n\n
 This command creates a new device group that can have devices added to it.
 The name of the group must be unique across all device IDs and device groups
 owned by the given account.
@@ -94,7 +94,7 @@ Packages installed on a group will be pushed out to all devices of that group.";
 
   rpc delete-device-group {
     description
-"**Delete a device group**<br>" +
+"**Delete a device group**\n\n" +
 "This command deletes a device group previously created through a " +
 "[exodm:create-device-group] command.  Any devices added to the group " +
 "through an [exodm:add-device-group-members] will be " +
@@ -129,10 +129,10 @@ Packages installed on a group will be pushed out to all devices of that group.";
 
   rpc list-device-groups {
     description
-"**List all device groups owned by an account**<br> " +
+"**List all device groups owned by an account**\n\n " +
 "This command will return all device groups created under an account " +
 "through the [exodm:create-device-group] command." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device names";
 
@@ -186,11 +186,11 @@ Packages installed on a group will be pushed out to all devices of that group.";
 
   rpc list-device-group-members {
     description
-"**List all device members of a device group under an account**<br> " +
+"**List all device members of a device group under an account**\n\n " +
 "This command will list all devices that are a member of the given " +
 "device group. The listed devices have previously been added to the " +
 "group through an [exodm:add-device-group-members] call." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device names";
 
@@ -244,23 +244,23 @@ Packages installed on a group will be pushed out to all devices of that group.";
 
   rpc add-device-group-members {
     description
-"**Add one or more devices as members of a  device group**<br>" +
+"**Add one or more devices as members of a  device group**\n\n" +
 "This command will add a list of devices as members to a single " +
 "device group.  Once this command has been completed, JSON-RPCs sent " +
 "to the device group will be forwarded to all member devices. " +
-"<br><br> " +
+"\n\n\n\n " +
 "If a device, who is a member of multiple groups, sends an RPC to the " +
 "Exosense Server, the RPC will be forwarded to the callback URL (as " +
 "JSON-RPC) of the group that is marked as primary. This ensures that only " +
 "one URL receives, processes, and replies to an RPC send by a device. " +
-"<br><br> " +
+"\n\n\n\n " +
 "If a device is only member of a single group, the primary flag is " +
 "ignored and that group will always receive the forwarded RPC." +
-"<br> " +
+"\n\n " +
 "If a device itself has a callback URL configured, the RPC will be " +
 "forwarded to that URL, regardless of which device groups it is a " +
 "member of and their status as primary. " +
-"<br><br> " +
+"\n\n\n\n " +
 "If a device is member of a device group, and has it marked as primary, " +
 "when the [exodm:add-device-group-members] command also has the primary flag " +
 "set, the primary flag will be moved from the previous group to the new " +
@@ -309,7 +309,7 @@ in favor of the group specified by this call.";
 
   rpc remove-device-group-members {
     description
-"**Remove a list of devices as members from a device group**<br>" +
+"**Remove a list of devices as members from a device group**\n\n" +
 "This command removes the specified devices from the given group. The " +
 "devices have previously been added to the group through the " +
 "[exodm:add-device-group-members] command.  If one or more of the " +
@@ -350,7 +350,7 @@ in favor of the group specified by this call.";
 
   rpc update-device-group {
     description
-"**Update a device group**<br>" +
+"**Update a device group**\n\n" +
 "This command will update the notification URL of the given device " +
 "group. Once this command has completed, any incoming, device-orignated " +
 "RPCs sent to the device group will be forwarded as JSON-RPC to the "+

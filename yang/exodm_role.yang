@@ -15,7 +15,7 @@ submodule exodm_role {
 
   rpc add-user-to-role {
     description
-'**Add user(s) to a role in an account**<br>' +
+"**Add user(s) to a role in an account**\n\n" +
 'This command gives one or more users access to the resources of an ' +
 'account by adding them to a role. Each role will give access to a ' +
 'predefined set of core Exosense Server JSON-RPC commands, as listed in ' +
@@ -25,11 +25,11 @@ submodule exodm_role {
 '[exodm:add-role-execution-permission] command. ' +
 'See the "Package" chapter of the "Exosense Operations Manual" and ' +
 '[exodm:create-package] for details on RPCs and their execution rights. ' +
-'<br><br>' +
+"\n\n\n\n" +
 'Once one or more roles have been assigned to a user, that user can ' +
 'execute all JSON-RPC commands that those roles have execution rights ' +
 'for on the given account. ' +
-'<br><br>' +
+"\n\n\n\n" +
 'The [exodm:list-account-roles] command can be used to retrieve a list ' +
 'of all availale roles for an account that a usert can be assigned to.';
 
@@ -74,7 +74,7 @@ submodule exodm_role {
 
   rpc remove-user-from-role {
     description
-'**Remove user(s) from a role**<br>' +
+"**Remove user(s) from a role**\n\n" +
 "This command retracts one or more user's access to the " +
 'resources of an account by removing the user from a role. The user ' +
 'have previously been added to the role through a ' +
@@ -125,15 +125,15 @@ submodule exodm_role {
 
   rpc add-role-execution-permission {
       description
-"**Add permission execution for a role to an RPC**<br>  " +
+"**Add permission execution for a role to an RPC**\n\n  " +
 "This command adds execution rights for a role to an RPC in a " +
 "package owned by the given account. Once this command has executed, " +
 "all users assigned to the role will be able to execute the given RPC " +
 "on all devices, owned by the account, that the associated package has been " +
 "installed on. " +
-"<br><br>" +
+"\n\n\n\n" +
 "Users can be added to the role through the [exodm:add-user-to-role] command. " +
-"<br><br>" +
+"\n\n\n\n" +
 "If multiple roles have execution rights to a single RPC within a package, any user who " +
 "is assigned to one or more of these roles can execute the RPC. Conversely, a user must " +
 "be removed from all roles with execution rights to an RPC in order to revoke the execution " +
@@ -180,13 +180,13 @@ submodule exodm_role {
 
   rpc remove-role-execution-permission {
       description
-"**Remove permission for a role to execute an RPC**<br>" +
+"**Remove permission for a role to execute an RPC**\n\n" +
 "This command removes execution rights for a role from an RPC in a " +
 "package owned by the given account. Once this command has executed, " +
 "all users assigned to the role will no longer have permission to execute the given RPC " +
 "on devices, owned by the account, that the associated package has been " +
 "installed on. " +
-"<br><br>" +
+"\n\n\n\n" +
 "If multiple roles have execution rights to a single RPC within a package, any user who " +
 "is assigned to one or more of these roles can execute the RPC. Conversely, a user must " +
 "be removed from all roles with execution rights to an RPC in order to revoke the execution " +
@@ -234,10 +234,10 @@ submodule exodm_role {
 
   rpc list-rpc-roles {
       description
-"**List all roles that have exeuction right for an RPC**<br>" +
+"**List all roles that have exeuction right for an RPC**\n\n" +
 "This command will list all roles with execution rights for the given " +
 "account/package/RPC combination" +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of roles.";
 
@@ -290,10 +290,10 @@ submodule exodm_role {
 
   rpc list-account-roles {
     description
-"**List all roles defined for account**<br>" +
+"**List all roles defined for account**\n\n" +
 "This command will return all roles in account that can be assigned to users in order " +
 "for them to access resources owned by the account." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of roles.";
     input {

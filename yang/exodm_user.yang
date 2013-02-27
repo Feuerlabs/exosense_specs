@@ -14,7 +14,7 @@ submodule exodm_user {
 
   rpc create-user {
     description
-"**Create a new user**<br>" +
+"**Create a new user**\n\n" +
 "This command creates a new user that can be given access to accounts " +
 "and assigned roles." +
 "The authorizing user must have either master or admin roles assigned to " +
@@ -35,7 +35,7 @@ submodule exodm_user {
 
   rpc delete-user {
     description
-"**Delete an existing user**<br>" +
+"**Delete an existing user**\n\n" +
 "This command deletes an existing user previously created through an " +
 "[exodm:create-user] command.  The user will be removed from all accounts and roles " +
 "it was assigned to prior to being deleted.";

@@ -22,7 +22,7 @@ submodule exodm_config_set {
 
   rpc create-config-set {
     description
-"**Create a new configuration set [deprecated in 2.x]**<br>" +
+"**Create a new configuration set [deprecated in 2.x]**\n\n" +
 "This command creates a new configuration set describing an RPC API and " +
 "configuration data supported by a device. A configuration set is " +
 "associated with a yang module, created through a " +
@@ -32,14 +32,14 @@ submodule exodm_config_set {
 "will receive all results from RPCs sent to a member device " +
 "The notification URL will also be used to forward incoming " +
 "incoming RPCs from the device sent to the server. " +
-"<br><br>" +
+"\n\n\n\n" +
 "Once a configuration set has been created, it can have devices added " +
 "to it through the [exodm:add-config-set-members]. All such member " +
 "devices can have RPCs, as defined in the configuration set yang " +
 "module, called through the JSON-RPC interface. These devices can also " +
 "have configuration data updated by the server through the " +
 "[exodm:update-config-set] and [exodm:push-config-set] commands." +
-"<br><br>" +
+"\n\n\n\n" +
 "Please note that any RPCs defined in the yang module tied to a " +
 "configuration set must have a \"uses exo:std-request\" line in it to " +
 "include transaction elements used by the Exosense Server to route the " +
@@ -87,12 +87,12 @@ submodule exodm_config_set {
 
   rpc update-config-set {
     description
-"**Update the data of a configuraiton set**<br>" +
+"**Update the data of a configuraiton set**\n\n" +
 "This command will update the configuration values of a configuraiton " +
 "set. Once the data has been updated, it can be pushed out to all " +
 "configuration set member devices through the [exodm:push-config-set] " +
 "command. " +
-"<br><br>" +
+"\n\n\n\n" +
 "The format of the configuration data is specified by the yang module provided " +
 "to the [exodm:create-config-set] command that created the " +
 "configuration set. Any data that does not validate against the yang " +
@@ -133,7 +133,7 @@ submodule exodm_config_set {
 
   rpc delete-config-set {
     description
-"**Delete an existing configuration set**<br>" +
+"**Delete an existing configuration set**\n\n" +
 "This command deletes a configuration set previously created through an " +
 "[exodm:create-config-set] command. Any configuration data pushed to " +
 "the set's member devices will be delivered, although the delivery " +
@@ -168,7 +168,7 @@ submodule exodm_config_set {
 
   rpc list-config-sets {
     description
-"**List all configuraiton sets owned by an account**<br>" +
+"**List all configuraiton sets owned by an account**\n\n" +
 "This commands will return all configuration sets created under the " +
 "specified account through a previous [exodm:create-config-set] " +
 "command.";
@@ -225,10 +225,10 @@ submodule exodm_config_set {
 
   rpc list-config-set-members {
     description
-"**List all device members of a configuration set**<br>" +
+"**List all device members of a configuration set**\n\n" +
 "This command will list all devices added as member to the given " +
 "configuration set through previous [exodm:add-config-set-members] commands." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of accounts.";
 
@@ -272,16 +272,16 @@ submodule exodm_config_set {
 
   rpc add-config-set-members {
     description
-"**Add devices as a members to one or more configuration sets**<br>" +
+"**Add devices as a members to one or more configuration sets**\n\n" +
 "This command adds the listed devices as members of a collection of configuraiton sets. " +
 "When this command returns, the RPCs of the yang specification associated " +
 "with the configuraiton set through the [exodm:create-config-set] command can be invoked "+
 "for the devices. " +
-"<br><br>" +
+"\n\n\n\n" +
 "The devices will also be able to have the configuration data setup for the config " +
 "set through the [exodm:create-config-set] and [exodm:update-config-set] pushed to " +
 "them using the [exodm:push-config-set] command." +
-"<br><br>" +
+"\n\n\n\n" +
 "If a member device replies to an RPC sent to it, or " +
 "originates an RPC of its own, the JSON-RPC will be sent to the " +
 "notification URL associated with the configuration set.";
@@ -317,7 +317,7 @@ submodule exodm_config_set {
 
   rpc remove-config-set-members {
     description
-"**Remove devices as a members from one or more configuration sets**<br>" +
+"**Remove devices as a members from one or more configuration sets**\n\n" +
 "This command removes a list of devices from one or more configuration " +
 "sets. The devices have previously been added as configuration set "  +
 "members through an [exodm:add-config-set-members] command.";
@@ -356,7 +356,7 @@ submodule exodm_config_set {
 
   rpc push-config-set {
     description
-"**Push configuration set data to all member devices**<br>"   +
+"**Push configuration set data to all member devices**\n\n"   +
 "This command will transfer the configuration data in the configuration " +
 "set to all member devices.  The configuration data is setup in the " +
 "configuration set through the [exodm:create-config-set] and " +

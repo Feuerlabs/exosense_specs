@@ -15,11 +15,11 @@ submodule exodm_account {
 
   rpc create-account {
     description
-"**Create a new account**<br>" +
+"**Create a new account**\n\n" +
 "This call, which must be invoked by the sysadm user, creates a new Exosense " +
 "Account. The created account can give access permission to users that will " +
 "manage the devices, device groups, packages, etc, owned by the account. " +
-"<br><br>" +
+"\n\n\n\n" +
 "When the account is created, an account admin user, [name]-admin will be also be " +
 "automatically created. This user acts as the initial administrator for " +
 "the account and can be used to manage all resources owned by the " +
@@ -47,7 +47,7 @@ submodule exodm_account {
 
   rpc update-account {
     description
-"**Update an existing account**<br>" +
+"**Update an existing account**\n\n" +
 "This call modifies the name of an account " +
 "previously created with a [exodm:create-account] command. The new name " +
 "of the account must be unique across all accounts in the Exosense " +
@@ -72,7 +72,7 @@ submodule exodm_account {
 
   rpc delete-account {
     description
-"**Delete an existing account<br>**" +
+"**Delete an existing account\n\n**" +
 "This command will remove the account specified by " +
 "the name argument. If the given account owns any devices, device " +
 "types, device groups, packages, configuration sets or yang " +
@@ -95,10 +95,10 @@ submodule exodm_account {
 
   rpc list-accounts {
     description
-"**List all accounts in the Exosense Server**<br>" +
+"**List all accounts in the Exosense Server**\n\n" +
 "This command will list all accounts created in the Exosense " +
 "Server. This command can only be executed by the sysadm user." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of accounts.";
     input {
@@ -127,7 +127,7 @@ submodule exodm_account {
 
   rpc add-user-to-account {
       description
-"**Add a user to an account**<br>" +
+"**Add a user to an account**\n\n" +
 "This command adds the specified user to the given account. Once a user " +
 "has been added to an account, the user can be assigned to roles in the " +
 "given account through the [exodm:add-user-to-role] command. The user " +
@@ -159,7 +159,7 @@ submodule exodm_account {
 
   rpc remove-account-users {
       description
-"**Remove a user from an account**<br>" +
+"**Remove a user from an account**\n\n" +
 "This command removes the specified user to the given account. Once a " +
 "user has been removed to an account, any previous RPCs that the user " +
 "could execute on devices owned by the account will become " +
@@ -189,10 +189,10 @@ submodule exodm_account {
 
   rpc list-account-users {
     description
-"**List all users with access to the specified account<br>**" +
+"**List all users with access to the specified account\n\n**" +
 "This command will list all users who have been given access to the " +
 "given account through [exodm:add-user-to-account] commands." +
-"<br><br>"+
+"\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of user names.";
 
