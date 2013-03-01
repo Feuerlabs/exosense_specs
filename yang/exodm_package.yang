@@ -55,7 +55,7 @@ RPC definitions are global and cannot be hosted in a container. " +
 "Exosense Server. The server will store the call and forward it to the " +
 "device once it comes online. The result of the executed function will " +
 "be transported back from the device to the backend server through a " +
-"notification sent to the device callback URL and the callback URL of " +
+"notification sent to the device notification URL and the notification URL of " +
 "any device groups that the device is a member of. " +
 "\n\n\n\n" +
 "Please note that any RPCs defined in the yang module tied to a " +
@@ -360,7 +360,7 @@ RPC definitions are global and cannot be hosted in a container. " +
 "during the install process.  The notification will be sent to the URL " +
 "registered for the device and any device groups that the device is a " +
 "member of. Thus, a single device operation may trigger notifications " +
-"sends to multiple callback URLs. If the same URL is registered " +
+"sends to multiple notification URLs. If the same URL is registered " +
 "multiple times for a device and its groups, the notificaiton will only " +
 "be sent once to that URL.";
 	input {
@@ -456,7 +456,7 @@ RPC definitions are global and cannot be hosted in a container. " +
 "during the upgrade process.  The notification will be sent to the URL " +
 "registered for the device and any device groups that the device is a " +
 "member of. Thus, a single device operation may trigger notifications " +
-"sends to multiple callback URLs. If the same URL is registered " +
+"sends to multiple notification URLs. If the same URL is registered " +
 "multiple times for a device and its groups, the notificaiton will only " +
 "be sent once to that URL.";
 	input {
@@ -545,7 +545,7 @@ RPC definitions are global and cannot be hosted in a container. " +
 "during the uninstall process.  The notification will be sent to the URL " +
 "registered for the device and any device groups that the device is a " +
 "member of. Thus, a single device operation may trigger notifications " +
-"sends to multiple callback URLs. If the same URL is registered " +
+"sends to multiple notification URLs. If the same URL is registered " +
 "multiple times for a device and its groups, the notificaiton will only " +
 "be sent once to that URL.";
 

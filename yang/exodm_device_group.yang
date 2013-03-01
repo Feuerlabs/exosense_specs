@@ -43,19 +43,22 @@ submodule exodm_device_group {
   rpc create-device-group {
     description
 "**Create a device group**\n\n
-This command creates a new device group that can have devices added to it.
-The name of the group must be unique across all device IDs and device groups
-owned by the given account.
+This command creates a new device group that can have devices added to
+it.  The name of the group must be unique across all device IDs and
+device groups owned by the given account.
 
-A device group can have devices added to it through the [exodm:add-device-group-memberss]
-Once a group has been created, and devices have been added to it , an RPC
-command in a package can be invoked on all member devices by sending the
-RPC to the device group instead of individual devices.
+A device group can have devices added to it through the
+[exodm:add-device-group-memberss] Once a group has been created, and
+devices have been added to it , an RPC command in a package can be
+invoked on all member devices by sending the RPC to the device group
+instead of individual devices.
 
-Incoming RPCs from member devices will be sent to the callback URL of the device group marked
-as primary. See [exodm:add-device-group-members] for details.
+Incoming RPCs from member devices will be sent to the notification URL of
+all device groups that the device is a member of. See
+[exodm:add-device-group-members] for details.
 
-Packages installed on a group will be pushed out to all devices of that group.";
+Packages installed on a group will be pushed out to all devices of
+that group.";
     input {
 	leaf account {
 	    description
@@ -176,7 +179,7 @@ Packages installed on a group will be pushed out to all devices of that group.";
 		type exodm_type:id-string;
 	    }
 	    leaf notification-url {
-		description "The callback URL of the device group";
+		description "The notification URL of the device group";
 		type inet:uri;
 	    }
 	}
@@ -244,28 +247,33 @@ Packages installed on a group will be pushed out to all devices of that group.";
 
   rpc add-device-group-members {
     description
-"**Add one or more devices as members of a  device group**\n\n" +
+"**Add one or more devices as members of a device group**\n\n" +
 "This command will add a list of devices as members to a single " +
 "device group.  Once this command has been completed, JSON-RPCs sent " +
 "to the device group will be forwarded to all member devices. " +
 "\n\n\n\n " +
 "If a device, who is a member of multiple groups, sends an RPC to the " +
-"Exosense Server, the RPC will be forwarded to the callback URL (as " +
-"JSON-RPC) of the group that is marked as primary. This ensures that only " +
-"one URL receives, processes, and replies to an RPC send by a device. " +
+"Exosense Server, the RPC will be forwarded to the notification URL (as " +
+"JSON-RPC) of all groups. The reply to send back to the device is read
+from the device group marked as primary for the device. This allows
+multiple URLs to receive device data while ensuring that only one
+reply is sent back to the device." +
 "\n\n\n\n " +
 "If a device is only member of a single group, the primary flag is " +
-"ignored and that group will always receive the forwarded RPC." +
+"ignored." +
 "\n\n " +
-"If a device itself has a callback URL configured, the RPC will be " +
-"forwarded to that URL, regardless of which device groups it is a " +
-"member of and their status as primary. " +
+"If a device itself has a notification URL configured, incoming RPCs from the device will be " +
+"forwarded to that URL and the notification URL of all device groups
+that the device is a member of. In these cases, the reply to send back
+to the device will always be read from the notification URL of the
+device, thus silently dropping the reply from all device groups that
+the device is a member of, including the primary group." +
 "\n\n\n\n " +
 "If a device is member of a device group, and has it marked as primary, " +
 "when the [exodm:add-device-group-members] command also has the primary flag " +
 "set, the primary flag will be moved from the previous group to the new " +
-"one. Thus, only one group will be marked as primary for a device at " +
-"any given time.";
+"one for the device. Thus, only one group will be marked as primary for " +
+"a device at any given time.";
 
     input {
       leaf account {
@@ -312,11 +320,13 @@ in favor of the group specified by this call.";
 "**Remove a list of devices as members from a device group**\n\n" +
 "This command removes the specified devices from the given group. The " +
 "devices have previously been added to the group through the " +
-"[exodm:add-device-group-members] command.  If one or more of the " +
-"devices have the group marked as primary, and the device itself does " +
-"not have a configured callback URL, then any future RPCs received from " +
-"the device will result in an error being sent back to the device " +
-"directly by the Exosense Server.";
+"[exodm:add-device-group-members] command.  If a device removed from a group " +
+"has that group marked as primary, and the device will still be member
+of more than one group, and the device itself does "+
+"not have a notification URL setup, then any future RPCs received from " +
+"that device will result in an error being sent back to it " +
+"by the Exosense Server. This is due to the fact that Exosense does not
+know which notification URL to read the reply from.";
     input {
       leaf account {
 	    description
@@ -374,7 +384,7 @@ in favor of the group specified by this call.";
 	}
 
 	leaf notification-url {
-	    description "RPC callback URL to forward for incoming device-originated RPCs to.";
+	    description "RPC notification URL to forward for incoming device-originated RPCs to.";
         type inet:uri;
         mandatory true;
       }
