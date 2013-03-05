@@ -259,6 +259,45 @@ submodule exodm_config_set {
     uses exo:std-callback;
   }
 
-
+  rpc add-notification-urls {
+    description "Add device-specific ConfigSet+URL pairs";
+    input {
+      device-id {
+	type exodm_type:id-string;
+	mandatory true;
+      }
+      list urls {
+	leaf config-set {
+	  exodm_type:id-string;
+	}
+	leaf notification-url {
+	  type inet:uri;
+	}
+      }
+    }
+    output {
+      leaf result {
+	type exodm_type:result-code;
+      }
+    }
+  }
+  
+  rpc delete-notification-urls {
+    description "Remove device-specific ConfigSet+URL pairs";
+    input {
+      device-id {
+	type exodm_type:id-string;
+	mandatory true;
+      }
+      leaf-list config-sets {
+	exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+	type exodm_type:result-code;
+      }
+    }
+  }
 }
 
