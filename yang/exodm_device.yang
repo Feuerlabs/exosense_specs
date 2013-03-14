@@ -16,7 +16,7 @@ submodule exodm_device {
   grouping device-obj {
     description "Device object leafs.";
 
-    leaf dev-id {
+    leaf device-id {
       description "Account-wide unique device-id.";
       type exodm_type:id-string;
       mandatory true;
@@ -182,7 +182,7 @@ submodule exodm_device {
       "Read a single device object." +
       "Returns a list of zero or one device object.";
     input {
-      leaf dev-id {
+      leaf device-id {
         type exodm_type:id-string;
         mandatory true;
       }
@@ -232,7 +232,7 @@ submodule exodm_device {
     description "Deprovision a set of existing devices.";
 
     input {
-     leaf-list dev-id {
+     leaf-list device-id {
         description "Account-wide unique device-id.";
         type exodm_type:id-string;
       }

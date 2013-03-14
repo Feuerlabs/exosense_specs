@@ -16,15 +16,15 @@ submodule exodm_device_group {
   organization "Feuerlabs, Inc.";
 
   // INTERNAL INFO!
-  // <uid>/groups/<gid>/name
-  // <uid>/groups/<gid>/url
+  // <uid>/groups/<group-id>/name
+  // <uid>/groups/<group-id>/url
   //
   list groups {
     description "Device group information.";
 
-    key "gid";
+    key "group-id";
 
-    leaf gid {
+    leaf group-id {
       description "group id";
       type exodm_type:id-string;
     }
@@ -64,10 +64,6 @@ submodule exodm_device_group {
       leaf result {
         type exodm_type:result-code;
       }
-      leaf gid {
-        description "Group identifier. \"\" if operation failed.";
-        type exodm_type:id-string;
-      }
     }
   }
 
@@ -75,7 +71,7 @@ submodule exodm_device_group {
     description "Deletes a device group.";
 
     input {
-      leaf gid {
+      leaf group-id {
         description "Group ID.";
         type exodm_type:id-string;
         mandatory true;
@@ -105,7 +101,7 @@ submodule exodm_device_group {
       }
       leaf previous {
         description
-          "Previous device group id (GID); \"\" if from beginning.";
+          "Previous device group-id; \"\" if from beginning.";
         type exodm_type:id-string;
         mandatory true;
       }
@@ -122,10 +118,7 @@ submodule exodm_device_group {
     }
     output {
       list device-groups {
-        leaf gid {
-          type exodm_type:id-string;
-        }
-        leaf name {
+        leaf group-id {
           type exodm_type:id-string;
         }
         leaf notification-url {
@@ -141,7 +134,7 @@ submodule exodm_device_group {
       "N entries at a time.";
 
     input {
-      leaf gid {
+      leaf group-id {
         description "ID of the device group.";
         type exodm_type:id-string;
         mandatory true;
@@ -173,12 +166,12 @@ submodule exodm_device_group {
   rpc add-device-group-members {
     description "Link devices to device groups.";
     input {
-      leaf-list device-groups {
+      leaf-list group-id {
         description
           "Device groups to associate with the given device(s).";
         type exodm_type:id-string;
       }
-      leaf-list dev-id {
+      leaf-list device-id {
         description "List of Device ID(s).";
         type exodm_type:id-string;
       }
@@ -198,13 +191,13 @@ submodule exodm_device_group {
   rpc remove-device-group-members {
     description "Unlink devices from device groups.";
     input {
-      leaf-list device-groups {
+      leaf-list group-id {
         description
           "Device groups to unlink the given device(s) from.";
         min-elements 1;
         type exodm_type:id-string;
       }
-      leaf-list dev-id {
+      leaf-list device-id {
         description "List of device ID(s).";
         min-elements 1;
         type exodm_type:id-string;
@@ -226,7 +219,7 @@ submodule exodm_device_group {
     description "Changes the notification URL of an existing group.";
 
     input {
-      leaf gid {
+      leaf group-id {
         description "Group identifier.";
         type exodm_type:id-string;
         mandatory true;

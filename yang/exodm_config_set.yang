@@ -186,7 +186,7 @@ submodule exodm_config_set {
           "the given device(s).";
         type exodm_type:id-string;
       }
-      leaf-list dev-id {
+      leaf-list device-id {
         description
           "Devices to push the given config data instances to.";
         type exodm_type:id-string;
@@ -215,7 +215,7 @@ submodule exodm_config_set {
         min-elements 1;
         type exodm_type:id-string;
       }
-      leaf-list dev-id {
+      leaf-list device-id {
         description
           "Devices to remove from the given config data instances.";
         min-elements 1;

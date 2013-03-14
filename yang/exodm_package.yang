@@ -68,7 +68,7 @@ submodule exodm_package {
                      length "1..256";
                  }
              }
-             leaf-list dev-id {
+             leaf-list device-id {
                  description
  		  "Devices to push the given config data instances to (s)";
                  type exodm_type:id-string;
@@ -249,9 +249,9 @@ submodule exodm_package {
 //                 description
 //                     "List of all members receiving the package, and their status.";
 
-//                 key dev-id;
+//                 key device-id;
 
-//                 leaf dev-id {
+//                 leaf device-id {
 //                     description "The device id of the member.";
 //                     type string {
 //                         length "1..64";
