@@ -138,7 +138,7 @@ submodule exodm_device {
 
   }
 
-  rpc provision-device {
+  rpc create-device {
     description
       "Create a new device. " +
       "augment this call if you want to add device-data.";
@@ -202,7 +202,7 @@ submodule exodm_device {
   }
 
   rpc list-devices {
-    description "List provisioned devices, N entries at a time.";
+    description "List created devices, N entries at a time.";
 
     input {
       leaf n {
@@ -228,8 +228,8 @@ submodule exodm_device {
   }
 
 
-  rpc deprovision-devices {
-    description "Deprovision a set of existing devices.";
+  rpc delete-devices {
+    description "Delete a set of existing devices.";
 
     input {
      leaf-list device-id {
