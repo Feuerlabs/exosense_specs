@@ -26,7 +26,7 @@ submodule exodm_device_group {
 
     leaf gid {
       description "group id";
-      type uint32;
+      type exodm_type:id-string;
     }
 
     leaf name {
@@ -65,8 +65,8 @@ submodule exodm_device_group {
         type exodm_type:result-code;
       }
       leaf gid {
-        description "Group identifier. 0 (zero) if operation failed.";
-        type uint32;
+        description "Group identifier. \"\" if operation failed.";
+        type exodm_type:id-string;
       }
     }
   }
@@ -77,7 +77,7 @@ submodule exodm_device_group {
     input {
       leaf gid {
         description "Group ID.";
-        type uint32;
+        type exodm_type:id-string;
         mandatory true;
       }
        leaf account {
@@ -106,7 +106,7 @@ submodule exodm_device_group {
       leaf previous {
         description
           "Previous device group id (GID); \"\" if from beginning.";
-        type uint32;
+        type exodm_type:id-string;
         mandatory true;
       }
       leaf account {
@@ -123,7 +123,7 @@ submodule exodm_device_group {
     output {
       list device-groups {
         leaf gid {
-          type uint32;
+          type exodm_type:id-string;
         }
         leaf name {
           type exodm_type:id-string;
@@ -143,7 +143,7 @@ submodule exodm_device_group {
     input {
       leaf gid {
         description "ID of the device group.";
-        type uint32;
+        type exodm_type:id-string;
         mandatory true;
       }
       leaf n {
@@ -176,7 +176,7 @@ submodule exodm_device_group {
       leaf-list device-groups {
         description
           "Device groups to associate with the given device(s).";
-        type uint32;
+        type exodm_type:id-string;
       }
       leaf-list dev-id {
         description "List of Device ID(s).";
@@ -202,7 +202,7 @@ submodule exodm_device_group {
         description
           "Device groups to unlink the given device(s) from.";
         min-elements 1;
-        type uint32;
+        type exodm_type:id-string;
       }
       leaf-list dev-id {
         description "List of device ID(s).";
@@ -228,7 +228,7 @@ submodule exodm_device_group {
     input {
       leaf gid {
         description "Group identifier.";
-        type uint32;
+        type exodm_type:id-string;
         mandatory true;
       }
       leaf notification-url {
