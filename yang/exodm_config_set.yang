@@ -233,6 +233,37 @@ submodule exodm_config_set {
     }
   }
 
+  rpc read-config-set-data {
+    description
+      "Reads the user data stored in a config set.";
+    input {
+      leaf name {
+        description "Name of the config data set.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf area {
+	description "Type of data area to read from";
+	type enumeration {
+	  enum staged;
+	  enum pending;
+	  enum installed;
+	}
+      }
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      anyxml values;
+    }
+  }
+
 
   rpc push-config-set {
     description "Push the given configuration data to all member devices.";
