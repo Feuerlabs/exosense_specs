@@ -15,7 +15,7 @@ module exosense {
 
     // Transaction id.
     typedef transaction-id {
-	type uint32;
+	type uint64;
 	description
 	  "A transaction ID associated with an operation. " +
 	  "Assigned by caller";
