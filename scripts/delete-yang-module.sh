@@ -27,3 +27,4 @@ curl -u $AUTH -k -X POST $URL -d @- <<EOF
     }
 }
 EOF
+echo

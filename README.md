@@ -36,7 +36,8 @@ is done through the ~/.exodmrc file that looks like the following
     USER_AUTH=<account>:<password>
 
 The `URL` in the example above points to the Feuerlabs test server
-provided for free for up to ten devices. Please email us at accounts at Feuerlabs to get an account setup.
+provided for free for up to ten devices. Please email us at accounts
+at Feuerlabs to get an account setup.
 
 The USER_AUTH contains the account name and password assigned to you
 by Feuerlabs. 

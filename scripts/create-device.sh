@@ -23,7 +23,7 @@ curl -u $USER_AUTH -k -X POST $URL -d @- << EOF
     }
 }
 EOF
-
+echo
 curl -u $USER_AUTH -k -X POST $URL -d @-  <<EOF
 {
     "jsonrpc": "2.0",
@@ -36,3 +36,4 @@ curl -u $USER_AUTH -k -X POST $URL -d @-  <<EOF
     }
 }
 EOF
+echo

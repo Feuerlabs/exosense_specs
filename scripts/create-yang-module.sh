@@ -3,11 +3,11 @@
 #
 . $HOME/.exodmrc
 
-if [ $# == 1 ]
+if [ "$#" = "1" ]
 then
     REPO=user
     YANG_FILE=$1
-elif [ $# == 2 ]
+elif [ "$#" = "2" ]
 then
     REPO=$1
     YANG_FILE=$2
@@ -50,3 +50,4 @@ cat > /tmp/yang.json << EOF
 EOF
 
 curl -u $AUTH -k $URL -F file="@${YANG_FILE};filename=$BASE_YANG" -F jsonrpc=@/tmp/yang.json
+echo

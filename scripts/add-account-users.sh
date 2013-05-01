@@ -39,3 +39,4 @@ curl -u $ADMIN_AUTH -k -X POST  $URL -d @- << EOF
     }
 }
 EOF
+echo
