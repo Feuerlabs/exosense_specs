@@ -1,4 +1,9 @@
 submodule exodm_device_type {
+  description 
+      "API for Exosense Device Management Server - Device Type Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
+
   belongs-to "exodm" {
     prefix exodm;
   }
@@ -8,7 +13,6 @@ submodule exodm_device_type {
   }
 
 
-  description "API for Exosense Device Management Server, device type part.";
 
 
   contact "ulf.wiger@feuerlabs.com";

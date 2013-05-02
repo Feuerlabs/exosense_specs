@@ -1,4 +1,8 @@
 submodule exodm_device {
+  description 
+      "API for Exosense Device Management Server - Device Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
   belongs-to "exodm" {
     prefix exodm;
   }

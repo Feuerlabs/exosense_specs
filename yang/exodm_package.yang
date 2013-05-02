@@ -1,4 +1,8 @@
 submodule exodm_package {
+    description 
+      "API for Exosense Device Management Server - Package Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
     belongs-to "exodm" {
 	prefix exodm;
     }
@@ -11,7 +15,7 @@ submodule exodm_package {
     }
 
 
-    description "API for Exosense Device Management Server, package part";
+
 
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";

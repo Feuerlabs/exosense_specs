@@ -1,4 +1,10 @@
 submodule exodm_config_set {
+
+  description 
+      "API for Exosense Device Management Server - Config Sets. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
+
   belongs-to "exodm" {
     prefix exodm;
   }

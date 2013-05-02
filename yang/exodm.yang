@@ -9,6 +9,11 @@
 // ---- END COPYRIGHT -----------------------------------------------
 module exodm {
     namespace "http://feuerlabs.com/exodm";
+
+    description 
+      "API for Exosense Device Management Server - Core aggregator. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
     prefix exodm;
 
     // Do NOT remove

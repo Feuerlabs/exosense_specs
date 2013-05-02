@@ -1,4 +1,8 @@
 submodule exodm_yang_module {
+  description 
+      "API for Exosense Device Management Server - Yang Module Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
   belongs-to "exodm" {
     prefix exodm;
   }
@@ -6,8 +10,6 @@ submodule exodm_yang_module {
   import exodm_type {
     prefix exodm_type;
   }
-
-  description "API for Exosense Device Management Server, yang model part.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";

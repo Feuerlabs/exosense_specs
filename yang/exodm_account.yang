@@ -1,4 +1,9 @@
 submodule exodm_account {
+
+  description 
+      "API for Exosense Device Management Server - Account Management. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
   belongs-to "exodm" {
     prefix "exodm";
   }
@@ -7,8 +12,6 @@ submodule exodm_account {
     prefix exodm_type;
   }
 
-
-  description "API for Exosense Device Management Server, account part.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
