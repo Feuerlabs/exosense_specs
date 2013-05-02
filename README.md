@@ -26,6 +26,17 @@ from a command line. The curl scripts can also be used as a reference
 to resolve ambiguities in the reference manual.
 
 
+3. **Exosense Demo  Tutorial (scripts/exosense_demo_tutorial.pdf)**<br>
+Contains a complete guide on how to:
+  - Setup a Yocto build environment
+  - Build a flashable image
+  - Install the image on targe thardware
+  - Setup a device identity
+  - Provision the device in the server
+  - Test the demo application on the device
+  - Do changes to the demo application
+
+
 # Setting up the shell script environment
 
 In order for the shell scripts to operate, they must know the URL
