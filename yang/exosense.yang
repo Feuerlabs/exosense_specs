@@ -1,14 +1,9 @@
 module exosense {
-
+    prefix exo;
+    namespace "http://feuerlabs.com/exosense";
     description 
       "API for Exosense Device Management Server - Standard types " +
       "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
-
-    prefix exo;
-
-    namespace "http://feuerlabs.com/exosense";
-
-
 
     typedef timer {
       description "Kvdb_cron-type timer specification";
