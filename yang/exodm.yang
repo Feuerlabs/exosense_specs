@@ -10,9 +10,6 @@
 module exodm {
     namespace "http://feuerlabs.com/exodm";
 
-    description 
-      "API for Exosense Device Management Server - Core aggregator. " +
-      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
     prefix exodm;
 
@@ -38,7 +35,9 @@ module exodm {
     include exodm_yang_module;
     include exodm_package;
 
-    description "Data model for Exosense Device Management Server";
+    description 
+      "API for Exosense Device Management Server - Core aggregator. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";

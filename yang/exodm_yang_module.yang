@@ -32,8 +32,10 @@ submodule exodm_yang_module {
 "repository on the Exosense Server. Modules created in the \"system\ " +
 "repository will be accessible to all accounts on the system, while " +
 "modules created in the \"account\" repository will only be visible and " +
-"accessible to the account invoking this command.  Only the sysadm " +
-"account can create a yang module in the system repository." +
+"accessible to the account invoking this command.  Only the exodm-admin " +
+"account can create a yang module in the system repository. When the system." +
+"repository is used, the command has to be sent from the same host that " +
+"the server is executing on." +
 "\n\n\n\n" +
 "If the yang module is uploaded to the \"user\" repo, " +
 "then the name of the yang module must be unique among all existing yang " +
@@ -93,7 +95,9 @@ submodule exodm_yang_module {
 "**Delete an existing yang module**\n\n " +
 "This command deletes a yang module previously created through [exodm:create-yang-module]. " +
 "This command will fail if there are any device types and/or packages currently referring " +
-"to the given yang module.";
+"to the given yang module.\n\n " +
+"If the yang module resides in the system repository, the account has to be exodm-admin " +
+"and the command has to be sent from the same host that the server runs on.";
 
     input {
       leaf account {
@@ -131,8 +135,10 @@ submodule exodm_yang_module {
 
   rpc lookup-yang-module {
     description "**Retreive yang module**\n\n." +
-	"This command returns the content of a yang module previously created through " +
-	"[exodm:create-yang-module].";
+"This command returns the content of a yang module previously created through " +
+"[exodm:create-yang-module]." +
+"If the yang module resides in the system repository, the account has to be exodm-admin " +
+"and the command has to be sent from the same host that the server runs on.";
 
     input {
       leaf account {
@@ -177,7 +183,9 @@ submodule exodm_yang_module {
 "system-wide repository." +
 "\n\n\n\n" +
 "This command allows for chunks of the result set to be returned " +
-"to facilitate a sequential retrieval of device IDs.";
+"to facilitate a sequential retrieval of device IDs." +
+"If the yang modules to list reside in the system repository, the account has to be exodm-admin " +
+"and the command has to be sent from the same host that the server runs on.";
 
     input {
       leaf account {

@@ -19,7 +19,8 @@ submodule exodm_account {
   rpc create-account {
     description
 "**Create a new account**\n\n" +
-"This call, which must be invoked by the sysadm user, creates a new Exosense " +
+"This call, which must be invoked by the exodm-admin user from the same host that the " +
+"server is running on, creates a new Exosense " +
 "Account. The created account can give access permission to users that will " +
 "manage the devices, device groups, packages, etc, owned by the account. " +
 "\n\n\n\n" +
@@ -50,7 +51,8 @@ submodule exodm_account {
   rpc update-account {
     description
 "**Update an existing account**\n\n" +
-"This call modifies the name of an account " +
+"This call, which must be invoked by the exodm-admin user from the same host that the " +
+"server is running on, modifies the name of an account " +
 "previously created with a [exodm:create-account] command. The new name " +
 "of the account must be unique across all accounts in the Exosense " +
 "Server.";
@@ -75,7 +77,8 @@ submodule exodm_account {
   rpc delete-account {
     description
 "**Delete an existing account\n\n**" +
-"This command will remove the account specified by " +
+"This call, which must be invoked by the exodm-admin user from the same host that the " +
+"server is running on, removes the account specified by " +
 "the name argument. If the given account owns any devices, device " +
 "types, device groups, packages, configuration sets or yang " +
 "specifications, they will be deleted together with the account.";
@@ -99,7 +102,8 @@ submodule exodm_account {
     description
 "**List all accounts in the Exosense Server**\n\n" +
 "This command will list all accounts created in the Exosense " +
-"Server. This command can only be executed by the sysadm user." +
+"Server. The command has to be executed by the exodm-admin user on the " +
+"same host as the server is executing." +
 "\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of accounts.";
