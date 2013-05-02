@@ -14,11 +14,18 @@
 -export([post_compile/2,
 	 clean/2]).
 
--spec post_compile(rebar_config:config(), _AppFile::file:filename()) -> 'ok'.
+-spec post_compile(rebar_config:config(), _AppFile::file:filename()) ->
+			  'ok'.
 post_compile(Config, _AppFile) ->
-    io:fwrite("~p:compile(...)~n", [?MODULE]),
-    rebar_base_compiler:run(Config, [], "yang", ".yang", "priv/yang", ".eterm",
-			    fun compile_yang/3, []).
+    case lists:member(?MODULE, rebar_config:get(Config,plugins,[])) of
+	true ->
+	    io:fwrite("~p:compile(...)~n", [?MODULE]),
+	    rebar_base_compiler:run(
+	      Config, [], "yang", ".yang", "priv/yang", ".eterm",
+	      fun compile_yang/3, []);
+	false ->
+	    ok
+    end.
 
 -spec compile_yang(file:filename(), file:filename(),
                    rebar_config:config()) -> ok.

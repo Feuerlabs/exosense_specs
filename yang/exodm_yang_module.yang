@@ -1,4 +1,5 @@
 submodule exodm_yang_module {
+
   belongs-to "exodm" {
     prefix exodm;
   }
@@ -7,11 +8,13 @@ submodule exodm_yang_module {
     prefix exodm_type;
   }
 
-  description "API for Exosense  Server - Yang Modules";
+  description 
+     "API for Exosense Device Management Server - Yang Module Management " +
+     "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
 
   contact "magnus.feuer@feuerlabs.com";
-  organization "Feuerlabs, Inc."
-;
+  organization "Feuerlabs, Inc.";
 
   rpc create-yang-module {
     description
@@ -52,6 +55,7 @@ submodule exodm_yang_module {
 "only one account, which will be used. If no account is given, and " +
 "the user has access to multiple accounts, an error is returned.\n\n " +
 "This argument is not used if the yang module to is to be created in the \"system\" repository.";
+
         type exodm_type:id-string;
       }
       leaf repository {
@@ -59,7 +63,6 @@ submodule exodm_yang_module {
 	      "Where to store the module in the Exosense Server: Can be \"system\" or \"account\"";
 	  type exodm_type:id-string;
 	  default "account";
-	  mandatory false;
       }
       leaf name {
 	  description
@@ -70,6 +73,7 @@ submodule exodm_yang_module {
 
       leaf yang-module {
         description "The yang code to create the module from";
+
         type string {
           length "1..100000";
         }
@@ -87,12 +91,11 @@ submodule exodm_yang_module {
   rpc delete-yang-module {
     description
 "**Delete an existing yang module**\n\n " +
-"This commands deletes a yang module previously created through [exodm:create-yang-module]. " +
+"This command deletes a yang module previously created through [exodm:create-yang-module]. " +
 "This command will fail if there are any device types and/or packages currently referring " +
 "to the given yang module.";
 
     input {
-
       leaf account {
 	  description
 "The account, accessible by the authorizing user, to which the yang modules belongs." +
@@ -101,6 +104,13 @@ submodule exodm_yang_module {
 "the user has access to multiple accounts, an error is returned.\n\n " +
 "This argument is not used if the yang module to delete resides in the \"system\" repository.";
 	  type exodm_type:id-string;
+      }
+
+      leaf repository {
+        description
+          "The repository where the module resides: Currently \"system\" or \"account\".";
+        type exodm_type:id-string;
+	default "account";
       }
 
       leaf name {
@@ -119,12 +129,53 @@ submodule exodm_yang_module {
     }
   }
 
+  rpc lookup-yang-module {
+    description "**Retreive yang module**\n\n." +
+	"This command returns the content of a yang module previously created through " +
+	"[exodm:create-yang-module].";
+
+    input {
+      leaf account {
+	  description
+"The account, accessible by the authorizing user, to which the yang modules belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.\n\n " +
+"This argument is not used if the yang module to delete resides in the \"system\" repository.";
+	  type exodm_type:id-string;
+      }
+
+      leaf repository {
+        description
+          "The repository where the module resides: Currently \"system\" or \"account\".";
+        type exodm_type:id-string;
+	default "account";
+      }
+
+      leaf name {
+	  description "Name of the yang module to retrieve. Include suffix (module.yang)";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      leaf-list yang-modules {
+        description "A list of zero or one yang source files.";
+        type string;
+      }
+    }
+  }
+
   rpc list-yang-modules {
     description
 "**List the yang modules created in a repository**" +
 "This commands lists all yang modules under the account-specific or "+
 "system-wide repository." +
-"\n\n\n\n"+
+"\n\n\n\n" +
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of device IDs.";
 
@@ -139,11 +190,14 @@ submodule exodm_yang_module {
 
         type exodm_type:id-string;
       }
+
       leaf repository {
-        description "The repository to list modules under \"system\" or \"account\"; default: \"account\"";
+        description
+          "The repository where the module resides: Currently \"system\" or \"account\".";
         type exodm_type:id-string;
-        default "account";
+	default "account";
       }
+
       leaf n {
         description
 "Maximum number of entries to return. More modules may be available " +
@@ -161,10 +215,163 @@ submodule exodm_yang_module {
         mandatory true;
       }
     }
+
     output {
       leaf-list yang-modules {
 	  description "List of yang modules.";
-	  type string;
+	  type exodm_type:id-string;
+      }
+    }
+  }
+
+  rpc add-execution-permission {
+    description 
+	"**Add execution permission to a specific Yang Module**\n\n." +
+	"This command adds the right for a pre-defined role to execute a given RPC within " +
+	"a yang module previously uploaded through [exodm:create-yang-module].\n\n" +
+	"When this command completes, all users assigned to the role will have permission " +
+	"to invoke the given RPC in the module for as long as each user continues to " +
+	"be assigned to the role, and the role continues to have execution permission " +
+	"to the RPC.\n\n" +
+	"[exodm:list-account-roles] will list all roles that available " +
+	"for execution assignment in the account.";
+    input {
+      leaf account {
+        description
+"The account, accessible by the authorizing user, to which the yang modules belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.\n\n " +
+"This argument is not used if the yang modules to list resides in the \"system\" repository.";
+        type exodm_type:id-string;
+      }
+
+      leaf repository {
+        description
+          "The repository where the module resides: Currently \"system\" or \"account\".";
+        type exodm_type:id-string;
+	default "account";
+      }
+
+      leaf name {
+        description "Name of yang module, including extension, e.g. 'mymodule.yang'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpcname {
+        description "Name of rpc to grant execution permission to, e.g. 'config-device'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+  
+      leaf role {
+        description 
+	    "Name of role to add permission to. See [exodm:list-account-roles] " +
+	    "for a list of roles available to the account.";
+
+        type exodm_type:id-string;
+        mandatory true;
+      }
+
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+  rpc remove-execution-permission {
+    description 
+	"**Removeexecution permission from a specific Yang Module**\n\n." +
+	"This command removes the right for a pre-defined role to execute a given RPC within " +
+	"a yang module previously uploaded through [exodm:create-yang-module].\n\n" +
+	"When this command completes, none of the users assigned to the role will have " +
+	"permission to invoke the given RPC in the module, unless they are assigned to " +
+	"other roles that also have execution permission for the given RPC.\n\n "+
+	"[exodm:list-account-roles] will list all roles that available " +
+	"for execution assignment in the account.";
+    input {
+      leaf repository {
+        description
+          "The repository where the module resides: Currently \"system\" or \"account\".";
+        type exodm_type:id-string;
+	default "account";
+      }
+
+      leaf name {
+        description "Name of yang module, including extension, e.g. 'mymodule.yang'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf rpcname {
+        description "Name of rpc to revoke execution permission from, e.g. 'config-device'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+  
+      leaf role {
+        description 
+	    "Name of role to revoke permission from. See [exodm:list-account-roles] " +
+	    "for a list of roles available to the account.";
+
+        type exodm_type:id-string;
+        mandatory true;
+      }
+
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+    }
+  }
+
+
+  rpc list-execution-permission {
+    description 
+	"**List all roles with execution permission for a specific Yang Module**\n\n." +
+	"This command lists all roles that currently have execution permission for " +
+	"an RPC in a yang module previously uploaded through [exodm:create-yang-module].\n\n" +
+	"When this command completes, all users assigned to the role will have permission " +
+	"Each role is listed with their names and RPCs within the module that they can execute.";
+    input {
+      leaf account {
+        description
+"The account, accessible by the authorizing user, to which the yang modules belongs." +
+"If no account is given, the authorizing user assumes to have access to " +
+"only one account, which will be used. If no account is given, and " +
+"the user has access to multiple accounts, an error is returned.\n\n " +
+"This argument is not used if the yang modules to list resides in the \"system\" repository.";
+        type exodm_type:id-string;
+      }
+
+      leaf repository {
+        description
+          "The repository where the module resides: Currently \"system\" or \"account\".";
+        type exodm_type:id-string;
+	default "account";
+      }
+
+      leaf name {
+        description "Name of yang module, including extension, e.g. 'mymodule.yang'";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+
+    output {
+      list roles {
+        leaf name {
+          description "Name of the role."; 
+          type exodm_type:id-string;
+        }
+        leaf-list rpcs {
+          description "List of RPCs that this role can execute within the module"; 
+          type exodm_type:id-string;
+        }
       }
     }
   }

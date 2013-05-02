@@ -1,4 +1,5 @@
 submodule exodm_account {
+
   belongs-to "exodm" {
     prefix "exodm";
   }
@@ -8,7 +9,9 @@ submodule exodm_account {
   }
 
 
-  description "API for Exosense Device Management Server, account part";
+  description 
+      "API for Exosense Device Management Server - Account Management. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "magnus.feuer@feuerlabs.com";
   organization "Feuerlabs, Inc.";
@@ -36,7 +39,6 @@ submodule exodm_account {
 	  type exodm_type:id-string;
 	  mandatory true;
       }
-
     }
     output {
       leaf result {
@@ -195,7 +197,6 @@ submodule exodm_account {
 "\n\n\n\n"+
 "This command allows for chunks of the result set to be returned " +
 "to facilitate a sequential retrieval of user names.";
-
     input {
       leaf account {
 	  description
@@ -210,7 +211,6 @@ submodule exodm_account {
 	  description
 "Maximum number of entries to return. More users may be available " +
 "after the last returned element.";
-
         type uint32;
         mandatory true;
       }

@@ -3,12 +3,14 @@ module exosense {
     prefix exo;
 
     namespace "http://feuerlabs.com/exosense";
+
     import exodm_type {
 	prefix exodm_type;
     }
 
-
-    description "Exosense standard RPC structures.";
+    description 
+      "API for Exosense Device Management Server - Standard types " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
     typedef timer {
       description "Kvdb_cron-type timer specification";
@@ -20,7 +22,7 @@ module exosense {
 
     // Transaction id.
     typedef transaction-id {
-	type uint32;
+	type uint64;
 	description
 "A transaction ID associated with an operation. " +
 "Unlike the JSON-RPC level \"id\" element, the transaction-id can tie a " +

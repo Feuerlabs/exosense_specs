@@ -6,7 +6,11 @@ submodule exodm_user {
   import exodm_type {
     prefix exodm_type;
   }
-  description "API for Exosense Device Management Server, user part";
+
+
+  description 
+      "API for Exosense Device Management Server - User Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
@@ -40,17 +44,19 @@ submodule exodm_user {
 "[exodm:create-user] command.  The user will be removed from all accounts and roles " +
 "it was assigned to prior to being deleted.";
     input {
-      leaf uname {
-	description
-	    "The name of the user to delete.";
-	  type exodm_type:id-string; mandatory true;
-      }
+	leaf uname {
+	    description
+		"The name of the user to delete.";
+	    type exodm_type:id-string; mandatory true;
+
+	}
     }
+
     output {
-      leaf result {
-	description "Result of the operation";
-	  type exodm_type:result-code;
-      }
+	leaf result {
+	    description "Result of the operation";
+	    type exodm_type:result-code;
+	}
     }
   }
 }

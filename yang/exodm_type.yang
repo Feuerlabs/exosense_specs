@@ -2,10 +2,13 @@ module exodm_type {
   namespace "http://feuerlabs.com/exodm_type";
   prefix exodm_type;
 
-  description "API for Exosense Device Management Server, type definitions";
-
   contact "ulf.wiger@feuerlabs.com";
+
   organization "Feuerlabs, Inc.";
+  description 
+      "API for Exosense Device Management Server - Core types " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
+
 
 
   // Result codes used by all requests/replies.

@@ -1,4 +1,5 @@
 submodule exodm_device_group {
+
   belongs-to "exodm" {
     prefix exodm;
   }
@@ -10,23 +11,25 @@ submodule exodm_device_group {
     prefix exodm_type;
   }
 
-  description "API for Exosense Server - Device Groups";
+  description 
+      "API for Exosense Device Management Server - Device Type Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
 
   // INTERNAL INFO!
-  // <uid>/groups/<gid>/name
-  // <uid>/groups/<gid>/url
+  // <uid>/groups/<group-id>/name
+  // <uid>/groups/<group-id>/url
   //
   list groups {
-    description "Device group information";
+    description "Device group information.";
 
-    key "gid";
+    key "group-id";
 
-    leaf gid {
+    leaf group-id {
       description "group id";
-      type uint32;
+      type exodm_type:id-string;
     }
 
     leaf name {
@@ -34,7 +37,7 @@ submodule exodm_device_group {
     }
 
     leaf notification-url {
-      description "Where to send notifications";
+      description "Where to send notifications.";
       type inet:uri;
     }
   }
@@ -46,7 +49,6 @@ submodule exodm_device_group {
 This command creates a new device group that can have devices added to
 it.  The name of the group must be unique across all device IDs and
 device groups owned by the given account.
-
 A device group can have devices added to it through the
 [exodm:add-device-group-memberss] Once a group has been created, and
 devices have been added to it , an RPC command in a package can be

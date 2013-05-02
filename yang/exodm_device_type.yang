@@ -1,14 +1,17 @@
 submodule exodm_device_type {
-    belongs-to "exodm" {
-	prefix exodm;
-    }
 
-    import exodm_type {
-	prefix exodm_type;
-    }
+  belongs-to "exodm" {
+    prefix exodm;
+  }
+
+  import exodm_type {
+    prefix exodm_type;
+  }
 
 
-    description "API for Exosense Server - Device Types";
+  description 
+      "API for Exosense Device Management Server - Device Type Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
     contact "magnus.feuer@feuerlabs.com";
     organization "Feuerlabs, Inc.";
@@ -128,7 +131,6 @@ submodule exodm_device_type {
 	    }
 	}
     }
-
 
     rpc delete-device-type {
 	description

@@ -1,4 +1,6 @@
 submodule exodm_config_set {
+
+
   belongs-to "exodm" {
     prefix exodm;
   }
@@ -14,7 +16,9 @@ submodule exodm_config_set {
   }
 
 
-  description "API for Exosense Server - Configuration Sets";
+  description 
+      "API for Exosense Device Management Server - Config Sets. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "magnus.feuer@feuerlabs.com";
   organization "Feuerlabs, Inc.";
@@ -44,7 +48,6 @@ submodule exodm_config_set {
 "configuration set must have a \"uses exo:std-request\" line in it to " +
 "include transaction elements used by the Exosense Server to route the " +
 "RPC to the correct device. See [exo:std-request] for details.";
-
     input {
       leaf account {
         description
@@ -165,7 +168,6 @@ submodule exodm_config_set {
     }
   }
 
-
   rpc list-config-sets {
     description
 "**List all configuraiton sets owned by an account**\n\n" +
@@ -183,13 +185,13 @@ submodule exodm_config_set {
       }
 
       leaf n {
-        description "Number of entries to fetch";
+        description "Number of entries to fetch.";
         type uint32;
         mandatory true;
       }
 
       leaf previous {
-        description "Previous config set; \"\" if from beginning";
+        description "Previous config set; \"\" if from beginning.";
         type exodm_type:id-string;
         mandatory true;
       }
@@ -353,6 +355,37 @@ submodule exodm_config_set {
     }
   }
 
+  rpc read-config-set-data {
+    description
+      "Reads the user data stored in a config set.";
+    input {
+      leaf name {
+        description "Name of the config data set.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf area {
+	description "Type of data area to read from";
+	type enumeration {
+	  enum staged;
+	  enum pending;
+	  enum installed;
+	}
+      }
+      leaf account {
+        description "The account to which the config set belongs.";
+        type exodm_type:id-string;
+      }
+    }
+
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      anyxml values;
+    }
+  }
+
 
   rpc push-config-set {
     description
@@ -364,7 +397,6 @@ submodule exodm_config_set {
 "configuration set, an [exodm:push-config-set-callback] notification " +
 "will be sent back to the notification URL associated with the " +
 "configuration set.";
-
 
     exo:matching-notification "push-config-set-callback";
 
@@ -399,6 +431,45 @@ submodule exodm_config_set {
     uses exo:std-callback;
   }
 
-
+  rpc add-notification-urls {
+    description "Add device-specific ConfigSet+URL pairs";
+    input {
+      leaf device-id {
+	type exodm_type:id-string;
+	mandatory true;
+      }
+      list urls {
+	leaf config-set {
+	  type exodm_type:id-string;
+	}
+	leaf notification-url {
+	  type inet:uri;
+	}
+      }
+    }
+    output {
+      leaf result {
+	type exodm_type:result-code;
+      }
+    }
+  }
+  
+  rpc delete-notification-urls {
+    description "Remove device-specific ConfigSet+URL pairs";
+    input {
+      leaf device-id {
+	type exodm_type:id-string;
+	mandatory true;
+      }
+      leaf-list config-sets {
+	  type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+	type exodm_type:result-code;
+      }
+    }
+  }
 }
 

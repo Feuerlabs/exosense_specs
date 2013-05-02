@@ -1,4 +1,5 @@
 submodule exodm_package {
+
     belongs-to "exodm" {
 	prefix exodm;
     }
@@ -11,7 +12,9 @@ submodule exodm_package {
     }
 
 
-    description "API for Exosense Server - Packages";
+    description 
+      "API for Exosense Device Management Server - Package Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
     contact "ulf.wiger@feuerlabs.com";
     organization "Feuerlabs, Inc.";
@@ -987,7 +990,6 @@ RPC definitions are global and cannot be hosted in a container. " +
 	    }
 	}
     }
-
 }
 
 

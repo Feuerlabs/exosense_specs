@@ -7,7 +7,9 @@ submodule exodm_device {
     prefix exodm_type;
   }
 
-  description "API for Exosense Server - Devices";
+  description 
+      "API for Exosense Device Management Server - Device Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
@@ -38,22 +40,22 @@ submodule exodm_device {
   // <uid>/devices/<did>/groups[1]/__gid = uint32()
   //
   list devices {
-    description "Device information";
+    description "Device information.";
     key "did";
 
     leaf did {
-      description "Device identifer";
+      description "Device identifer.";
       // internally it must be escaped!
       type exodm_type:id-string;
     }
 
     leaf name {
-      description "Optional device name";
+      description "Optional device name.";
       type string;
     }
 
     list groups {
-      description "Device group member ship";
+      description "Device group member ship.";
       key "id";
 
       leaf id {
@@ -103,7 +105,6 @@ submodule exodm_device {
 "opaque to the Exosense Server. It is up to the yang-file and protocol " +
 "plugin author to agree on the structure of the attributes assigned to " +
 "a device of the given device type.";
-
     input {
       leaf account {
         description
