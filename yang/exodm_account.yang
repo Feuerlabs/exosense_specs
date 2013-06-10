@@ -178,4 +178,68 @@ submodule exodm_account {
       }
     }
   }
+
+  rpc set-mblox-parameters {
+    description "Set access parameters for the push service Mblox.com";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+
+      leaf application-id {
+	mandatory true;
+	type string;
+      }
+      leaf originating-msisdn {
+	mandatory true;
+	type string;
+      }
+      leaf consumer-key {
+	mandatory true;
+	type string;
+      }
+      leaf secret-key {
+	mandatory true;
+	type string;
+      }
+      leaf token {
+	mandatory false;
+	type string;
+      }
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+    }
+  }
+
+  rpc get-mblox-parameters {
+    description "Get mblox access parameters (except the secret key)";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+
+      leaf application-id {
+	type string;
+      }
+      leaf originating-msisdn {
+	type string;
+      }
+      leaf consumer-key {
+	type string;
+      }
+      leaf token {
+	type string;
+      }
+    }
+  }
+
+  rpc delete-mblox-parameters {
+    description "Delete mblox access parameters for account";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+    }
+  }
 }
