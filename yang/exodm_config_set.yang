@@ -1,4 +1,5 @@
 submodule exodm_config_set {
+
   belongs-to "exodm" {
     prefix exodm;
   }
@@ -13,8 +14,9 @@ submodule exodm_config_set {
     prefix exodm_type;
   }
     
-    
-  description "API for Exosense Device Management Server, config set part.";
+  description 
+      "API for Exosense Device Management Server - Config Sets. " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
@@ -293,13 +295,13 @@ submodule exodm_config_set {
   rpc add-notification-urls {
     description "Add device-specific ConfigSet+URL pairs";
     input {
-      device-id {
+      leaf device-id {
 	type exodm_type:id-string;
 	mandatory true;
       }
       list urls {
 	leaf config-set {
-	  exodm_type:id-string;
+	  type exodm_type:id-string;
 	}
 	leaf notification-url {
 	  type inet:uri;
@@ -316,12 +318,12 @@ submodule exodm_config_set {
   rpc delete-notification-urls {
     description "Remove device-specific ConfigSet+URL pairs";
     input {
-      device-id {
+      leaf device-id {
 	type exodm_type:id-string;
 	mandatory true;
       }
       leaf-list config-sets {
-	exodm_type:id-string;
+	type exodm_type:id-string;
       }
     }
     output {

@@ -6,7 +6,11 @@ submodule exodm_user {
   import exodm_type {
     prefix exodm_type;
   }
-  description "API for Exosense Device Management Server, user part.";
+
+
+  description 
+      "API for Exosense Device Management Server - User Management " +
+      "(C) 2013 Feurelabs, Inc - All Rights Reserved.";
 
   contact "ulf.wiger@feuerlabs.com";
   organization "Feuerlabs, Inc.";
