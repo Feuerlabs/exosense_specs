@@ -27,7 +27,7 @@ module exosense {
 
     extension semantics {
       description "Element expects special treatment in Exosense:\n" +
-	"Arg: timeout | schedule";
+	"Arg: timeout | schedule | protocol";
       argument class;
     }
 
