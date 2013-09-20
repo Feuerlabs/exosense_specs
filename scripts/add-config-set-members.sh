@@ -2,26 +2,11 @@
 
 . $HOME/.exodmrc
 
-if [ $# -lt 2 ]
+if [ $# -ne 2 ]
 then
-    echo "Usage: $0 config-set devid1 devid2 ..."
+    echo "Usage: $0 config-set devid"
     exit 255
 fi
-
-CFG_SET=$1
-shift
-FIRST_ENTRY=true
-while [ "$#" -gt "0" ]
-do
-    if [ "$FIRST_ENTRY" = "true" ]
-    then
-        VAL="\"$1\""
-        FIRST_ENTRY=false
-    else
-        VAL="$VAL, \"$1\""
-    fi
-    shift
-done
 
 echo "CFG_SET = $CFG_SET"
 echo "VAL = $VAL"
@@ -33,8 +18,8 @@ curl -u $USER_AUTH -k -X POST $URL -d @- << EOF
     "id": "1",
     "params":
     {
-        "name": [ "$CFG_SET" ],
-        "device-id": [ $VAL ]
+        "name": [ "$1" ],
+        "device-id": [ "$2" ]
     }
 }
 EOF
