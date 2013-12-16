@@ -66,6 +66,26 @@ submodule exodm_account {
     }	
   }
   
+  rpc lookup-account {
+    description
+      "Read a single account.";
+    input {
+      leaf name {
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      leaf-list accounts {
+        description "A list of zero or one accounts.";
+        type string;
+      }
+    }
+  }
+  
   rpc list-accounts {
     description "List all account names.";
     input {
