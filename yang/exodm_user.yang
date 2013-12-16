@@ -29,13 +29,56 @@ submodule exodm_user {
   rpc delete-user {
     description "Delete an existing user.";
     input {
-      leaf uname      { type exodm_type:id-string; mandatory true; }
+      leaf uname { type exodm_type:id-string; mandatory true; }
     }
     output {
       leaf result { type exodm_type:result-code; }
     }
   }
       
+  rpc lookup-user {
+    description
+      "Read a single user object.";
+    input {
+      leaf uname {
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      list users {
+        description "A list of zero or one user objects.";
+        uses exodm_type:user-obj;
+      }
+    }
+  }
+
+  rpc list-user-accounts {
+    description
+      "Read accounts and roles for a user.";
+    input {
+      leaf uname {
+        type exodm_type:id-string;
+        mandatory true;
+      }
+    }
+    output {
+      list accounts {
+        leaf name {
+          description "List of account names."; 
+          type exodm_type:id-string;
+        }
+        leaf-list roles {
+          description "List of role names."; 
+          type exodm_type:id-string;
+        }
+      }
+    } 
+  }
+
   rpc list-users {
     description "List all users.";
     input {
