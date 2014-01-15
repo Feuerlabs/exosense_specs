@@ -3,6 +3,9 @@ submodule exodm_device {
     prefix exodm;
   }
 
+  import exosense {
+    prefix exo;
+  }
   import exodm_type {
     prefix exodm_type;
   }
@@ -212,7 +215,7 @@ submodule exodm_device {
         type exodm_type:id-string;
         mandatory true;
       }
-      list attributes {
+      leaf-list attributes {
         type exodm_type:id-string;
       }
       leaf account {
@@ -221,11 +224,8 @@ submodule exodm_device {
       }
     }
     output {
-      leaf result {
-        type exodm_type:result-code;
-      }
       list attributes {
-        uses configuration-entry;
+        uses exo:configuration-entry;
       }
     }
   }
