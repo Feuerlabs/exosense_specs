@@ -203,6 +203,33 @@ submodule exodm_device {
     }
   }
 
+  rpc lookup-device-attributes {
+    description
+      "Read device object attributes." +
+      "Returns a list of zero or one device object attributes.";
+    input {
+      leaf device-id {
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      list attributes {
+        type exodm_type:id-string;
+      }
+      leaf account {
+        description "The account to which the device belongs.";
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      list attributes {
+        uses configuration-entry;
+      }
+    }
+  }
+
   rpc list-devices {
     description "List created devices, N entries at a time.";
 
