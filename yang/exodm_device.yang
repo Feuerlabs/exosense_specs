@@ -209,13 +209,17 @@ submodule exodm_device {
   rpc lookup-device-attributes {
     description
       "Read device object attributes." +
-      "Returns a list of zero or one device object attributes.";
+      "Returns a list of zero or one device object attributes " +
+      "as specified the 'attributes' parameter.";
     input {
       leaf device-id {
         type exodm_type:id-string;
         mandatory true;
       }
       leaf-list attributes {
+        description
+          "Available attributes are those in device-obj and " +
+          "in addition the boolean attribute 'is-connected'.";
         type exodm_type:id-string;
       }
       leaf account {
