@@ -144,6 +144,16 @@ submodule exodm_account {
     }
   }
 
+  rpc remove-account-user {
+    description "Remove all account access from existing user.";
+    input {
+      leaf "account" { type exodm_type:id-string; mandatory true; }
+      leaf "uname" { type exodm_type:id-string; mandatory true; }
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+    }
+  }
   rpc list-account-users {
     description "List all users with access to account.";
     input {
