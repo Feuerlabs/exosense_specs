@@ -228,6 +228,9 @@ submodule exodm_device {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       list attributes {
         uses exo:configuration-entry;
       }

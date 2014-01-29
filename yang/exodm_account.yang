@@ -81,7 +81,7 @@ submodule exodm_account {
       }
       leaf-list accounts {
         description "A list of zero or one accounts.";
-        type string;
+        type exodm_type:id-string;
       }
     }
   }
@@ -133,7 +133,7 @@ submodule exodm_account {
       leaf "role" { type exodm_type:id-string; mandatory true; }
       leaf-list unames { 
         description
-          "Users to add to account.";
+          "Users to remove from account.";
         min-elements 1;
         max-elements 10;
         type exodm_type:id-string; 
@@ -154,6 +154,7 @@ submodule exodm_account {
       leaf result { type exodm_type:result-code; }
     }
   }
+
   rpc list-account-users {
     description "List all users with access to account.";
     input {

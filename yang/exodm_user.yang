@@ -36,6 +36,16 @@ submodule exodm_user {
     }
   }
       
+  rpc update-user {
+    description "Update an existing user.";
+    input {
+      uses exodm_type:user-obj;
+    }
+    output {
+      leaf result { type exodm_type:result-code; }
+    }
+  }
+
   rpc lookup-user {
     description
       "Read a single user object.";
