@@ -110,6 +110,9 @@ submodule exodm_device_type {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       list device-types {
         uses device-type-obj;
       }
@@ -140,6 +143,9 @@ submodule exodm_device_type {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       leaf-list device-type-members {
         description "Device ID.";
         type exodm_type:id-string;

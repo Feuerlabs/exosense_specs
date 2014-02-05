@@ -26,7 +26,7 @@ submodule exodm_account {
     }
     output {
       leaf result { type exodm_type:result-code; }
-      leaf account-id { type string; }
+      leaf account-admin { type exodm_type:id-string; }
     }
   }
 
@@ -101,6 +101,9 @@ submodule exodm_account {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       leaf-list accounts {
         description "List of account ID.";
         type exodm_type:id-string;
@@ -174,6 +177,9 @@ submodule exodm_account {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       list users {
         leaf name {
           description "List of user names."; 
@@ -206,6 +212,9 @@ submodule exodm_account {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       leaf-list roles {
         description "List of role names."; 
         type exodm_type:id-string;

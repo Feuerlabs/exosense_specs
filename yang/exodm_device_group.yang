@@ -120,6 +120,9 @@ submodule exodm_device_group {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       list device-groups {
         leaf group-id {
           type exodm_type:id-string;
@@ -158,6 +161,9 @@ submodule exodm_device_group {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       leaf-list device-group-members {
         description "";
         type exodm_type:id-string;

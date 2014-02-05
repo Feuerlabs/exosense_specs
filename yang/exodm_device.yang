@@ -257,6 +257,9 @@ submodule exodm_device {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       list devices {
         uses device-obj;
       }

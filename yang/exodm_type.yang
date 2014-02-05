@@ -46,6 +46,14 @@ module exodm_type {
         description "An account must be given.";
         value 7;
       }
+      enum illegal-name {
+        description "Given name is illegal.";
+        value 8;
+      }
+      enum missing-option {
+        description "A required option is missing.";
+        value 9;
+      }
     }
   }
 

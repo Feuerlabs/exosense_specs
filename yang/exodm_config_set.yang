@@ -132,6 +132,9 @@ submodule exodm_config_set {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       list config-sets {
         leaf name {
           type exodm_type:id-string;
@@ -171,6 +174,9 @@ submodule exodm_config_set {
       }
     }
     output {
+      leaf result {
+        type exodm_type:result-code;
+      }
       leaf-list config-set-members {
         description "";
         type exodm_type:id-string;
