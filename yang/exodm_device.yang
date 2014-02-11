@@ -221,6 +221,7 @@ submodule exodm_device {
           "Available attributes are those in device-obj and " +
           "in addition the boolean attribute 'is-connected'.";
         type exodm_type:id-string;
+        mandatory true;
       }
       leaf account {
         description "The account to which the device belongs.";
@@ -262,6 +263,57 @@ submodule exodm_device {
       }
       list devices {
         uses device-obj;
+      }
+    }
+  }
+
+
+  rpc list-devices-attributes {
+    description
+      "List device objects with attributes." +
+      "Returns a list of zero or more device object matching "+
+      "pattern, default is all, and their attributes " +
+      "as specified the 'attributes' parameter.";
+    input {
+      leaf n {
+        description "Number of entries to fetch.";
+        type uint32;
+        mandatory true;
+      }
+      leaf previous {
+        description "Previous device ID; \"\" if from beginning.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf-list attributes {
+        description
+          "Available attributes are those in device-obj and " +
+          "in addition the boolean attribute 'is-connected'.";
+        type exodm_type:id-string;
+        mandatory true;
+      }
+      leaf pattern {
+        description "Pattern to match device-id against.";
+        type exodm_type:id-string;
+        default "*";
+      }
+      leaf account {
+        description "The account to which the device belongs.";
+        type exodm_type:id-string;
+      }
+    }
+    output {
+      leaf result {
+        type exodm_type:result-code;
+      }
+      list devices {
+        leaf device-id {
+          description "Account-wide unique device-id.";
+          type exodm_type:id-string;
+        }
+        list attributes {
+          uses exo:configuration-entry;
+        }
       }
     }
   }
