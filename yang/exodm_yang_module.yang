@@ -127,6 +127,11 @@ submodule exodm_yang_module {
         type exodm_type:id-string;
         mandatory true;
       }
+      leaf direction {
+        description "Search direction.";
+        type exodm_type:direction;
+        default ascending;
+      }
       leaf account {
         description "The account to which the yang module belongs.";
         type exodm_type:id-string;

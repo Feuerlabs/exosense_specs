@@ -297,6 +297,11 @@ submodule exodm_device {
         type exodm_type:id-string;
         default "*";
       }
+      leaf direction {
+        description "Search direction.";
+        type exodm_type:direction;
+        default ascending;
+      }
       leaf account {
         description "The account to which the device belongs.";
         type exodm_type:id-string;

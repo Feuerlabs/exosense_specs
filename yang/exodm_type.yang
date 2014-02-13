@@ -64,6 +64,17 @@ module exodm_type {
     }
   }
 
+  typedef direction {
+    type enumeration {
+      enum ascending {
+        value 0;
+      }
+      enum descending {
+        value 1;
+      }
+    }
+  }
+
   grouping user-obj {
     leaf uname      { type id-string; mandatory true; }
     leaf email      { type string; mandatory true; }

@@ -175,6 +175,11 @@ submodule exodm_account {
         type exodm_type:id-string;
         mandatory true;        
       }
+      leaf direction {
+        description "Search direction.";
+        type exodm_type:direction;
+        default ascending;
+      }
     }
     output {
       leaf result {

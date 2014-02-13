@@ -105,7 +105,12 @@ submodule exodm_user {
         type exodm_type:id-string;
         mandatory true;
       }
-       leaf account {
+      leaf direction {
+        description "Search direction.";
+        type exodm_type:direction;
+        default ascending;
+      }
+      leaf account {
         description "If account is given only users connected to that " +
           "account are returned.";
         type exodm_type:id-string;
