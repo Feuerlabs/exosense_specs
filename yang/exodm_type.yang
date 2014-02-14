@@ -54,6 +54,10 @@ module exodm_type {
         description "A required option is missing.";
         value 9;
       }
+      enum internal-error {
+        description "An internal error occurred.";
+	value 10;
+      }
     }
   }
 
